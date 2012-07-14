@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface>
+        <composite:attribute name="key" required="true" shortDescription="key to retrieve from the properties file" />
+        <composite:attribute name="file" shortDescription="file to retrieve keys,if no file is specified 
+                        the component will retrieve keys from defaultProperty file configured in web.xml DEFAULT_PROPERTIES_PATH contextParam"/>
+    </composite:interface>
+    
+    <composite:implementation>
+        <h:outputFormat value="#{empty cc.attrs.file ? propertiesProvider.currentProps[cc.attrs.key] : propertiesProvider.propsMap[cc.attrs.file][cc.attrs.key]}">
+             <composite:insertChildren />
+        </h:outputFormat>
+        
+    </composite:implementation>
+
+</html>
+
+

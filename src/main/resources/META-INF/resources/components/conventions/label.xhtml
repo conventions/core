@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface>
+        <composite:attribute name="alignment" default="right"/>
+        <composite:attribute name="requiredStyle" default="false"/>
+        <composite:attribute name="leftRequiredStyle" default="true"/>
+        <composite:attribute name="renderColon" default="true" />
+        <composite:attribute name="style" default="margin-right: 5px"/>
+        <composite:attribute name="value" required="true"/>
+    </composite:interface>
+    <composite:implementation>
+        <div align="#{cc.attrs.alignment}">
+            <h:outputText rendered="#{cc.attrs.requiredStyle and cc.attrs.leftRequiredStyle}" value="*" style="color: #E51010;font-weight: bold;"/>
+            <h:outputLabel  value="#{cc.attrs.value}" style="#{cc.attrs.style}">
+                 <h:outputText rendered="#{cc.attrs.requiredStyle and not cc.attrs.leftRequiredStyle}" value="*" style="color: #E51010;font-weight: bold;"/>
+                 <h:outputText rendered="#{cc.attrs.renderColon}" value=":"/>
+            </h:outputLabel>
+           
+
+        </div>    
+    </composite:implementation>
+</html>
+
+
+
+
+

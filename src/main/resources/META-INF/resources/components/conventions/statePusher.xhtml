@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface>
+        <composite:attribute name="mbean" required="true" shortDescription="managed bean to pushed on top of the stateItens stack at page render event" />
+        <composite:attribute name="state" type="com.jsf.conventions.bean.state.State" shortDescription="state" required="true" />
+    </composite:interface>
+    
+    <composite:implementation>
+        <f:event type="preRenderView" id="stateEvent" rendered="#{cc.rendered and (empty cc.attrs.mbean.beanState or (cc.attrs.mbean.beanState.stateName ne cc.attrs.state.stateName) )}" listener="#{cc.attrs.mbean.firePushStateEvent(cc.attrs.state)}"/>
+    </composite:implementation>
+
+</html>
+
+

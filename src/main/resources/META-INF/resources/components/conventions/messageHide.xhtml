@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface>
+        <composite:attribute name="messageId" shortDescription="p:message component id, including naming container"  />
+        <composite:attribute name="effect" default="none" shortDescription="valid values: clip, fade, slide, explode, blind, drop, fold, puff, bounce" />
+        <composite:attribute name="timeout" default="1700" shortDescription="timer to hide the message" />
+    </composite:interface>
+
+    <composite:implementation>
+        <p:outputPanel id="messageHiderParent">
+            <p:commandButton  id="hider-bt" global="false" style="display: none" value="click me" >
+                <p:effect type="#{cc.attrs.effect}" event="click" for="#{cc.attrs.messageId}">
+                    <f:param name="mode" value="'hide'" />
+                </p:effect>
+            </p:commandButton>
+
+        </p:outputPanel>
+        <script type="text/javascript">
+            function hideMsg(args){
+                   if(! args.validationFailed){//beanValidation errors
+                       if(! args.businessError){//exceptions in the managedBean
+                           setTimeout("doHide()", #{cc.attrs.timeout});
+                       }
+                   }
+            }
+                    
+            function doHide(){
+               jQuery('button[id$="hider-bt"]').click();
+            }
+                    
+        </script>
+
+    </composite:implementation>
+
+</html>
+
+

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface>
+        <composite:attribute name="ajax" type="java.lang.Boolean" default="#{true}"/>
+        <composite:attribute name="align" default="left" />
+        <composite:attribute name="image" shortDescription="only available for type button" default="ui-icon back_img"/>
+        <composite:attribute name="process" default="@this" />
+        <composite:attribute name="rendered" type="java.lang.Boolean" />
+        <composite:attribute name="style" />
+        <composite:attribute name="type" shortDescription="valid values: link and button - default is button" default="button" />
+        <composite:attribute name="value" default="Back" />
+        <composite:attribute name="update" default="@form" />
+        <composite:attribute name="oncomplete" />
+        
+    </composite:interface>
+    <composite:implementation>
+        <div align="#{cc.attrs.align}">
+            <p:commandLink value="#{cc.attrs.value}" 
+                           immediate="true"
+                           rendered="#{cc.attrs.rendered and cc.attrs.type eq 'link'}"
+                           action="#{stateController.goBack}" 
+                           update="#{cc.attrs.update}" 
+                           process="#{cc.attrs.process}"
+                           oncomplete="#{cc.attrs.oncomplete}; jQuery('.ui-state-error').removeClass('ui-state-error');"
+                           ajax="#{cc.attrs.ajax}"/>
+            <p:commandButton value="#{cc.attrs.value}" 
+                           immediate="true"
+                           rendered="#{cc.attrs.rendered and cc.attrs.type eq 'button'}"
+                           action="#{stateController.goBack}" 
+                           icon="#{cc.attrs.image}"
+                           update="#{cc.attrs.update}" 
+                           process="#{cc.attrs.process}"
+                           oncomplete="#{cc.attrs.oncomplete}; jQuery('.ui-state-error').removeClass('ui-state-error');"
+                           ajax="#{cc.attrs.ajax}"/>
+        </div>
+    </composite:implementation>
+</html>
+
+
+
+
+

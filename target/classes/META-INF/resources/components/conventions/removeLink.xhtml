@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface >
+        <composite:attribute name="row" required="true" shortDescription="row/entity to remove" />
+        <composite:attribute name="id"  />
+        <composite:attribute name="update" default="@none" />
+        <composite:attribute name="process" default="@this"  />
+        <composite:attribute name="mbean"  required="true"/>
+        <composite:attribute name="style" />
+        <composite:attribute name="image" default="garbage20x20.png" shortDescription="image url" />
+        <composite:attribute name="library" default="images" shortDescription="image library" />
+        <composite:attribute name="styleClass" />
+        <composite:attribute name="oncomplete" />
+        <composite:attribute name="renderIcon" default="true" type="java.lang.Boolean" />
+        <composite:attribute name="label" default="Remove"/>
+        <composite:attribute name="ajax" default="true"/>
+        <composite:attribute name="modal"  shortDescription="widgetVar of modalRemoval to be called on editLink click"/>
+
+    </composite:interface>
+
+    <composite:implementation>
+
+        <p:commandButton value="#{cc.attrs.label}" rendered="#{not cc.attrs.renderIcon}" immediate="true"  update="#{cc.attrs.update}" 
+                         ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete};#{not empty cc.attrs.modal ? 'openModalRemoval()':''}">
+            <f:setPropertyActionListener target="#{cc.attrs.mbean.entityAux}" value="#{cc.attrs.row}"/>
+        </p:commandButton>
+        <p:commandLink rendered="#{cc.attrs.renderIcon}" immediate="true"  update="#{cc.attrs.update}" 
+                       ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete};#{not empty cc.attrs.modal ? 'openModalRemoval()':''}">
+            <h:graphicImage  library="#{cc.attrs.library}" name="#{cc.attrs.image}" style="border: none;"/>
+            <f:setPropertyActionListener target="#{cc.attrs.mbean.entityAux}" value="#{cc.attrs.row}"/>
+            
+        </p:commandLink>
+        <script type="text/javascript">
+            
+            function openModalRemoval(){
+                #{cc.attrs.modal}.show();
+            }
+        </script>
+    </composite:implementation>
+
+</html>
+
+

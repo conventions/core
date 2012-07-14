@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface>
+        <composite:attribute name="message"  shortDescription="Faces message(fatal) to display when user has no access to the page." />
+        <composite:attribute name="outcome"  shortDescription="Navigation rule to be matched when user has no access to the page." />
+        <composite:attribute name="rolesAllowed" required="true" shortDescription="comma,space or semicolon separated list of roles allowed to access the page." />
+        <composite:attribute name="removeLastBeanState" type="java.lang.Boolean" shortDescription="if true the component will remove the last bean state from StateController stateList - useful if you use statePusher in conjunction with securityPage" default="#{false}" />
+    </composite:interface>
+    
+    <composite:implementation >
+        <f:event type="preRenderView" id="securityPageEvent" rendered="#{cc.rendered}" listener="#{pageController.checkUserAccess(cc.attrs.rolesAllowed,cc.attrs.outcome,cc.attrs.message,cc.attrs.removeLastBeanState)}"/>
+    </composite:implementation>
+
+</html>
+
+

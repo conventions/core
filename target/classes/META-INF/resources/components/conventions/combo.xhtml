@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface componentType="com.jsf.conventions.composite.ComboCC">
+        <composite:attribute name="alignment" default="left"/>    
+        <composite:attribute name="converter" default="entityConverter"/>
+        <composite:attribute name="effect" default="slide" />
+        <composite:attribute name="emptyOption" type="java.lang.Boolean" default="#{true}" />
+        <composite:attribute name="emptyMessage" default="Choose an option" />
+        <composite:attribute name="label"  />
+        <composite:attribute name="list" required="true" type="java.util.List" shotDescription="must resolve to a list of entities that implement SelectItemAware interface" />
+        <composite:attribute name="listener" method-signature="void method(javax.faces.event.AjaxBehaviorEvent)" />
+        <composite:attribute name="mbean" />
+        <composite:attribute name="process" default="@this" />
+        <composite:attribute name="rendered" type="java.lang.Boolean" />
+        <composite:attribute name="required" type="java.lang.Boolean" default="false" />
+        <composite:attribute name="requiredMessage"  />
+        <composite:attribute name="style" />
+        <composite:attribute name="styleClass" />
+        <composite:attribute name="type" default="oneMenu" shotDescription="valid values:oneMenu,oneList,oneRadio,manyMenu,manyList,manyCheck,checkMenu" />
+        <composite:attribute name="update"  />
+        <composite:attribute name="value" />
+        <composite:attribute name="width" default="255" />
+    </composite:interface>
+
+    <composite:implementation>
+                    <ui:remove><!-- SELECT ONE MENU--></ui:remove>
+                    <p:selectOneMenu id="comboOneMenu"
+                                     rendered="#{cc.attrs.type eq 'oneMenu'}"
+                                     value="#{cc.attrs.value}"
+                                     style="width:#{cc.attrs.width}px;text-align: #{cc.attrs.alignment};#{cc.attrs.style} "
+                                     effect="#{cc.attrs.effect}"
+                                     required="#{cc.attrs.required}" 
+                                     requiredMessage="#{cc.attrs.requiredMessage}"
+                                     widgetVar="#{cc.id}OneMenu"
+                                     >
+                        <f:converter converterId="#{cc.attrs.converter}" for="comboOneMenu"/>
+                        <composite:insertChildren />
+                        <f:selectItem rendered="#{cc.attrs.emptyOption}" itemLabel="#{cc.attrs.emptyMessage}" itemValue=""/>
+                        <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                        <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
+                    </p:selectOneMenu>
+                    
+                      <ui:remove><!-- SELECT ONE RADIO--></ui:remove>
+                     <p:selectOneRadio id="comboOneRadio"
+                                     rendered="#{cc.attrs.type eq 'oneRadio'}"
+                                     value="#{cc.attrs.value}"
+                                     style="width:#{cc.attrs.width}px;text-align: #{cc.attrs.alignment};#{cc.attrs.style} "
+                                     effect="#{cc.attrs.effect}"
+                                     required="#{cc.attrs.required}" 
+                                     requiredMessage="#{cc.attrs.requiredMessage}"
+                                     >
+                        <f:converter converterId="#{cc.attrs.converter}" for="comboOneRadio"/>
+                        <composite:insertChildren />
+                        <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                        <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
+                    </p:selectOneRadio>
+                      
+                     <ui:remove><!-- SELECT ONE LIST BOX--></ui:remove>
+                    <p:selectOneListbox id="comboOneList"
+                                     rendered="#{cc.attrs.type eq 'oneList'}"
+                                     value="#{cc.attrs.value}"
+                                     required="#{cc.attrs.required}" 
+                                     requiredMessage="#{cc.attrs.requiredMessage}"
+                                     style="width:#{cc.attrs.width}px;text-align: #{cc.attrs.alignment};#{cc.attrs.style} "
+                                     >
+                        <f:converter converterId="#{cc.attrs.converter}" for="comboOneList"/>
+                        <composite:insertChildren />
+                        <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                        <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
+                    </p:selectOneListbox>
+                    
+                    <ui:remove><!-- SELECT MANY MENU--></ui:remove>
+                     <p:selectManyMenu id="comboManyMenu"
+                                     rendered="#{cc.attrs.type eq 'manyMenu'}"
+                                     value="#{cc.attrs.mbean[cc.attrs.value]}"
+                                     required="#{cc.attrs.required}" 
+                                     requiredMessage="#{cc.attrs.requiredMessage}"
+                                     style="width:#{cc.attrs.width}px;text-align: #{cc.attrs.alignment};#{cc.attrs.style} "
+                                     >
+                        <f:converter converterId="#{cc.attrs.converter}" for="comboManyMenu"/>
+                        <composite:insertChildren />
+                        <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                        <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
+                    </p:selectManyMenu>
+                    
+                    <ui:remove><!-- SELECT MANY CHECKBOX--></ui:remove>
+                     <p:selectManyCheckbox id="comboManyCheck"
+                                     rendered="#{cc.attrs.type eq 'manyCheck'}"
+                                     value="#{cc.attrs.mbean[cc.attrs.value]}"
+                                     required="#{cc.attrs.required}" 
+                                     requiredMessage="#{cc.attrs.requiredMessage}"
+                                     style="width:#{cc.attrs.width}px;text-align: #{cc.attrs.alignment};#{cc.attrs.style} "
+                                     >
+                        <f:converter converterId="#{cc.attrs.converter}" for="comboManyCheck"/>
+                        <composite:insertChildren />
+                        <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                        <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
+                    </p:selectManyCheckbox>
+                    
+                     <ui:remove><!-- SELECT CHECK MENU--></ui:remove>
+                    <p:selectCheckboxMenu id="comboCheckMenu"
+                                     rendered="#{cc.attrs.type eq 'checkMenu'}"
+                                     value="#{cc.attrs.mbean[cc.attrs.value]}"
+                                     required="#{cc.attrs.required}" 
+                                     requiredMessage="#{cc.attrs.requiredMessage}"
+                                     style="width:#{cc.attrs.width}px;text-align: #{cc.attrs.alignment};#{cc.attrs.style}"
+                                     effect="#{cc.attrs.effect}"
+                                     >
+                        <f:converter converterId="#{cc.attrs.converter}" for="comboCheckMenu"/>
+                        <composite:insertChildren />
+                        <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                        <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
+                    </p:selectCheckboxMenu>
+               
+    </composite:implementation>
+
+</html>
+
+

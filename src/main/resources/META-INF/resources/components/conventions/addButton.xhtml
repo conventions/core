@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface>
+
+      <composite:attribute name="value" default="Add" />
+      <composite:attribute name="id"  />
+      <composite:attribute name="update" default="@form" />
+      <composite:attribute name="process" default="@this" />
+      <composite:attribute name="mbean" required="true" />
+      <composite:attribute name="style" />
+      <composite:attribute name="rendered" type="java.lang.Boolean" />
+      <composite:attribute name="immediate" default="true" />
+      <composite:attribute name="styleClass" />
+      <composite:attribute name="oncomplete" />
+      <composite:attribute name="ajax" default="true"/>
+  </composite:interface>
+
+    <composite:implementation>
+        
+        <p:commandButton value="#{cc.attrs.value}"
+                         immediate="#{cc.attrs.immediate}"
+                         action="#{cc.attrs.mbean.prepareInsert}"
+                         update="#{cc.attrs.update}" 
+                         ajax="#{cc.attrs.ajax}"
+                         oncomplete="#{cc.attrs.oncomplete}"
+                         process="#{cc.attrs.process}"
+                         rendered="#{cc.attrs.rendered}"
+                         style="#{cc.attrs.style}"
+                         >
+             <composite:insertChildren />
+        </p:commandButton>
+
+    </composite:implementation>
+
+</html>
+
+

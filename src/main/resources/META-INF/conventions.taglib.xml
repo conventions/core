@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<facelet-taglib version="2.0"
+                xmlns="http://java.sun.com/xml/ns/javaee"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd">
+
+    <namespace>http://conventions.com/ui</namespace>
+
+
+
+    <!-- Components -->
+    <tag>
+        <description><![CDATA[primefaces panelGrid extension to support multiple columns declaration.]]></description>
+        <tag-name>panelGrid</tag-name>
+        <component>
+            <component-type>com.jsf.conventions.component.PanelGrid</component-type>
+            <renderer-type>com.jsf.conventions.component.PanelGridRenderer</renderer-type>
+        </component>
+        <attribute>
+            <description><![CDATA[Unique identifier of the component in a naming container.]]></description>
+            <name>id</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[Boolean value to specify the rendering of the component, when set to false component will not be rendered.]]></description>
+            <name>rendered</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[Comma separated list of columns size of the table. Note that the last column will be colspaned if it is minor than the bigger column ]]></description>
+            <name>columns</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+    
+      <tag>
+        <description><![CDATA[primefaces panelGrid extension to support multiple columns declaration.]]></description>
+        <tag-name>securityArea</tag-name>
+        <component>
+            <component-type>com.jsf.conventions.component.SecurityArea</component-type>
+            <renderer-type>com.jsf.conventions.component.SecurityAreaRenderer</renderer-type>
+        </component>
+        <attribute>
+            <description><![CDATA[Unique identifier of the component in a naming container.]]></description>
+            <name>id</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+          <attribute>
+            <description></description>
+            <name>rendered</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+          <attribute>
+            <description><![CDATA[comma,space or semicolon separated list of roles that have permission to see components surrounded by the securited area. ONLY roles in the list of allowed will have access to the area]]></description>
+            <name>rolesAllowed</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+         <attribute>
+            <description><![CDATA[comma,space or semicolon separated list of roles that do not have permission to see components surrounded by the securited area. ALL roles, except the ones in the list of forbidden, will have acsess to the area]]></description>
+            <name>rolesForbidden</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute> 
+         </tag>
+        
+        <tag>
+        <description><![CDATA[renders a div which is aware if its children are valid or invalid]]></description>
+        <tag-name>validationPanel</tag-name>
+        <component>
+            <component-type>com.jsf.conventions.component.ValidationPanel</component-type>
+            <renderer-type>com.jsf.conventions.component.ValidationPanelRenderer</renderer-type>
+        </component>
+        <attribute>
+            <description><![CDATA[Unique identifier of the component in a naming container.]]></description>
+            <name>id</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+          <attribute>
+            <description></description>
+            <name>rendered</name>
+            <required>false</required>
+            <type>java.lang.Boolean</type>
+        </attribute>
+         <attribute>
+            <description></description>
+            <name>style</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+         <attribute>
+            <description></description>
+            <name>styleClass</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+         <attribute>
+            <description>Style to be used when component has a child which is not valid</description>
+            <name>errorStyle</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+         <attribute>
+            <description>class to be used when component has a child which is not valid</description>
+            <name>errorStyleClass</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        
+</tag>
+</facelet-taglib>

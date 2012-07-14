@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:framework="http://java.sun.com/jsf/composite/components/conventions"
+      xmlns:fn="http://conventions.com/fnc"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+
+        <h:head>
+            <title>#{title}</title>
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <ui:insert name="head"></ui:insert>
+        </h:head>
+
+        <h:body onload="if (windown.onload) {onload()}" >
+            <h:outputScript library="js" name="blockUI.js" target="head"/>
+            <h:outputStylesheet library="css" name="layout.css" target="head"/> 
+            
+            <p:ajaxStatus rendered="#{empty showAjaxStatus or showAjaxStatus}" styleClass="ajaxStatus" >
+                <f:facet name="start">
+                    <h:outputText value="#{empty statusMessage ? 'Loading...':statusMessage}" style="background-color: white;font-size: 12px;color: black;" />
+                </f:facet>
+                <f:facet name="complete">
+                    <h:outputText value="" />
+                </f:facet>
+            </p:ajaxStatus>
+              <pe:layout id="all" widgetVar="mainLayout" fullPage="true"  stateCookie="#{not empty keepLayoutState and keepLayoutState}">
+                  <pe:layoutPane position="north" resizable="true" collapsible="true" size="#{empty stateController.stateItens ? '125':'155'}" minSize="125" rendered="#{empty showTopUnit or showTopUnit}" >
+                      <h:form id="headerForm">
+                          <ui:insert name="headerForm"/>
+                          <div id="before_logo"   class="ui-widget ui-widget-header ui-corner-all" >
+                              <ui:insert name="beforeLogo"/>
+                              <div id="logo" style="margin-top: -15px" >
+                                  <h1>#{logo}</h1>
+                                  <ui:insert name="logo"/>
+                              </div>
+                              <ui:insert name="afterLogo"/>
+                          </div>
+                          <div style="width:100%;overflow: hidden;" >
+                              <div align="center" id="menu" class="ui-widget ui-widget-content ui-corner-all" style="width:99%;padding:0 5px 0 5px">
+                                  <table width="100%">
+                                      <tr>
+                                          <td width="50%" align="left">
+                                              <ui:insert name="topLeftMenu"/>
+                                          </td>
+                                          <td width="50%" align="right">
+                                                <ui:insert name="topRightMenu"/>    
+                                         </td>
+                                      </tr>
+                                  </table>
+                              </div>
+                          </div>
+                          <framework:stateItens id="historyStack" />
+                      </h:form>  
+                  </pe:layoutPane>
+                  <pe:layoutPane position="center" style="margin-top: #{not empty stateController.stateItens ? '0': '-15px'}">
+                      <ui:insert name="topCenter"/>
+                      <div id="content" class="ui-widget">
+                          <div class="post">
+                              <p:outputPanel id="mainOutputPanel">
+                                  <ui:insert name="content">...</ui:insert>
+                              </p:outputPanel>
+                          </div>
+                      </div>
+                        
+                      <ui:insert name="centerBottom"/>
+                        
+                  </pe:layoutPane>
+                  
+                  
+                  <pe:layoutPane position="west" header="#{leftHeader}" resizable="true" collapsible="true" size="#{empty westSize ? 180 : westSize}" rendered="#{empty showLeftUnit or showLeftUnit}">
+                      <ui:insert name="left"/>
+                                   
+                  </pe:layoutPane>     
+                  
+                  <pe:layoutPane position="south" collapsible="true" size="#{empty southSize ? 60 : southSize}" resizable="true" >
+                      <div id="footer" class="ui-widget ui-widget-header ui-corner-all" >
+                          <ui:insert name="footer"/>
+                     </div>
+                  </pe:layoutPane>
+                               
+              </pe:layout>  
+              <ui:insert name="popup"/>
+                  
+        </h:body>
+       <ui:insert name="outer"/>
+    </f:view>
+</html>

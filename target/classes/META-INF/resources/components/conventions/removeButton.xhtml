@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:composite="http://java.sun.com/jsf/composite">
+
+
+    <composite:interface>
+      <composite:attribute name="value" default="Remove" />
+      <composite:attribute name="update"  />
+      <composite:attribute name="process" default="@this"  />
+      <composite:attribute name="mbean" required="true" />
+      <composite:attribute name="style" />
+      <composite:attribute name="styleClass" />
+      <composite:attribute name="persistentRemove" default="true" type="java.lang.Boolean" 
+                           shortDescription="if true it will perform a database deletion if false it will call removeFromList method in the mbean" />
+      <composite:attribute name="oncomplete" />
+      <composite:attribute name="ajax" default="true"/>
+  </composite:interface>
+
+    <composite:implementation>
+        
+        <!-- TODO - passar action por parametro invés de criar dois botões -->
+        <p:commandButton value="#{cc.attrs.value}" rendered="#{cc.attrs.persistentRemove}"  action="#{cc.attrs.mbean.delete}" update="#{cc.attrs.update}" 
+                       process="#{cc.attrs.process}" ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete}">
+        </p:commandButton>
+        <p:commandButton value="#{cc.attrs.value}" rendered="#{not cc.attrs.persistentRemove}" action="#{cc.attrs.mbean.removeFromList}" update="#{cc.attrs.update}" 
+                       process="#{cc.attrs.process}" ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete}">
+        </p:commandButton>
+
+    </composite:implementation>
+
+</html>
+
+
