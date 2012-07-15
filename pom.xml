@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jsf.conventions</groupId>
     <artifactId>conventions-core</artifactId>
-    <version>0.9.4</version>
+    <version>0.9.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>conventions-core</name>
     <description>
@@ -266,6 +266,17 @@
         </plugins>
         <finalName>conventions-core-${version}</finalName>
     </build>
-       
-      
+   <repositories>
+       <repository>
+        <id>apache-m2-snapshot</id>
+        <name>Apache Snapshot Repository</name>
+        <url>http://repository.apache.org/snapshots</url>
+      </repository>
+      <repository>
+            <id>prime-repo</id>
+            <name>Prime Technology Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+            <layout>default</layout>
+        </repository>  
+  </repositories>    
 </project>
