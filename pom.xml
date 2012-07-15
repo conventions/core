@@ -262,7 +262,14 @@
                     </execution>
                 </executions>
             </plugin>
-          
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                    <version>1.6</version>
+                    <configuration>
+                        <connectionType>connection</connectionType>
+                    </configuration>
+            </plugin>
         </plugins>
         <finalName>conventions-core-${version}</finalName>
     </build>
