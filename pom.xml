@@ -59,9 +59,8 @@
     
     <distributionManagement>
         <repository>
-            <id>conventions-core-repo-id</id>
-            <name>conventions-core-repo</name>
-            <url>https://github.com/rmpestano/conventions-core</url>
+            <id>nexus-site</id>
+            <url>http://central_nexus/server</url>
         </repository>
     </distributionManagement>
     <dependencies>
