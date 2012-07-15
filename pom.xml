@@ -59,7 +59,7 @@
     <scm>
         <connection>scm:git:git://github.com/rmpestano/conventions-core.git</connection>
         <developerConnection>scm:git:git@github.com:rmpestano/conventions-core.git</developerConnection>
-        <url>https://github.com/rmpestano/conventions-core</url>
+        <url>git@github.com:rmpestano/conventions-core.git</url>
     </scm>
     
     <distributionManagement>
