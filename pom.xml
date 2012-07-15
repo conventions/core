@@ -1,7 +1,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.jsf.conventions.core</groupId>
+    <groupId>com.jsf.conventions</groupId>
     <artifactId>conventions-core</artifactId>
     <version>0.9.4</version>
     <packaging>jar</packaging>
@@ -14,11 +14,11 @@
      
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mojarra.version>2.1.3</mojarra.version>
-        <myfaces.version>2.1.5</myfaces.version>
+        <mojarra.version>2.1.7</mojarra.version>
+        <myfaces.version>2.1.7</myfaces.version>
         <myfaces.codi.version>1.0.5</myfaces.codi.version>
         <hibernate.version>4.1.3.Final</hibernate.version>
-        <primefaces.version>3.4-SNAPSHOT</primefaces.version>
+        <primefaces.version>3.3.1</primefaces.version>
         <prime-ext.version>0.5.1</prime-ext.version>
     </properties>
     
@@ -59,7 +59,7 @@
     
     <dependencies>
         <!-- Java EE -->
-         <dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
@@ -119,13 +119,14 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-         <dependency>
+        
+        <!--PF -->
+        <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>3.3.1</version>
+            <version>${primefaces.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!--PF Extensions -->
         <dependency>
             <groupId>org.primefaces.extensions</groupId>
             <artifactId>primefaces-extensions</artifactId>
@@ -185,6 +186,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.8.1</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -210,6 +212,17 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.3</version>
+                        <extensions>true</extensions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.7</version>
                     </plugin>
                 </plugins>
             </build>
@@ -249,22 +262,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <source>${java.version.source}</source>
-                </configuration>
-            </plugin>
+          
         </plugins>
         <finalName>conventions-core-${version}</finalName>
     </build>
