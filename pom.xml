@@ -10,7 +10,12 @@
         <![CDATA[Conventions framework core.]]>
     </description>
     <url>https://github.com/rmpestano/conventions-core/</url>
-    
+     <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+        <relativePath />
+    </parent>
      
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -71,6 +76,7 @@
             <version>6.0</version>
             <scope>provided</scope>
         </dependency>
+       
        
         <dependency>
             <groupId>com.sun.faces</groupId>

@@ -7,7 +7,6 @@ package com.jsf.conventions.bean;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import com.jsf.conventions.event.ModalCallback;
-import com.jsf.conventions.model.AbstractBaseEntity;
 
  
 /**
