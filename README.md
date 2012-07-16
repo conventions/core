@@ -166,6 +166,7 @@ Conventions Framework is a set of components based on top of JSF 2.x, CDI, EJB(o
 
 
 **3 -  Components**
+***
  * Composite components are available at 
 
  
