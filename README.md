@@ -9,7 +9,7 @@ Conventions Framework is a set of components based on top of JSF 2.x, CDI, EJB(o
  Getting Started
 ------------------- 
 
-# This wiki will help you add Conventions Framework to your project
+## The above steps will help you add Conventions Framework to your project
 
  1 -  **Architectural dependences**
 ***
