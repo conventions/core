@@ -33,7 +33,7 @@ Conventions Framework is a set of components based on top of JSF 2.x, CDI, EJB(o
          <!-- Conventions -->
 
         <dependency>
-            <groupId>com.jsf.conventions</groupId>
+            <groupId>org.conventionsframework</groupId>
             <artifactId>conventions-core</artifactId>
             <version>0.9.4 (or 0.9.5-SNAPSHOT)</version>
         </dependency>

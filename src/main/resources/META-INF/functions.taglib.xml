@@ -5,7 +5,7 @@
     <namespace>http://conventions.com/fnc</namespace>
     <function>
         <function-name>concat</function-name>
-        <function-class>com.jsf.conventions.facelets.Functions</function-class>
+        <function-class>org.conventionsframework.facelets.Functions</function-class>
         <function-signature>
             java.lang.String concat(java.lang.String,java.lang.String, java.lang.String)
         </function-signature>
@@ -13,7 +13,7 @@
     
     <function>
         <function-name>size</function-name>
-        <function-class>com.jsf.conventions.facelets.Functions</function-class>
+        <function-class>org.conventionsframework.facelets.Functions</function-class>
         <function-signature>
             java.lang.Integer size(java.util.List)
         </function-signature>

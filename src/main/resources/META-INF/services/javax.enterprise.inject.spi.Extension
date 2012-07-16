@@ -1,1 +1,1 @@
-com.jsf.conventions.extension.CustomEntityManagerBootstrap
+org.conventionsframework.extension.CustomEntityManagerBootstrap

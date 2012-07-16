@@ -9,7 +9,7 @@
 </context-param>
 <context-param>
   <param-name>facelets.RESOURCE_RESOLVER</param-name>
-  <param-value>com.jsf.conventions.facelets.CustomResourceResolver</param-value>
+  <param-value>org.conventionsframework.facelets.CustomResourceResolver</param-value>
 </context-param>
 
 </web-app>

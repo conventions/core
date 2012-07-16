@@ -13,8 +13,8 @@
         <description><![CDATA[primefaces panelGrid extension to support multiple columns declaration.]]></description>
         <tag-name>panelGrid</tag-name>
         <component>
-            <component-type>com.jsf.conventions.component.PanelGrid</component-type>
-            <renderer-type>com.jsf.conventions.component.PanelGridRenderer</renderer-type>
+            <component-type>org.conventionsframework.component.PanelGrid</component-type>
+            <renderer-type>org.conventionsframework.component.PanelGridRenderer</renderer-type>
         </component>
         <attribute>
             <description><![CDATA[Unique identifier of the component in a naming container.]]></description>
@@ -40,8 +40,8 @@
         <description><![CDATA[primefaces panelGrid extension to support multiple columns declaration.]]></description>
         <tag-name>securityArea</tag-name>
         <component>
-            <component-type>com.jsf.conventions.component.SecurityArea</component-type>
-            <renderer-type>com.jsf.conventions.component.SecurityAreaRenderer</renderer-type>
+            <component-type>org.conventionsframework.component.SecurityArea</component-type>
+            <renderer-type>org.conventionsframework.component.SecurityAreaRenderer</renderer-type>
         </component>
         <attribute>
             <description><![CDATA[Unique identifier of the component in a naming container.]]></description>
@@ -73,8 +73,8 @@
         <description><![CDATA[renders a div which is aware if its children are valid or invalid]]></description>
         <tag-name>validationPanel</tag-name>
         <component>
-            <component-type>com.jsf.conventions.component.ValidationPanel</component-type>
-            <renderer-type>com.jsf.conventions.component.ValidationPanelRenderer</renderer-type>
+            <component-type>org.conventionsframework.component.ValidationPanel</component-type>
+            <renderer-type>org.conventionsframework.component.ValidationPanelRenderer</renderer-type>
         </component>
         <attribute>
             <description><![CDATA[Unique identifier of the component in a naming container.]]></description>
