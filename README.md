@@ -179,7 +179,7 @@ namespace.
 
     
 
-   `xmlns:conventions='http://conventions.com/ui'`
+   `xmlns:conventions='http://conventions.org/ui'`
 
  
 namespace.    

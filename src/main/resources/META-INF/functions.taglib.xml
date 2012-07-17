@@ -2,7 +2,7 @@
   "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
   "https://facelets.dev.java.net/source/browse/*checkout*/facelets/src/etc/facelet-taglib_1_0.dtd">
 <facelet-taglib xmlns="http://java.sun.com/JSF/Facelet">
-    <namespace>http://conventions.com/fnc</namespace>
+    <namespace>http://conventions.org/fnc</namespace>
     <function>
         <function-name>concat</function-name>
         <function-class>org.conventionsframework.facelets.Functions</function-class>
