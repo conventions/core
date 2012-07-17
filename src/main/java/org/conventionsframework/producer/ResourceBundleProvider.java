@@ -1,6 +1,6 @@
 package org.conventionsframework.producer;
 
-import org.conventionsframework.event.LanguageChangeEvent;
+import org.conventionsframework.event.LocaleChangeEvent;
 import org.conventionsframework.util.ResourceBundle;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ public class ResourceBundleProvider implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_BASE_NAME = "messages";
     private String baseName;
-    private String language;
+    private String currentLocale;
     private Map<String, ResourceBundle> bundleMap = new HashMap<String, ResourceBundle>();
     private Logger log = Logger.getLogger(getClass().getSimpleName());
     private ResourceBundle currentBundle;
@@ -36,7 +36,7 @@ public class ResourceBundleProvider implements Serializable {
         else{
             baseName = baseNameParam;
         }
-        language = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
+        currentLocale = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
         this.changeResourceBundle();
     }
 
@@ -45,31 +45,31 @@ public class ResourceBundleProvider implements Serializable {
      * sets the currentBundle based on the baseName and language
      */ 
     private void changeResourceBundle() {
-        if (bundleMap.containsKey(language)) {
-            currentBundle = bundleMap.get(language);
+        if (bundleMap.containsKey(currentLocale)) {
+            currentBundle = bundleMap.get(currentLocale);
 
         } else {
             try {
-                currentBundle = new ResourceBundle(getClass().getResourceAsStream(baseName + "_" + language + ".properties"));
-                bundleMap.put(language,currentBundle);
+                currentBundle = new ResourceBundle(getClass().getResourceAsStream(baseName + "_" + currentLocale + ".properties"));
+                bundleMap.put(currentLocale,currentBundle);
                 if(log.isLoggable(Level.FINE)){
-                	log.fine("Conventions: loaded resource bundle:"+baseName + "_" + language + ".properties");
+                	log.fine("Conventions: loaded resource bundle:"+baseName + "_" + currentLocale + ".properties");
                 }
             } catch (Exception e) {
             	if(log.isLoggable(Level.WARNING)){
-            		log.warning("Conventions: problems trying to find resource bundle:"+baseName + "_" + language + ".properties");
+            		log.warning("Conventions: problems trying to find resource bundle:"+baseName + "_" + currentLocale + ".properties");
             	}
             }
         }
 
     }
 
-    public String getLanguage() {
-            return language;
+    public String getCurrentLocale() {
+            return currentLocale;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setCurrentLocale(String locale) {
+        this.currentLocale = locale;
         this.changeResourceBundle();
     }
 
@@ -81,8 +81,8 @@ public class ResourceBundleProvider implements Serializable {
         this.currentBundle = currentBundle;
     }
     
-    public void onLanguageChange(@Observes LanguageChangeEvent languageChangeEvent){
-        this.setLanguage(languageChangeEvent.getLanguage());
+    public void onLocaleChange(@Observes LocaleChangeEvent localeChangeEvent){
+        this.setCurrentLocale(localeChangeEvent.getLocale());
     }
     
     
