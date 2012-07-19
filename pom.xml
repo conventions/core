@@ -61,7 +61,7 @@
         <developerConnection>scm:git:git@github.com:rmpestano/conventions-core.git</developerConnection>
         <url>git@github.com:rmpestano/conventions-core.git</url>
     </scm>
-    
+   
     <dependencies>
         <!-- Java EE -->
         <dependency>
@@ -124,44 +124,24 @@
             <artifactId>commons-lang</artifactId>
             <version>2.3</version>
         </dependency>
-            
         
-        <!--PF -->
-        <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-            <version>${primefaces.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.primefaces.extensions</groupId>
             <artifactId>primefaces-extensions</artifactId>
             <version>${prime-ext.version}</version>
         </dependency>
-      
-      <!-- extension 
-      
-       <dependency>
-            <groupId>org.jboss.solder</groupId>
-            <artifactId>solder-api</artifactId>
-            <scope>compile</scope>
-            <version>3.1.0.Final</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.solder</groupId>
-            <artifactId>solder-impl</artifactId>
-            <scope>compile</scope> 
-            <version>3.1.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.weld.se</groupId>
-            <artifactId>weld-se</artifactId>
-            <version>1.1.5.Final</version>
-           <scope>compile</scope> 
-        </dependency>-->
-          
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+             <!--override extensions PF version-->
+            <dependency>
+                <groupId>org.primefaces</groupId>
+                <artifactId>primefaces</artifactId>
+                <version>${primefaces.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     
     <profiles>
         <profile>
