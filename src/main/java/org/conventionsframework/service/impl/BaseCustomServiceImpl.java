@@ -303,4 +303,8 @@ public abstract class BaseCustomServiceImpl<T, K extends Serializable> implement
 
         return null;
     }
+    
+    public void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter){
+        getDao().addBasicFilterRestrictions(dc, externalFilter);
+    }
 }

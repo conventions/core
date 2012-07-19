@@ -41,7 +41,7 @@ public interface HibernateDao<T, Id extends Serializable> extends Serializable{
 
     List<T> findAll(final Integer first, final Integer max);
      
-    WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters, Map<String, Object> externalFilter);
+    WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters);
 
     int countAll();
     
@@ -79,7 +79,7 @@ public interface HibernateDao<T, Id extends Serializable> extends Serializable{
     
     List findByNativeQuery(String nativeQuery,Map params,Class entity,ResultTransformer rt,ScalarReturn scalar);
 
-    public EntityManager getEntityManager();
+     EntityManager getEntityManager();
     
-    
+    void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilters);
 }

@@ -46,7 +46,12 @@ public abstract class AbstractBaseConverter implements Converter {
 
     @Override
     public String getAsString(FacesContext fc, UIComponent uic, Object o) {
-        return o.toString();
+        if(o != null){
+            return o.toString();
+        }
+        else{
+            return "";
+        }
     }
 
 }

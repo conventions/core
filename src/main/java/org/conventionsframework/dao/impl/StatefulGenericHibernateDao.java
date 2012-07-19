@@ -218,27 +218,27 @@ public class StatefulGenericHibernateDao<T, Id extends Serializable> implements 
         return new WrappedData<T>(data, size);
     }
 
-    /**
+     /**
      * basic implementation of pagination without restrictions
      *
      * @param first
      * @param pageSize
      * @param sortField
      * @param sortOrder
-     * @param filters sortBy in primefaces datatable
-     * @param externalFilter filters outside datatable- eg: inputText, sliders,
+     * @param columnFilters primefaces datatable column filters
+     * @param externalFilters filters outside datatable- eg: inputText, sliders,
      * autocomplete etc..
-     * @return
+     * @return wrapped data with paginated list and rowCount
      */
     @Override
-    public WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters, Map<String, Object> externalFilter) {
+    public WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters) {
         DetachedCriteria dc = DetachedCriteria.forClass(persistentClass);
 
-        if (externalFilter != null && !externalFilter.isEmpty()) {
-            this.addBasicFilterRestrictions(dc, externalFilter);
+        if (externalFilters != null && !externalFilters.isEmpty()) {
+            this.addBasicFilterRestrictions(dc, externalFilters);
         }
-        if (filters != null && !filters.isEmpty()) {
-            this.addBasicFilterRestrictions(dc, filters);
+        if (columnFilters != null && !columnFilters.isEmpty()) {
+            this.addBasicFilterRestrictions(dc, columnFilters);
         }
         return this.findPaginated(first, pageSize, sortField, sortOrder, dc);
     }
@@ -327,7 +327,7 @@ public class StatefulGenericHibernateDao<T, Id extends Serializable> implements 
      * @param dc
      * @param externalFilter
      */
-    private void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter) {
+    public void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter) {
         for (Iterator<Entry<String, Object>> it = (Iterator<Entry<String, Object>>) externalFilter.entrySet().iterator(); it.hasNext();) {
             Entry<String, Object> entry = it.next();
             try {
@@ -347,8 +347,7 @@ public class StatefulGenericHibernateDao<T, Id extends Serializable> implements 
                         dc.add(Restrictions.eq(entry.getKey(), (Calendar)entry.getValue()));
                     }
                 } catch (Exception ex) {
-                    Logger.getLogger(StatefulGenericHibernateDao.class.getName()).log(Level.SEVERE, "Problem trying to infer restrictions from filter:" + ex.getMessage(), ex);
-                    ex.printStackTrace();
+                    Logger.getLogger(StatefulGenericHibernateDao.class.getName()).log(Level.SEVERE, "Problem trying to infer restrictions from filter:" + ex.getMessage());
                 }
         }
 

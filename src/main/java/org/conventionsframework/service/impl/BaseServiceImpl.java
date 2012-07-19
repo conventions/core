@@ -315,4 +315,8 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         }
         return null;
     }
+    
+    public void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter){
+        getDao().addBasicFilterRestrictions(dc, externalFilter);
+    }
 }
