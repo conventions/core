@@ -14,18 +14,12 @@ import javax.persistence.Transient;
  * @author rmpestano Aug 21, 2011 9:33:12 AM
  */
 @MappedSuperclass
-public abstract class AbstractBaseEntity<T extends Serializable> implements Serializable,SelectItemAware {
+public abstract class AbstractBaseEntity<T extends Serializable> implements Serializable {
   
 
     @Transient
     public boolean isTransient() {
         return getId() == null;
-    }
-    
-    @Transient
-    @Override
-    public String getLabel(){
-        return this.toString();
     }
     
     @Override
