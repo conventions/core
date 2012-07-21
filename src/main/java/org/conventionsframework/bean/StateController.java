@@ -34,9 +34,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.conventionsframework.producer.ResourceBundleProvider;
-import org.conventionsframework.qualifier.SecurityMethod;
-import org.conventionsframework.util.MessagesController;
-import org.conventionsframework.util.ResourceBundle;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
@@ -245,7 +242,12 @@ public class StateController implements Serializable{
         if(resourceBundleProvider.getCurrentBundle() == null){
             return title;
         }
-         String i18nTitle = resourceBundleProvider.getCurrentBundle().getString(title);
+         String i18nTitle = null;
+         try{
+             i18nTitle  = resourceBundleProvider.getCurrentBundle().getString(title);
+         }catch(java.util.MissingResourceException re){
+             
+         }
          if(i18nTitle != null){
                   return i18nTitle;
           } 
