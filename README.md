@@ -183,7 +183,7 @@ Conventions Framework is a set of components based on top of JSF 2.x, CDI, EJB(o
      </repository>
 ´
 
-**2.2 - without maven:** you can download [conventions jar at maven central] (http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.conventionsframework%22) or snapshot version here(https://oss.sonatype.org/content/repositories/snapshots/org/conventionsframework/conventions-core/) in the download section, also you will need to download and add Hibernate, Primefaces and Apache Commons Lang3 to your project.
+**2.2 - without maven:** you can download [Conventions at maven central] (http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.conventionsframework%22) or snapshot version here(https://oss.sonatype.org/content/repositories/snapshots/org/conventionsframework/conventions-core/) in the download section, also you will need to download and add Hibernate, Primefaces and Apache Commons Lang3 to your project.
 
 
 
