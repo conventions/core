@@ -37,7 +37,17 @@ Conventions Framework is a set of components based on top of JSF 2.x, CDI, EJB(o
             <artifactId>conventions-core</artifactId>
             <version>0.9.4 (or 0.9.5-SNAPSHOT)</version>
             
-            <!-- not avaiable until https://github.com/rmpestano/conventions/issues/4 is resolved -->
+            <!-- for Snapshots you must declare the sonatype snapshot repository 
+            
+            <repositories> 
+              <repository>
+               <id>sonatype snapshots</id>
+               <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+               <snapshots><enabled>true</enabled></snapshots>
+              </repository>
+           </repositories>
+           
+            -->
             
         </dependency>
  
