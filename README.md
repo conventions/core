@@ -37,7 +37,17 @@ Conventions Framework is a set of components based on top of JSF 2.x, CDI, EJB(o
             <artifactId>conventions-core</artifactId>
             <version>0.9.4 (or 0.9.5-SNAPSHOT)</version>
             
-            <!-- not avaiable until https://github.com/rmpestano/conventions/issues/4 is resolved -->
+            <!-- for Snapshots you must declare the sonatype snapshot repository 
+            
+            <repositories> 
+              <repository>
+               <id>sonatype snapshots</id>
+               <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+               <snapshots><enabled>true</enabled></snapshots>
+              </repository>
+           </repositories>
+           
+            -->
             
         </dependency>
  
@@ -163,9 +173,18 @@ Conventions Framework is a set of components based on top of JSF 2.x, CDI, EJB(o
             <url>http://repository.primefaces.org</url>
             <layout>default</layout>
         </repository> 
+        
+      <!-- conventions snapshot repo, for releases you dont need to declare a repository cause conventions is deployed at maven central -->
+      
+      <repository>
+               <id>sonatype snapshots</id>
+               <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+               <snapshots><enabled>true</enabled></snapshots>
+     </repository>
 ´
 
-**2.2 - without maven:** you can download [conventions jar] (/rmpestano/conventions-core/downloads) in the download section, also you will need to download and add Hibernate, Primefaces and Apache Commons Lang3 to your project.
+**2.2 - without maven:** you can download conventions [releases at maven central] (http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.conventionsframework%22) or [snapshot versions here] (https://oss.sonatype.org/content/repositories/snapshots/org/conventionsframework/conventions-core/), also you will need to download and add Hibernate, Primefaces and Apache Commons Lang3 to your project.
+
 
 
 **3 -  Components**
