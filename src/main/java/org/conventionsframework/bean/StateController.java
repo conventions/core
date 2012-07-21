@@ -33,6 +33,10 @@ import javax.faces.event.MethodExpressionActionListener;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
+import org.conventionsframework.producer.ResourceBundleProvider;
+import org.conventionsframework.qualifier.SecurityMethod;
+import org.conventionsframework.util.MessagesController;
+import org.conventionsframework.util.ResourceBundle;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
@@ -50,6 +54,9 @@ public class StateController implements Serializable{
     private LinkedList<StateItem> stateItens = new LinkedList<StateItem>();
     @Inject 
     private Event<StatePullEvent> statePullEvent;
+    
+    @Inject
+    private ResourceBundleProvider resourceBundleProvider;
     
     private MenuModel stateModel;
 
@@ -168,7 +175,7 @@ public class StateController implements Serializable{
               MenuItem item = new MenuItem();  
               item.setAjax(stateItem.isAjax());
               item.setUpdate(stateItem.getUpdate());
-              item.setValue(stateItem.getTitle()); 
+              item.setValue(this.getItemTitle(stateItem.getTitle())); 
               item.setId("item_"+UUID.randomUUID().toString().replaceAll("-", ""));
               if(!"".equals(stateItem.getPage())){
                  item.setActionExpression(this.createMethodExpression(stateItem.getPage(), String.class,new Class[]{}));
@@ -232,6 +239,17 @@ public class StateController implements Serializable{
    
     public void setStateItens(LinkedList<StateItem> stateItems) {
         this.stateItens = stateItems;
+    }
+
+    private String getItemTitle(String title) {
+        if(resourceBundleProvider.getCurrentBundle() == null){
+            return title;
+        }
+         String i18nTitle = resourceBundleProvider.getCurrentBundle().getString(title);
+         if(i18nTitle != null){
+                  return i18nTitle;
+          } 
+         return title;
     }
     
 }

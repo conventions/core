@@ -38,7 +38,6 @@ public class StatelessHibernateService<T,K extends Serializable> extends BaseSer
         } catch (Exception ex) {
             if(log.isLoggable(Level.WARNING)){
                 log.log(Level.WARNING, "Conventions:could not resolve persistent class for service:" + this.getClass().getSimpleName() + ", message:"+ex.getMessage());
-                ex.printStackTrace();
                 
             }
         }

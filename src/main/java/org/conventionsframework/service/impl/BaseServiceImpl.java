@@ -86,9 +86,20 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     public void afterRemove(T entity) {
     }
 
+     /**
+     * 
+     * @param first
+     * @param pageSize
+     * @param sortField
+     * @param sortOrder
+     * @param columnFilters primefaces datatable column filters
+     * @param externalFilters filters outside datatable- eg: inputText, sliders,
+     * autocomplete etc..
+     * @return wrapped data with paginated list and rowCount
+     */
     @Override
-    public WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters, Map<String, Object> externalFilter) {
-        return getDao().configFindPaginated(first, pageSize, sortField, sortOrder, filters, externalFilter);
+    public WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilter) {
+        return getDao().configFindPaginated(first, pageSize, sortField, sortOrder, columnFilters, externalFilter);
     }
 
     @Override

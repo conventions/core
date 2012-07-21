@@ -12,8 +12,6 @@ import java.util.Map;
 import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.qualifier.CustomService;
 import org.conventionsframework.qualifier.PersistentClass;
-import org.conventionsframework.qualifier.StatefulService;
-import org.conventionsframework.qualifier.StatelessService;
 import org.conventionsframework.service.BaseService;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
@@ -85,9 +83,20 @@ public abstract class BaseCustomServiceImpl<T, K extends Serializable> implement
     public void afterRemove(T entity) {
     }
 
+    /**
+     * 
+     * @param first
+     * @param pageSize
+     * @param sortField
+     * @param sortOrder
+     * @param columnFilters primefaces datatable column filters
+     * @param externalFilters filters outside datatable- eg: inputText, sliders,
+     * autocomplete etc..
+     * @return wrapped data with paginated list and rowCount
+     */
     @Override
-    public WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters, Map<String, Object> externalFilter) {
-        return getDao().configFindPaginated(first, pageSize, sortField, sortOrder, filters, externalFilter);
+    public WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters) {
+        return getDao().configFindPaginated(first, pageSize, sortField, sortOrder, columnFilters, externalFilters);
     }
 
     @Override
