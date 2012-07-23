@@ -12,7 +12,6 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.entitymanager.provider.EntityManagerProvider;
-import org.conventionsframework.entitymanager.provider.Type;
 import org.conventionsframework.qualifier.CustomHibernateDao;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -22,6 +21,7 @@ import java.util.logging.Logger;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
+import org.conventionsframework.qualifier.Type;
 
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;

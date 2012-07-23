@@ -20,6 +20,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
+import org.conventionsframework.qualifier.Type;
 
 /**
  * 
@@ -27,7 +28,7 @@ import javax.persistence.PersistenceContextType;
  */
 
 @Stateless  
-@ConventionsEntityManager(type= Type.TRANSACTION)
+@ConventionsEntityManager(type= Type.STATELESS)
 public class TransactionEntityManagerProvider implements EntityManagerProvider{
     
      @PersistenceContext(type = PersistenceContextType.TRANSACTION)

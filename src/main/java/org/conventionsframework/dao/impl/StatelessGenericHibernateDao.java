@@ -11,7 +11,6 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.entitymanager.provider.EntityManagerProvider;
-import org.conventionsframework.entitymanager.provider.Type;
 import org.conventionsframework.qualifier.ConventionsEntityManager;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.StatelessHibernateDao;
@@ -23,6 +22,7 @@ import java.util.logging.Logger;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.conventionsframework.qualifier.Type;
 
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
@@ -42,7 +42,7 @@ import org.primefaces.model.SortOrder;
 public class StatelessGenericHibernateDao<T, Id extends Serializable> implements HibernateDao<T, Id>, Serializable {
 
     private Class<T> persistentClass;
-    @Inject @ConventionsEntityManager(type= Type.TRANSACTION)
+    @Inject @ConventionsEntityManager(type= Type.STATELESS)
     private EntityManagerProvider entityManagerProvider;
     private Session session;
     @Inject @Log

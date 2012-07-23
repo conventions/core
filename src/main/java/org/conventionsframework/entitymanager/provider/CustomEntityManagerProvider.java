@@ -17,6 +17,7 @@ package org.conventionsframework.entitymanager.provider;
 
 import org.conventionsframework.qualifier.ConventionsEntityManager;
 import javax.persistence.EntityManager;
+import org.conventionsframework.qualifier.Type;
 
 /**
  *

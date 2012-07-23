@@ -7,20 +7,20 @@ package org.conventionsframework.service.impl;
 import org.conventionsframework.dao.HibernateDao;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.StatelessHibernateDao;
-import org.conventionsframework.qualifier.StatelessService;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.conventionsframework.qualifier.*;
 
 /**
  * Stateless EJB based service
  * 
  * @author rmpestano Dec 4, 2011 9:40:01 PM
  */
-@StatelessService
+@Service(type= Type.STATEFUL)
 @Named(value="statelessHibernateService")
 public class StatelessHibernateService<T,K extends Serializable> extends BaseServiceImpl<T, K> {
     

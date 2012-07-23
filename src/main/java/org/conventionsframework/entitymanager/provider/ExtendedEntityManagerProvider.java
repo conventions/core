@@ -20,13 +20,14 @@ import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
+import org.conventionsframework.qualifier.Type;
 
 /** 
  * @author Rafael M. Pestano jun 19 11:10 PM
  * 
  */
 @Stateful
-@ConventionsEntityManager(type= Type.EXTENDED)
+@ConventionsEntityManager(type= Type.STATEFUL)
 public class ExtendedEntityManagerProvider implements EntityManagerProvider{
     
      @PersistenceContext(type = PersistenceContextType.EXTENDED)

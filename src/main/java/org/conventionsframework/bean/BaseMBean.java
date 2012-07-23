@@ -8,7 +8,6 @@ import org.conventionsframework.util.ResourceBundle;
 import org.conventionsframework.util.BeanManagerController;
 import org.conventionsframework.util.MessagesController;
 import org.conventionsframework.util.AnnotationUtils;
-import org.conventionsframework.util.Paginator;
 import org.conventionsframework.event.ModalInitialization;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -26,6 +25,7 @@ import org.conventionsframework.service.BaseService;
 import java.lang.annotation.Annotation;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import org.conventionsframework.paginator.Paginator;
 
 /**
  * Base implementation of managedBeans

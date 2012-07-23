@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.conventionsframework.entitymanager.provider;
+package org.conventionsframework.qualifier;
 
 /**
  *
  * @author rmpestano
  */
 public enum Type {
-    EXTENDED,TRANSACTION,CUSTOM
+    STATEFUL,STATELESS,CUSTOM
 }

@@ -6,7 +6,6 @@ package org.conventionsframework.service.impl;
 
 import org.conventionsframework.dao.HibernateDao;
 import org.conventionsframework.qualifier.CustomHibernateDao;
-import org.conventionsframework.qualifier.CustomService;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.service.BaseService;
 import java.io.Serializable;
@@ -15,6 +14,8 @@ import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.conventionsframework.qualifier.Service;
+import org.conventionsframework.qualifier.Type;
 
 /**
  * Non JavaEE(EJB) dependent Service
@@ -27,9 +28,9 @@ import javax.inject.Named;
  * 
  * @author Rafael M. Pestano Jun 12, 2012 7:18:29 PM
  */
-@CustomService
+@Service(type= Type.CUSTOM)
 @Named(value="customHibernateService")
-public class CustomHibernateService<T, K extends Serializable> extends BaseCustomServiceImpl<T, K> implements BaseService<T, K> {
+public class CustomHibernateService<T, K extends Serializable> extends BaseCustomServiceImpl<T, K>  {
 
     @Inject @Log
     private transient Logger log;

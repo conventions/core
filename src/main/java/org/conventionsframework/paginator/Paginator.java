@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.conventionsframework.util;
+package org.conventionsframework.paginator;
 
+import org.conventionsframework.util.*;
 import org.conventionsframework.model.WrappedData;
-import org.conventionsframework.qualifier.Service;
 import org.conventionsframework.service.BaseService;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
+import org.conventionsframework.qualifier.PaginatorService;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -45,12 +46,12 @@ public class Paginator<T> implements Serializable{
      
     @Inject 
     public void Paginator(InjectionPoint ip){
-        if(ip != null && ip.getAnnotated().isAnnotationPresent(Service.class)){
-            Service service = ip.getAnnotated().getAnnotation(Service.class);
+        if(ip != null && ip.getAnnotated().isAnnotationPresent(PaginatorService.class)){
+            PaginatorService paginatorService = ip.getAnnotated().getAnnotation(PaginatorService.class);
             try{
-                 baseService = (BaseService)BeanManagerController.getBeanByName(service.name());
-                 if(!service.entity().isPrimitive() && getBaseService().getPersistentClass() == null || getBaseService().getPersistentClass().isPrimitive()){
-                    getBaseService().getDao().setPersistentClass(service.entity());
+                 baseService = (BaseService)BeanManagerController.getBeanByName(paginatorService.name());
+                 if(!paginatorService.entity().isPrimitive() && (getBaseService().getPersistentClass() == null || getBaseService().getPersistentClass().isPrimitive())){
+                    getBaseService().getDao().setPersistentClass(paginatorService.entity());
                 }
                  initDataModel();
             }catch(Exception ex){

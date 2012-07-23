@@ -65,7 +65,7 @@ public class ResourceBundleProvider implements Serializable {
     }
 
     public String getCurrentLocale() {
-            return currentLocale;
+             return currentLocale;
     }
 
     public void setCurrentLocale(String locale) {

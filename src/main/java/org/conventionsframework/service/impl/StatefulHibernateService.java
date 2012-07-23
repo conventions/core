@@ -5,7 +5,6 @@
 
 package org.conventionsframework.service.impl;
 
-import org.conventionsframework.qualifier.StatefulService;
 import org.conventionsframework.dao.HibernateDao;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.StatefulHibernateDao;
@@ -15,13 +14,15 @@ import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.conventionsframework.qualifier.Service;
+import org.conventionsframework.qualifier.Type;
 
 /**
  *
  * Stateful EJB based service
  * @author rmpestano
  */
-@StatefulService
+@Service(type= Type.STATELESS)
 @Named(value="statefulHibernateService")
 public class StatefulHibernateService<T,K extends Serializable> extends BaseServiceImpl<T, K>{
 

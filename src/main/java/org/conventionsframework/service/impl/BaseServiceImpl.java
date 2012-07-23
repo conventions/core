@@ -13,8 +13,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.qualifier.PersistentClass;
-import org.conventionsframework.qualifier.StatefulService;
-import org.conventionsframework.qualifier.StatelessService;
 import org.conventionsframework.service.BaseService;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
@@ -22,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.persistence.EntityManager;
+import org.conventionsframework.qualifier.Service;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -295,16 +294,9 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         //inspect injection point
         if (ip != null && ip.getAnnotated() != null) {
 
-            if (ip.getAnnotated().isAnnotationPresent(StatelessService.class)) {
+            if (ip.getAnnotated().isAnnotationPresent(Service.class)) {
                 //try to get persistentClass from injectionPoint via @StatelessService(entity=SomeClass.class) annotation
-                Class persistentClass = ip.getAnnotated().getAnnotation(StatelessService.class).entity();
-                if (!persistentClass.isPrimitive()) {
-                    return persistentClass;
-                }
-            }
-            if (ip.getAnnotated().isAnnotationPresent(StatefulService.class)) {
-                //try to get persistentClass from injectionPoint via @StatefulService(entity=SomeClass.class) annotation
-                Class persistentClass = ip.getAnnotated().getAnnotation(StatefulService.class).entity();
+                Class persistentClass = ip.getAnnotated().getAnnotation(Service.class).entity();
                 if (!persistentClass.isPrimitive()) {
                     return persistentClass;
                 }
@@ -321,8 +313,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         try {
             return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
         } catch (Exception ex) {
-            ex.printStackTrace();
-            Logger.getLogger(getClass().getSimpleName()).log(Level.WARNING, "Conventions: could not find persistent class for service:" + getClass().getSimpleName() + " it will be resolved to null.");
+            Logger.getLogger(getClass().getSimpleName()).log(Level.WARNING, "Conventions service: could not find persistent class for service:" + getClass().getSimpleName() + " it will be resolved to null.(ignore this warn if you're using @Service annotation)");
         }
         return null;
     }
