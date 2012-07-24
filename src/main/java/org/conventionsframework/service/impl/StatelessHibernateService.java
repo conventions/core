@@ -4,9 +4,8 @@
  */
 package org.conventionsframework.service.impl;
 
-import org.conventionsframework.dao.HibernateDao;
+import org.conventionsframework.dao.BaseDao;
 import org.conventionsframework.qualifier.Log;
-import org.conventionsframework.qualifier.StatelessHibernateDao;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +31,7 @@ public class StatelessHibernateService<T,K extends Serializable> extends BaseSer
     }
     
     @Inject
-    public void StatelessHibernateService(@StatelessHibernateDao HibernateDao<T, K> hibernateDao,InjectionPoint ip){
+    public void StatelessHibernateService(@Dao(type= Type.STATELESS) BaseDao<T, K> hibernateDao,InjectionPoint ip){
         try {
              hibernateDao.setPersistentClass(this.findPersistentClass(ip));
         } catch (Exception ex) {

@@ -28,7 +28,7 @@ import org.conventionsframework.qualifier.Type;
  */
 @Stateful
 @ConventionsEntityManager(type= Type.STATEFUL)
-public class ExtendedEntityManagerProvider implements EntityManagerProvider{
+public class StatefulEntityManagerProvider implements EntityManagerProvider{
     
      @PersistenceContext(type = PersistenceContextType.EXTENDED)
      private EntityManager entityManager;

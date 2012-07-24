@@ -14,7 +14,7 @@ import javax.inject.Qualifier;
 @Qualifier
 @Retention(RUNTIME)
 @Target({TYPE, FIELD,PARAMETER,METHOD})
-public @interface ConventionsEntityManager {
+public @interface Dao {
     
     Type type() default Type.CUSTOM;
     

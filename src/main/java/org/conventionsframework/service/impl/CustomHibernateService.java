@@ -4,18 +4,15 @@
  */
 package org.conventionsframework.service.impl;
 
-import org.conventionsframework.dao.HibernateDao;
-import org.conventionsframework.qualifier.CustomHibernateDao;
+import org.conventionsframework.dao.BaseDao;
 import org.conventionsframework.qualifier.Log;
-import org.conventionsframework.service.BaseService;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.conventionsframework.qualifier.Service;
-import org.conventionsframework.qualifier.Type;
+import org.conventionsframework.qualifier.*;
 
 /**
  * Non JavaEE(EJB) dependent Service
@@ -39,7 +36,7 @@ public class CustomHibernateService<T, K extends Serializable> extends BaseCusto
     }
 
     @Inject
-    public void CustomHibernateService(@CustomHibernateDao HibernateDao<T,K> hibernateDao, InjectionPoint ip) {
+    public void CustomHibernateService(@Dao(type= Type.CUSTOM) BaseDao<T,K> hibernateDao, InjectionPoint ip) {
         try {
             hibernateDao.setPersistentClass(this.findPersistentClass(ip));
         } catch (Exception ex) {

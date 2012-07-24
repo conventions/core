@@ -29,7 +29,7 @@ import org.conventionsframework.qualifier.Type;
 
 @Stateless  
 @ConventionsEntityManager(type= Type.STATELESS)
-public class TransactionEntityManagerProvider implements EntityManagerProvider{
+public class StatelessEntityManagerProvider implements EntityManagerProvider{
     
      @PersistenceContext(type = PersistenceContextType.TRANSACTION)
      private EntityManager entityManager;

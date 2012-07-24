@@ -4,7 +4,7 @@
  */
 package org.conventionsframework.service.impl;
 
-import org.conventionsframework.dao.HibernateDao;
+import org.conventionsframework.dao.BaseDao;
 import org.conventionsframework.exception.BusinessException;
 import java.io.Serializable;
 import java.util.List;
@@ -36,7 +36,7 @@ import org.primefaces.model.SortOrder;
  */
 public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
-    protected HibernateDao<T,K> dao;
+    protected BaseDao<T,K> dao;
     
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -169,11 +169,11 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     @Override
-    public HibernateDao<T,K> getDao() {
+    public BaseDao<T,K> getDao() {
         return dao;
     }
 
-    public void setDao(HibernateDao<T,K> dao) {
+    public void setDao(BaseDao<T,K> dao) {
         this.dao = dao;
     }
 
