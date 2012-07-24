@@ -1,3 +1,4 @@
+ 
 package org.conventionsframework.qualifier;
 
 import static java.lang.annotation.ElementType.TYPE;
@@ -12,18 +13,11 @@ import javax.inject.Qualifier;
 
 @Qualifier
 @Retention(RUNTIME)
-@Target({TYPE, FIELD, PARAMETER, METHOD})
-public @interface Service {
-
-    @Nonbinding
-    String name() default "";
-
-    @Nonbinding
-    Class entity() default Byte.class;
-
-    Type type() default Type.CUSTOM;
+@Target({TYPE, FIELD,PARAMETER,METHOD})
+public @interface ConventionsBundle {
     
-    public static final String STATELESS = "statelessHibernateService";
-    public static final String STATEFUL = "statefulHibernateService";
-    public static final String CUSTOM = "customHibernateService";
+    
+    
+    
 }
+

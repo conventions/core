@@ -19,6 +19,12 @@ import org.conventionsframework.qualifier.BeanState;
 import org.conventionsframework.qualifier.BeanStates;
 import org.conventionsframework.qualifier.Service;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.Id;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -26,31 +32,32 @@ import java.lang.annotation.Annotation;
  */
 public class AnnotationUtils {
 
-    public static Service findServiceAnnotation(Class c){
-         for (Annotation annotation : c.getAnnotations()) {
+    public static Service findServiceAnnotation(Class c) {
+        for (Annotation annotation : c.getAnnotations()) {
             if (annotation instanceof Service) {
                 return (Service) annotation;
             }
         }
         return null;
     }
-    
-    public static BeanState findStateAnnotation(Class c){
-         for (Annotation annotation : c.getAnnotations()) {
+
+    public static BeanState findStateAnnotation(Class c) {
+        for (Annotation annotation : c.getAnnotations()) {
             if (annotation instanceof BeanState) {
                 return (BeanState) annotation;
             }
         }
         return null;
     }
-    public static BeanStates findStatesAnnotation(Class c){
-         for (Annotation annotation : c.getAnnotations()) {
+
+    public static BeanStates findStatesAnnotation(Class c) {
+        for (Annotation annotation : c.getAnnotations()) {
             if (annotation instanceof BeanStates) {
                 return (BeanStates) annotation;
             }
         }
         return null;
     }
-    
+
     
 }

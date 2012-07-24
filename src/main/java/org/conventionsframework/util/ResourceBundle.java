@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
+import org.conventionsframework.qualifier.ConventionsBundle;
 
+@ConventionsBundle
 public class ResourceBundle extends java.util.PropertyResourceBundle implements Serializable {
 
 

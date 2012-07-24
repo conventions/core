@@ -5,7 +5,6 @@
 package org.conventionsframework.service;
 
 import org.conventionsframework.dao.BaseDao;
-import org.conventionsframework.model.AbstractBaseEntity;
 import java.io.Serializable;
 
 /**

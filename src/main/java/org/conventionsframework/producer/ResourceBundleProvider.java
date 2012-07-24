@@ -9,6 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Default;
+import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
@@ -73,6 +76,7 @@ public class ResourceBundleProvider implements Serializable {
         this.changeResourceBundle();
     }
 
+    @Produces @Default @Any
     public ResourceBundle getCurrentBundle() {
         return currentBundle;
     }

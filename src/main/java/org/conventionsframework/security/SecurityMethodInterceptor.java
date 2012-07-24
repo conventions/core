@@ -4,7 +4,6 @@
  */
 package org.conventionsframework.security;
 
-import org.conventionsframework.producer.ResourceBundleProvider;
 import org.conventionsframework.qualifier.SecurityMethod;
 import org.conventionsframework.util.MessagesController;
 import org.conventionsframework.util.ResourceBundle;
@@ -21,7 +20,7 @@ import javax.interceptor.InvocationContext;
 public abstract class SecurityMethodInterceptor implements Serializable {
 
     @Inject
-    private ResourceBundleProvider resourceBundleProvider;
+    private ResourceBundle  resourceBundle;
 
     @AroundInvoke
     public Object checkPermission(InvocationContext ic) throws Exception {
@@ -57,10 +56,10 @@ public abstract class SecurityMethodInterceptor implements Serializable {
     }
 
     private String getFatalMessage(String message) {
-        if (resourceBundleProvider.getCurrentBundle() != null) {
+        if (resourceBundle  != null) {
             String i18nMessage = null;
             try {
-                i18nMessage = resourceBundleProvider.getCurrentBundle().getString(message);
+                i18nMessage = resourceBundle.getString(message);
             } catch (java.util.MissingResourceException re) {
             }
             if (i18nMessage != null) {

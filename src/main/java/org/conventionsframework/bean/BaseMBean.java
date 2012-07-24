@@ -167,13 +167,27 @@ public abstract class BaseMBean<T> implements Serializable {
 
     //actions
     public void store() {
+        baseService.store(entity);
         if (isInsertState()) {
             MessagesController.addInfo(getCreateMessage());
         } else {
             MessagesController.addInfo(getUpdateMessage());
         }
-        baseService.store(entity);
         setBeanState(CrudState.UPDATE);
+    }
+    
+    public void save(){
+         baseService.saveOrUpdate(entity);
+         if (isInsertState()) {
+            MessagesController.addInfo(getCreateMessage());
+        } else {
+            MessagesController.addInfo(getUpdateMessage());
+        }
+    }
+    
+    public void save(String msg){
+        baseService.saveOrUpdate(entity);
+        MessagesController.addInfo(msg);
     }
 
     public void delete() {
