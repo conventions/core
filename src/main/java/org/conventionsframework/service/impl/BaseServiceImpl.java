@@ -33,8 +33,7 @@ import org.primefaces.model.SortOrder;
  * EJB base service
  *
  * @author Rafael M. Pestano Mar 19, 2011 11:55:37 AM
- */
-public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
+ */public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
     protected BaseDao<T,K> dao;
     
@@ -75,7 +74,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    private void doRemove(T entity) {
+    public void doRemove(T entity) {
         this.beforeRemove(entity);
         this.delete(entity);
         this.afterRemove(entity);

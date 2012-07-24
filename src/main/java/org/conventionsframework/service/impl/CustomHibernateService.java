@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
 import org.conventionsframework.qualifier.*;
 
 /**
@@ -26,8 +27,8 @@ import org.conventionsframework.qualifier.*;
  * @author Rafael M. Pestano Jun 12, 2012 7:18:29 PM
  */
 @Service(type= Type.CUSTOM)
-@Named(value="customHibernateService")
-public class CustomHibernateService<T, K extends Serializable> extends BaseCustomServiceImpl<T, K>  {
+@Named(value=Service.CUSTOM)
+public class CustomHibernateService<T, K extends Serializable> extends BaseServiceImpl<T, K>  {
 
     @Inject @Log
     private transient Logger log;
@@ -47,5 +48,56 @@ public class CustomHibernateService<T, K extends Serializable> extends BaseCusto
         super.setDao(hibernateDao);
 
     }
+
+    @Override
+    @Transactional
+    public void doStore(T entity) {
+        super.doStore(entity);
+    }
+
+    @Override
+    @Transactional
+    public void doRemove(T entity) {
+        super.doRemove(entity);
+    }
+
+    @Override
+    @Transactional
+    public void delete(T entity) {
+        super.delete(entity);
+    }
+
+    @Override
+    public void remove(T entity) {
+        super.remove(entity);
+    }
+
+    @Override
+    @Transactional
+    public void save(T entity) {
+        super.save(entity);
+    }
+
+    @Override
+    @Transactional
+    public void saveOrUpdate(T entity) {
+        super.saveOrUpdate(entity);
+    }
+
+    @Override
+    public void store(T entity) {
+        super.store(entity);
+    }
+    
+    
+
+    @Override
+    @Transactional
+    public void update(T entity) {
+        super.update(entity);
+    }
+
+    
+    
 
 }

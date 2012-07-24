@@ -27,7 +27,7 @@ import org.conventionsframework.qualifier.Type;
  * @author Rafael M. Pestano jun 19 11:12 PM
  */
 
-@Stateless  
+@Stateless
 @ConventionsEntityManager(type= Type.STATELESS)
 public class StatelessEntityManagerProvider implements EntityManagerProvider{
     

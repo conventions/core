@@ -9,6 +9,7 @@ import org.conventionsframework.qualifier.Log;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,8 +20,8 @@ import org.conventionsframework.qualifier.*;
  * 
  * @author rmpestano Dec 4, 2011 9:40:01 PM
  */
-@Service(type= Type.STATEFUL)
-@Named(value="statelessHibernateService")
+@Service(type= Type.STATELESS)
+@Named(value=Service.STATELESS)
 public class StatelessHibernateService<T,K extends Serializable> extends BaseServiceImpl<T, K> {
     
     @Inject @Log

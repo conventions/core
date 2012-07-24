@@ -10,6 +10,7 @@ import org.conventionsframework.qualifier.Log;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Stateful;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,8 +21,8 @@ import org.conventionsframework.qualifier.*;
  * Stateful EJB based service
  * @author rmpestano
  */
-@Service(type= Type.STATELESS)
-@Named(value="statefulHibernateService")
+@Service(type= Type.STATEFUL)
+@Named(value=Service.STATEFUL)
 public class StatefulHibernateService<T,K extends Serializable> extends BaseServiceImpl<T, K>{
 
     @Inject @Log
@@ -31,7 +32,7 @@ public class StatefulHibernateService<T,K extends Serializable> extends BaseServ
     }
 
     @Inject
-    public void StatefulHibernateService(@Dao(type= Type.STATELESS) BaseDao<T, K> hibernateDao,InjectionPoint ip) {
+    public void StatefulHibernateService(@Dao(type= Type.STATEFUL) BaseDao<T, K> hibernateDao,InjectionPoint ip) {
           try {
              hibernateDao.setPersistentClass(this.findPersistentClass(ip));
         } catch (Exception ex) {

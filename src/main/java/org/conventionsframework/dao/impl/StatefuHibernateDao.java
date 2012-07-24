@@ -4,6 +4,7 @@
 package org.conventionsframework.dao.impl;
 
 import java.io.Serializable;
+import javax.ejb.Stateful;
 import javax.inject.Named;
 import org.conventionsframework.entitymanager.provider.EntityManagerProvider;
 import org.conventionsframework.qualifier.ConventionsEntityManager;
