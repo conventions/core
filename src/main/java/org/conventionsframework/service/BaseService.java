@@ -4,14 +4,14 @@
  */
 package org.conventionsframework.service;
 
-import org.conventionsframework.dao.BaseDao;
+import org.conventionsframework.dao.BaseHibernateDao;
 import java.io.Serializable;
 
 /**
  *
  * @author Rafael M. Pestano Mar 19, 2011 9:13:05 AM
  */
-public interface BaseService<T, Id extends Serializable> extends BaseDao<T, Id> {
+public interface BaseService<T, Id extends Serializable> extends BaseHibernateDao<T, Id> {
 
     void store(T Entity);
 
@@ -25,6 +25,6 @@ public interface BaseService<T, Id extends Serializable> extends BaseDao<T, Id> 
 
     void afterRemove(T entity);
     
-    BaseDao getDao();
+    BaseHibernateDao getDao();
     
 }

@@ -4,7 +4,7 @@
  */
 package org.conventionsframework.service.impl;
 
-import org.conventionsframework.dao.BaseDao;
+import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.exception.BusinessException;
 import java.io.Serializable;
 import java.util.List;
@@ -33,9 +33,10 @@ import org.primefaces.model.SortOrder;
  * EJB base service
  *
  * @author Rafael M. Pestano Mar 19, 2011 11:55:37 AM
- */public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
+ */
+public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
-    protected BaseDao<T,K> dao;
+    protected BaseHibernateDao<T,K> dao;
     
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -168,11 +169,11 @@ import org.primefaces.model.SortOrder;
     }
 
     @Override
-    public BaseDao<T,K> getDao() {
+    public BaseHibernateDao<T,K> getDao() {
         return dao;
     }
 
-    public void setDao(BaseDao<T,K> dao) {
+    public void setDao(BaseHibernateDao<T,K> dao) {
         this.dao = dao;
     }
 

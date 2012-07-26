@@ -298,7 +298,7 @@ public abstract class BaseMBean<T> implements Serializable {
                 }
                 return true;
             } catch (Exception ex) {
-                if(log.isLoggable(Level.WARNING)){
+                if(log.isLoggable(Level.FINE)){
                     Logger.getLogger(getClass().getSimpleName()).log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
                 }
             }

@@ -21,7 +21,7 @@ import org.primefaces.model.SortOrder;
  * @author rmpestano
  *
  */
-public interface BaseDao<T, Id extends Serializable> extends Serializable{
+public interface BaseHibernateDao<T, Id extends Serializable> extends Serializable{
 
     T load(Id id);
 

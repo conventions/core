@@ -20,15 +20,11 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
-import org.conventionsframework.dao.BaseDao;
+import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.model.WrappedData;
-import org.conventionsframework.qualifier.ConventionsEntityManager;
 import org.conventionsframework.qualifier.Log;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
@@ -43,7 +39,7 @@ import org.primefaces.model.SortOrder;
  * @author Rafael M. Pestano Jul 23, 2012 8:58:11 PM
  */
 @Dependent
-public class BaseDaoImpl<T, K extends Serializable> implements BaseDao<T, K>,Serializable {
+public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibernateDao<T, K>,Serializable {
     
     private Class<T> persistentClass;
     private Session session;
@@ -52,7 +48,7 @@ public class BaseDaoImpl<T, K extends Serializable> implements BaseDao<T, K>,Ser
     
     private EntityManager entityManager;
 
-    public BaseDaoImpl() {
+    public BaseHibernateDaoImpl() {
     }
     
 
@@ -105,32 +101,27 @@ public class BaseDaoImpl<T, K extends Serializable> implements BaseDao<T, K>,Ser
     }
 
     @Override
-    @TransactionAttribute
     public void save(T entity) {
         this.getSession().save(entity);
     }
 
     @Override
-    @TransactionAttribute
     public void update(T entity) {
         this.getSession().update(entity);
     }
 
     @Override
-    @TransactionAttribute
     public void delete(T entity) {
         this.getSession().delete(entity);
     }
 
     @Override
-    @TransactionAttribute
     public T refresh(T entity) {
         this.getSession().refresh(entity);
         return entity;
     }
 
     @Override
-    @TransactionAttribute
     public void saveOrUpdate(T entity) {
         this.getSession().saveOrUpdate(entity);
     }
@@ -362,8 +353,8 @@ public class BaseDaoImpl<T, K extends Serializable> implements BaseDao<T, K>,Ser
                         dc.add(Restrictions.eq(entry.getKey(), (Calendar)entry.getValue()));
                     }
                 } catch (Exception ex) {
-                    if(log.isLoggable(Level.WARNING)){
-                        log.log(Level.WARNING, "Problem trying to infer restrictions from filter:" + ex.getMessage());
+                    if(log.isLoggable(Level.FINE)){
+                        log.log(Level.FINE, "Problem trying to infer restrictions from filter:" + ex.getMessage());
                     }
                 }
             }
