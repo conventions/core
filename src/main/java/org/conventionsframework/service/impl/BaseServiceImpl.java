@@ -38,7 +38,7 @@ import org.primefaces.model.SortOrder;
     protected BaseDao<T,K> dao;
     
     @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void store(T entity) {
         try {
             doStore(entity);
@@ -180,6 +180,11 @@ import org.primefaces.model.SortOrder;
     public Session getSession() {
         return dao.getSession();
     }
+    
+    public void setEntityManager(EntityManager entityManager){
+        getDao().setEntityManager(entityManager);
+    }
+
 
     @Override
     public List<T> findByExample(T entity) {
@@ -240,6 +245,8 @@ import org.primefaces.model.SortOrder;
     public DetachedCriteria getDetachedCriteria() {
         return DetachedCriteria.forClass(getPersistentClass());
     }
+    
+    
 
     @Override
     public Criteria getCriteria() {
@@ -312,7 +319,7 @@ import org.primefaces.model.SortOrder;
         try {
             return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
         } catch (Exception ex) {
-            Logger.getLogger(getClass().getSimpleName()).log(Level.WARNING, "Conventions service: could not find persistent class for service:" + getClass().getSimpleName() + " it will be resolved to null.(ignore this warn if you're using @Service annotation)");
+            Logger.getLogger(getClass().getSimpleName()).log(Level.FINEST, "Conventions service: could not find persistent class for service:" + getClass().getSimpleName() + " it will be resolved to null.(ignore this warn if you're using @Service annotation)");
         }
         return null;
     }

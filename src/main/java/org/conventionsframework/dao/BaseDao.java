@@ -81,5 +81,6 @@ public interface BaseDao<T, Id extends Serializable> extends Serializable{
 
      EntityManager getEntityManager();
     
+    void  setEntityManager(EntityManager entityManager);
     void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilters);
 }

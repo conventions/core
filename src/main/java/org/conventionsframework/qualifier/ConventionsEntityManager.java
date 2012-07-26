@@ -16,8 +16,5 @@ import javax.inject.Qualifier;
 @Target({TYPE, FIELD,PARAMETER,METHOD})
 public @interface ConventionsEntityManager {
     
-    Type type() default Type.CUSTOM;
-    
-    
 }
 

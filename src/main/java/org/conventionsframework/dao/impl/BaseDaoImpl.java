@@ -21,11 +21,14 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.TransactionAttribute;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import org.conventionsframework.dao.BaseDao;
-import org.conventionsframework.entitymanager.provider.EntityManagerProvider;
 import org.conventionsframework.model.WrappedData;
+import org.conventionsframework.qualifier.ConventionsEntityManager;
 import org.conventionsframework.qualifier.Log;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
@@ -39,15 +42,30 @@ import org.primefaces.model.SortOrder;
  * 
  * @author Rafael M. Pestano Jul 23, 2012 8:58:11 PM
  */
-public abstract class BaseDaoImpl<T, K extends Serializable> implements BaseDao<T, K>,Serializable {
+@Dependent
+public class BaseDaoImpl<T, K extends Serializable> implements BaseDao<T, K>,Serializable {
     
     private Class<T> persistentClass;
     private Session session;
     @Inject @Log
     private transient Logger log;
     
+    private EntityManager entityManager;
 
-    public abstract EntityManagerProvider getEntityManagerProvider();
+    public BaseDaoImpl() {
+    }
+    
+
+    public  EntityManager getEntityManager(){
+        return entityManager;
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+    
+    
+    
 
     @Override
     public Session getSession() {
@@ -314,11 +332,6 @@ public abstract class BaseDaoImpl<T, K extends Serializable> implements BaseDao<
             query.setParameter(entry.getKey().toString(), entry.getValue());
         }
         return query.list();
-    }
-
-    @Override
-    public EntityManager getEntityManager() {
-        return this.getEntityManagerProvider().getEntityManager();
     }
 
     /**

@@ -4,15 +4,17 @@
  */
 package org.conventionsframework.service.impl;
 
-import org.conventionsframework.dao.BaseDao;
 import org.conventionsframework.qualifier.Log;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
 import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
+import org.conventionsframework.dao.impl.BaseDaoImpl;
 import org.conventionsframework.qualifier.*;
 
 /**
@@ -26,22 +28,35 @@ import org.conventionsframework.qualifier.*;
  * 
  * @author Rafael M. Pestano Jun 12, 2012 7:18:29 PM
  */
+@Dependent
 @Service(type= Type.CUSTOM)
 @Named(value=Service.CUSTOM)
 public class CustomHibernateService<T, K extends Serializable> extends BaseServiceImpl<T, K>  {
 
+    public CustomHibernateService() {
+    }
+      
     @Inject @Log
     private transient Logger log;
     
-    public CustomHibernateService() {
-    }
+  
+    /**
+     * EntityManager producer should be provided
+     */
+    @Inject @ConventionsEntityManager
+    private EntityManager entityManager;
+    
+    
+    @Inject
+    private BaseDaoImpl hibernateDao;
 
     @Inject
-    public void CustomHibernateService(@Dao(type= Type.CUSTOM) BaseDao<T,K> hibernateDao, InjectionPoint ip) {
+    public void CustomHibernateService(InjectionPoint ip) {
         try {
             hibernateDao.setPersistentClass(this.findPersistentClass(ip));
+            hibernateDao.setEntityManager(entityManager);
         } catch (Exception ex) {
-            if(log.isLoggable(Level.WARNING)){
+            if(log.isLoggable(Level.FINEST)){
                 log.log(Level.WARNING, "Conventions:could not resolve persistent class for service:" + this.getClass().getSimpleName() + ", message:"+ex.getMessage());
             }
         }
