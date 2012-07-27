@@ -39,7 +39,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     protected BaseHibernateDao<T,K> dao;
     
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public void store(T entity) {
         try {
             doStore(entity);
@@ -302,7 +302,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         if (ip != null && ip.getAnnotated() != null) {
 
             if (ip.getAnnotated().isAnnotationPresent(Service.class)) {
-                //try to get persistentClass from injectionPoint via @StatelessService(entity=SomeClass.class) annotation
+                //try to get persistentClass from injectionPoint via @Service(entity=SomeClass.class) annotation
                 Class persistentClass = ip.getAnnotated().getAnnotation(Service.class).entity();
                 if (!persistentClass.isPrimitive()) {
                     return persistentClass;
