@@ -77,6 +77,14 @@ Conventions Framework is a set of components based on top of JSF 2.x, CDI, EJB(o
             <version>1.0-SP4</version>
             <scope>provided</scope>
         </dependency>
+        
+       <!-- CODI -->
+          
+        <dependency>
+            <groupId>org.apache.myfaces.extensions.cdi.bundles</groupId>
+            <artifactId>myfaces-extcdi-bundle-jsf20</artifactId>
+            <version>1.0.5</version>
+        </dependency>
           
         <!-- JSF -->
 
