@@ -19,7 +19,7 @@ Conventions Framework is a set of components based on top of JSF 2.x, CDI, EJB(o
 * **[PrimeFaces](http://primefaces.org)**: Conventions is highly dependent on primefaces 3.x components such as datatable to offer true pagination out of the box, it also has its own components based on top of primefaces such as inputsTexts, modals, combos etc..
 * **[PrimeFaces Extensions](http://code.google.com/p/primefaces-extensions/)**: should be in your classpath if you use <conventions:resetbutton component or layout.xhtml template.
 * **[Hibernate](http://hibernate.org)**: Conventions Dao and Service layers are highly dependend on hibernate 4.x API
-* **[http://myfaces.apache.org/extensions/cdi/download.html](CODI)**: is used to control transactions (@Transactional) in CustomHibernateService, if you use Custom Services, CODI must be in in your classpath.
+* **[CODI](http://myfaces.apache.org/extensions/cdi/download.html)**: is used to control transactions (@Transactional) in CustomHibernateService, beanManagerProvider and other utilities.
 
 
  **2 -  Classpath**
