@@ -25,6 +25,10 @@ public class ModalInitialization implements Serializable{
         this.modal = modalName;
         this.parameters = parameters;
     }
+
+    public ModalInitialization(Map<String, Object> parameters) {
+        this.parameters = parameters;
+    }
     
     public Map<String, Object> getParameters() {
         return parameters;

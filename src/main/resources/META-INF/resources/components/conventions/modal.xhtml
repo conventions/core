@@ -16,6 +16,7 @@ and open the template in the editor.
         
         <composite:attribute name="autoUpddate" default="false" shortDescription="Auto update its content in ajax calls"/>
         <composite:attribute name="closeListener" method-signature="void method(org.primefaces.event.CloseEvent)"  shortDescription="action to call on close - signature: void method(org.primefaces.event.CloseEvent)"/>
+        <composite:attribute name="formId"/>
         <composite:attribute name="header"/>
         <composite:attribute name="height" default="400"/>
         <composite:attribute name="hideEffect"/>
@@ -48,7 +49,7 @@ and open the template in the editor.
                     update="#{cc.attrs.onCloseUpdate}"
                     process="@this"/>
             <p:outputPanel id="#{cc.clientId}_panel" autoUpdate="#{cc.attrs.autoUpddate}">
-                <h:form prependId="false" rendered="#{cc.attrs.renderForm}">
+                <h:form prependId="#{empty cc.attrs.formId ? 'false':'true'}" id="#{empty cc.attrs.formId ? 'modalForm' : cc.attrs.formId}" rendered="#{cc.attrs.renderForm}">
                     <composite:insertChildren />
                     <center> 
                         <framework:modalButton value="#{cc.attrs.modalButtonValue}" 
