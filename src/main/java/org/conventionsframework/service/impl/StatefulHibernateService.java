@@ -7,8 +7,11 @@ package org.conventionsframework.service.impl;
 
 import org.conventionsframework.qualifier.Log;
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJBException;
+import javax.ejb.SessionSynchronization;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;

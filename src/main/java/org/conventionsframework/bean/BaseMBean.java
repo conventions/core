@@ -121,7 +121,7 @@ public abstract class BaseMBean<T> implements Serializable {
         setCreateMessage("Record created successfully");
         setUpdateMessage("Record updated successfully");
         setDeleteMessage("Record deleted successfully");
-        if (serviceInitialized()) { //baseService must be set to create paginator
+        if (initializeService()) { //baseService must be set to create paginator
             paginator = new Paginator(baseService);
         }
     }
@@ -137,8 +137,8 @@ public abstract class BaseMBean<T> implements Serializable {
             }//if no annotation found then try to create via reflection
             return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).newInstance();
         } catch (Exception ex) {
-            if(log.isLoggable(Level.WARNING)){
-                log.log(Level.WARNING, "Could not create entity for mbean:"+this.getClass().getSimpleName());
+            if(log.isLoggable(Level.FINE)){
+                log.log(Level.FINE, "Could not create entity for mbean:"+this.getClass().getSimpleName());
                 ex.printStackTrace();
             }
         }
@@ -285,7 +285,7 @@ public abstract class BaseMBean<T> implements Serializable {
         setBeanState(CrudState.UPDATE);
     }
 
-    private boolean serviceInitialized() {
+    private boolean initializeService() {
         if (getBaseService() != null) {
             return true;
         }
