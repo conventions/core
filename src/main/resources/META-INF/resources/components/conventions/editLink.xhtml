@@ -21,17 +21,25 @@ and open the template in the editor.
       <composite:attribute name="style" />
       <composite:attribute name="image" default="edit20x20.png" shortDescription="image url" />
       <composite:attribute name="library" default="images" shortDescription="image library" />
+      <composite:attribute name="renderIcon" default="true" type="java.lang.Boolean" />
       <composite:attribute name="styleClass" />
       <composite:attribute name="oncomplete" />
+      <composite:attribute name="value" default="Edit"/>
       <composite:attribute name="ajax" default="true"/>
+      <composite:attribute name="target" default="entity"/>
+
   </composite:interface>
 
     <composite:implementation>
 
-        <p:commandLink immediate="true" action="#{cc.attrs.mbean.prepareUpdate}" update="#{cc.attrs.update}"
+        <p:commandLink rendered="#{cc.attrs.renderIcon}" immediate="true" action="#{cc.attrs.mbean.prepareUpdate}" update="#{cc.attrs.update}"
                          ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete}">
-            <h:graphicImage library="#{cc.attrs.library}" name="#{cc.attrs.image}" style="border: none;"/>
-            <f:setPropertyActionListener target="#{cc.attrs.mbean.entity}" value="#{cc.attrs.row}"/>
+            <h:graphicImage  library="#{cc.attrs.library}" name="#{cc.attrs.image}" style="border: none;"/>
+            <f:setPropertyActionListener target="#{cc.attrs.mbean[cc.attrs.target]}" value="#{cc.attrs.row}"/>
+        </p:commandLink>
+        <p:commandLink value="Edit" rendered="#{not cc.attrs.renderIcon}" immediate="true" action="#{cc.attrs.mbean.prepareUpdate}" update="#{cc.attrs.update}"
+                         ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete}">
+            <f:setPropertyActionListener target="#{cc.attrs.mbean[target]}" value="#{cc.attrs.row}"/>
         </p:commandLink>
 
     </composite:implementation>

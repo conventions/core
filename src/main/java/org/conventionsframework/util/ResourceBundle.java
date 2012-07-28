@@ -22,8 +22,9 @@ public class ResourceBundle extends java.util.PropertyResourceBundle implements 
                     super(stream);
 	}
 
-	public String getString(String key, List<Object> params) {
-		return MessageFormat.format(this.getString(key), params.toArray());
+	 
+    public String getString(String key, Object... params) {
+		return MessageFormat.format(this.getString(key), params);
 	}
 
 }

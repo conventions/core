@@ -23,6 +23,7 @@ import org.conventionsframework.qualifier.PersistentClass;
 import org.conventionsframework.qualifier.Service;
 import org.conventionsframework.service.BaseService;
 import java.lang.annotation.Annotation;
+import java.util.List;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.conventionsframework.paginator.Paginator;
@@ -36,6 +37,7 @@ public abstract class BaseMBean<T> implements Serializable {
 
     private T entity;
     private T entityAux;
+    private List<T> entityAuxList;
     private BaseService baseService;
     private State beanState;
     private Paginator paginator;
@@ -90,6 +92,15 @@ public abstract class BaseMBean<T> implements Serializable {
     public ResourceBundleProvider getResourceBundleProvider() {
         return resourceBundleProvider;
     }
+
+    public List<T> getEntityAuxList() {
+        return entityAuxList;
+    }
+
+    public void setEntityAuxList(List<T> entityAuxList) {
+        this.entityAuxList = entityAuxList;
+    }
+    
 
     public String getCreateMessage() {
         return createMessage;

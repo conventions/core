@@ -23,22 +23,23 @@ and open the template in the editor.
         <composite:attribute name="styleClass" />
         <composite:attribute name="oncomplete" />
         <composite:attribute name="renderIcon" default="true" type="java.lang.Boolean" />
-        <composite:attribute name="label" default="Remove"/>
+        <composite:attribute name="value" default="Remove"/>
         <composite:attribute name="ajax" default="true"/>
+        <composite:attribute name="target" default="entityAux"/>
         <composite:attribute name="modal"  shortDescription="widgetVar of modalRemoval to be called on editLink click"/>
 
     </composite:interface>
 
     <composite:implementation>
 
-        <p:commandButton value="#{cc.attrs.label}" rendered="#{not cc.attrs.renderIcon}" immediate="true"  update="#{cc.attrs.update}" 
+        <p:commandButton value="#{cc.attrs.value}" rendered="#{not cc.attrs.renderIcon}" immediate="true"  update="#{cc.attrs.update}" 
                          ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete};#{not empty cc.attrs.modal ? 'openModalRemoval()':''}">
-            <f:setPropertyActionListener target="#{cc.attrs.mbean.entityAux}" value="#{cc.attrs.row}"/>
+            <f:setPropertyActionListener target="#{cc.attrs.mbean[cc.attrs.target]}" value="#{cc.attrs.row}"/>
         </p:commandButton>
         <p:commandLink rendered="#{cc.attrs.renderIcon}" immediate="true"  update="#{cc.attrs.update}" 
                        ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete};#{not empty cc.attrs.modal ? 'openModalRemoval()':''}">
             <h:graphicImage  library="#{cc.attrs.library}" name="#{cc.attrs.image}" style="border: none;"/>
-            <f:setPropertyActionListener target="#{cc.attrs.mbean.entityAux}" value="#{cc.attrs.row}"/>
+            <f:setPropertyActionListener target="#{cc.attrs.mbean[cc.attrs.target]}" value="#{cc.attrs.row}"/>
             
         </p:commandLink>
         <script type="text/javascript">

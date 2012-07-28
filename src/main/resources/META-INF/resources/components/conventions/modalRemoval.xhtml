@@ -20,9 +20,10 @@ and open the template in the editor.
         <composite:attribute name="removeMessage" default="Remove this record?" />
         <composite:attribute name="widgetVar" shortDescription="modal var" required="true"/>
         <composite:attribute name="header" default="Remove Record"/>
-        <composite:attribute name="height" default="200" />
+        <composite:attribute name="height" default="250" />
         <composite:attribute name="width" default="300" />
         <composite:attribute name="remove" default="Remove" />
+        <composite:attribute name="renderMessages" default="true" type="java.lang.Boolean" />
         <composite:attribute name="cancel" default="Cancel" />
         <composite:attribute name="persistentRemove" default="true" type="java.lang.Boolean" 
                              shortDescription="if true it will perform a database deletion if false it will call removeFromList method in the mbean" />
@@ -34,7 +35,7 @@ and open the template in the editor.
                   height="#{cc.attrs.height}" width="#{cc.attrs.width}" resizable="true" closable="true" showEffect="explode" hideEffect="explode">
             <p:fieldset legend="#{cc.attrs.removeMessage}" style="text-align: center;padding: 10px">
                 <p:outputPanel id="panel" autoUpdate="true">
-                    <p:messages id="msgRemove"/>
+                    <p:messages id="msgRemove" rendered="#{cc.attrs.renderMessages}"/>
                     <composite:insertChildren />
                 </p:outputPanel>
                 <center>
