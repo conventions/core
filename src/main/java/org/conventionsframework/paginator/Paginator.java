@@ -26,8 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
+import org.conventionsframework.model.LazyDataModel;
 import org.conventionsframework.qualifier.PaginatorService;
-import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
 /**
