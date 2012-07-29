@@ -14,24 +14,24 @@ and open the template in the editor.
 
 
     <composite:interface>
-        <composite:attribute name="appendToBody" default="true"  />
+        <composite:attribute name="appendToBody" default="false"  />
+        <composite:attribute name="timeout" default="1600"  shortDescription="timeout before closing dialog, useful to show messages before closing" />
         <composite:attribute name="mbean" required="true"/>
         <composite:attribute name="update" />
         <composite:attribute name="removeMessage" default="Remove this record?" />
         <composite:attribute name="widgetVar" shortDescription="modal var" required="true"/>
         <composite:attribute name="header" default="Remove Record"/>
-        <composite:attribute name="height" default="250" />
+        <composite:attribute name="height" default="225" />
         <composite:attribute name="width" default="300" />
         <composite:attribute name="remove" default="Remove" />
         <composite:attribute name="renderMessages" default="true" type="java.lang.Boolean" />
         <composite:attribute name="cancel" default="Cancel" />
         <composite:attribute name="persistentRemove" default="true" type="java.lang.Boolean" 
                              shortDescription="if true it will perform a database deletion if false it will call removeFromList method in the mbean" />
-        <composite:attribute name="oncomplete" />
     </composite:interface>
 
     <composite:implementation>
-        <p:dialog widgetVar="#{cc.attrs.widgetVar}" id="#{cc.attrs.id}" header="#{cc.attrs.header}" modal="true" minHeight="100" appendToBody="#{cc.attrs.appendToBody}"
+        <p:dialog widgetVar="#{cc.attrs.widgetVar}" header="#{cc.attrs.header}" modal="true" minHeight="100" appendToBody="#{cc.attrs.appendToBody}"
                   height="#{cc.attrs.height}" width="#{cc.attrs.width}" resizable="true" closable="true" showEffect="explode" hideEffect="explode">
             <p:fieldset legend="#{cc.attrs.removeMessage}" style="text-align: center;padding: 10px">
                 <p:outputPanel id="panel" autoUpdate="true">
@@ -41,7 +41,7 @@ and open the template in the editor.
                 <center>
                     <h:panelGrid cellspacing="15" columns="2">
                         <conv:removeButton value="#{cc.attrs.remove}"  persistentRemove="#{cc.attrs.persistentRemove ? 'true':'false'}" mbean="#{cc.attrs.mbean}" update="#{cc.attrs.update}"
-                                        oncomplete="closeModalRemoval(args)" />
+                                        oncomplete="closeModalRemoval()" />
                         <p:commandButton value="#{cc.attrs.cancel}" oncomplete="#{cc.attrs.widgetVar}.hide()"/>
                     </h:panelGrid>
                 </center>
@@ -50,12 +50,8 @@ and open the template in the editor.
 
           <script type="text/javascript">
 
-                function closeModalRemoval(args){
-                    if(!args.validationFailed){
-                        if(!args.businessError){
-                            setTimeout("closeRemovalDialog()", 1600);
-                        }
-                    }
+                function closeModalRemoval(){
+                            setTimeout("closeRemovalDialog()", #{cc.attrs.timeout});
                 }
 
                 function closeRemovalDialog(){
