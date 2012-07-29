@@ -30,6 +30,8 @@ public interface BaseHibernateDao<T, Id extends Serializable> extends Serializab
     void save(T entity);
 
     void update(T entity);
+    
+    T merge(T entity);
 
     void delete(T entity);
 

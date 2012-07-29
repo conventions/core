@@ -104,6 +104,10 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
     public void save(T entity) {
         this.getSession().save(entity);
     }
+    
+    public T merge(T entity){
+        return (T) getSession().merge(entity);
+    }
 
     @Override
     public void update(T entity) {

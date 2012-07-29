@@ -141,6 +141,10 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         return (T) getDao().refresh(entity);
     }
 
+   public T merge(T entity){
+        return  getDao().merge(entity);
+    }
+    
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void saveOrUpdate(T entity) {
