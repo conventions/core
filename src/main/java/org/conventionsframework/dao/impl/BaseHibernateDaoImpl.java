@@ -344,12 +344,13 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
      * @param dc
      * @param externalFilter
      */
-    public void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter) {
+    public void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter){
         for (Iterator<Map.Entry<String, Object>> it = (Iterator<Map.Entry<String, Object>>) externalFilter.entrySet().iterator(); it.hasNext();) {
             Map.Entry<String, Object> entry = it.next();
-            if (entry.getValue() != null && !"".equals(entry.getValue())) {
+            if (entry != null && entry.getValue() != null && !"".equals(entry.getValue())) {
+                    Field f;
                 try {
-                    Field f = persistentClass.getDeclaredField(entry.getKey());
+                    f = persistentClass.getDeclaredField(entry.getKey());
                     if (f.getType().isAssignableFrom(String.class)) {
                         dc.add(Restrictions.ilike(entry.getKey(), (String) entry.getValue(), MatchMode.ANYWHERE));
                     } else if (f.getType().isAssignableFrom(Integer.class) || f.getType().isAssignableFrom(int.class)) {
@@ -364,13 +365,12 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
                     else if(f.getType().isAssignableFrom(Calendar.class)){
                         dc.add(Restrictions.eq(entry.getKey(), (Calendar)entry.getValue()));
                     }
-                } catch (Exception ex) {
-                    if(log.isLoggable(Level.FINE)){
-                        log.log(Level.FINE, "Problem trying to infer restrictions from filter:" + ex.getMessage());
-                    }
+                } catch (NoSuchFieldException ex) {
+                } catch (SecurityException ex) {
                 }
             }
         }
+       
 
     }
     

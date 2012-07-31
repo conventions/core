@@ -19,8 +19,10 @@ import java.lang.reflect.ParameterizedType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import org.conventionsframework.dao.impl.BaseHibernateDaoImpl;
+import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.Service;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -38,6 +40,8 @@ import org.primefaces.model.SortOrder;
 public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
     protected BaseHibernateDao<T,K> dao = new BaseHibernateDaoImpl<T, K>();
+    @Inject @Log
+    private transient Logger log;
     
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -325,12 +329,20 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         try {
             return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
         } catch (Exception ex) {
-            Logger.getLogger(getClass().getSimpleName()).log(Level.FINEST, "Conventions service: could not find persistent class for service:" + getClass().getSimpleName() + " it will be resolved to null.(ignore this warn if you're using @Service annotation)");
+            log.log(Level.FINEST, "Conventions service: could not find persistent class for service:" + getClass().getSimpleName() + " it will be resolved to null.(ignore this warn if you're using @Service annotation)");
         }
         return null;
     }
     
     public void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter){
-        getDao().addBasicFilterRestrictions(dc, externalFilter);
+        try{
+            getDao().addBasicFilterRestrictions(dc, externalFilter);
+            
+        }catch(Exception ex){
+          if(log.isLoggable(Level.FINE)){
+                log.log(Level.FINE, "Problem trying to infer restrictions from filter:" + ex.getMessage());
+            }  
+        }
+        
     }
 }
