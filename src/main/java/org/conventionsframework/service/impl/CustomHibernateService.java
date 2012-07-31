@@ -13,7 +13,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
-import org.conventionsframework.dao.impl.BaseHibernateDaoImpl;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.*;
 
@@ -43,22 +42,17 @@ public class CustomHibernateService<T, K extends Serializable> extends BaseServi
     @Inject
     @ConventionsEntityManager(type = Type.CUSTOM)
     private EntityManagerProvider entityManagerProvider;
-    
-    @Inject
-    private BaseHibernateDaoImpl hibernateDao;
 
     @Inject
     public void CustomHibernateService(InjectionPoint ip) {
         try {
-            hibernateDao.setPersistentClass(this.findPersistentClass(ip));
-            hibernateDao.setEntityManager(entityManagerProvider.getEntityManager());
+            getDao().setPersistentClass(this.findPersistentClass(ip));
+            getDao().setEntityManager(entityManagerProvider.getEntityManager());
         } catch (Exception ex) {
             if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Conventions:could not resolve persistent class for service:" + this.getClass().getSimpleName() + ", message:" + ex.getMessage());
             }
         }
-        super.setDao(hibernateDao);
-
     }
 
     @Override

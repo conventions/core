@@ -30,24 +30,20 @@ public class StatelessHibernateService<T,K extends Serializable> extends BaseSer
     @Inject @ConventionsEntityManager(type= Type.STATELESS)
     private EntityManagerProvider entityManagerProvider;
     
-    @Inject
-    private BaseHibernateDaoImpl<T, K> hibernateDao;
-    
     public StatelessHibernateService() {
     }
     
     @Inject
     public void StatelessHibernateService(InjectionPoint ip){
         try {
-             hibernateDao.setPersistentClass(this.findPersistentClass(ip));
-             hibernateDao.setEntityManager(entityManagerProvider.getEntityManager());
+             getDao().setPersistentClass(this.findPersistentClass(ip));
+             getDao().setEntityManager(entityManagerProvider.getEntityManager());
         } catch (Exception ex) {
             if(log.isLoggable(Level.FINE)){
                 log.log(Level.FINE, "Conventions:could not resolve persistent class for service:" + this.getClass().getSimpleName() + ", message:"+ex.getMessage());
                 
             }
         }
-        super.setDao(hibernateDao);
     }
 
    

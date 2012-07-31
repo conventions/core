@@ -50,8 +50,16 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
 
     public BaseHibernateDaoImpl() {
     }
-    
 
+    public BaseHibernateDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    public BaseHibernateDaoImpl(Class<T> persistentClass, EntityManager entityManager) {
+        this.persistentClass = persistentClass;
+        this.entityManager = entityManager;
+    }
+    
     public  EntityManager getEntityManager(){
         return entityManager;
     }

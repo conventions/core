@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.persistence.EntityManager;
+import org.conventionsframework.dao.impl.BaseHibernateDaoImpl;
 import org.conventionsframework.qualifier.Service;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -36,7 +37,7 @@ import org.primefaces.model.SortOrder;
  */
 public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
-    protected BaseHibernateDao<T,K> dao;
+    protected BaseHibernateDao<T,K> dao = new BaseHibernateDaoImpl<T, K>();
     
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
