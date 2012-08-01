@@ -26,6 +26,7 @@ and open the template in the editor.
         <composite:attribute name="remove" default="Remove" />
         <composite:attribute name="renderMessages" default="true" type="java.lang.Boolean" />
         <composite:attribute name="cancel" default="Cancel" />
+        <composite:attribute name="oncomplete" />
         <composite:attribute name="persistentRemove" default="true" type="java.lang.Boolean" 
                              shortDescription="if true it will perform a database deletion if false it will call removeFromList method in the mbean" />
     </composite:interface>
@@ -41,7 +42,7 @@ and open the template in the editor.
                 <center>
                     <h:panelGrid cellspacing="15" columns="2">
                         <conv:removeButton value="#{cc.attrs.remove}"  persistentRemove="#{cc.attrs.persistentRemove ? 'true':'false'}" mbean="#{cc.attrs.mbean}" update="#{cc.attrs.update}"
-                                        oncomplete="closeModalRemoval()" />
+                                           oncomplete="closeModalRemoval();#{cc.attrs.oncomplete}" />
                         <p:commandButton value="#{cc.attrs.cancel}" oncomplete="#{cc.attrs.widgetVar}.hide()"/>
                     </h:panelGrid>
                 </center>
