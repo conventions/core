@@ -16,8 +16,8 @@ and open the template in the editor.
 
       <composite:attribute name="value" default="Clear" />
       <composite:attribute name="id"  />
-      <composite:attribute name="for"  shortDescription="id of component to reset state"  />
       <composite:attribute name="update" default="@form" />
+      <composite:attribute name="for" default="#{cc.attrs.update}" shortDescription="id of component to reset state, default is same target as update attr"  />
       <composite:attribute name="process" default="@this" />
       <composite:attribute name="mbean" required="true"  />
       <composite:attribute name="style" />
@@ -31,7 +31,7 @@ and open the template in the editor.
                          process="#{cc.attrs.process}" oncomplete="#{cc.attrs.oncomplete};jQuery('.ui-state-error').removeClass('ui-state-error');" styleClass="#{cc.attrs.styleClass}"
                          style="#{cc.attrs.style}"
                          >
-              <pe:resetInput for="#{empty cc.attrs.for ? cc.attrs.update : cc.attrs.for}"/>  
+              <pe:resetInput for="#{cc.attrs.for}"/>  
           </p:commandButton>
 
     </composite:implementation>
