@@ -13,7 +13,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
-import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.*;
 

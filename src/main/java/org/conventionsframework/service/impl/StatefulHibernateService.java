@@ -11,12 +11,9 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJBException;
-import javax.ejb.SessionSynchronization;
-import javax.ejb.TransactionAttribute;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.*;
 
@@ -45,21 +42,5 @@ public class StatefulHibernateService<T,K extends Serializable> extends BaseServ
         }
     }
 
-    public void afterBegin() throws EJBException, RemoteException {
-        System.out.println("afterBegin()");
-    }
-
-    public void beforeCompletion() throws EJBException, RemoteException {
-        System.out.println("beforeCompletion()");
-    }
-
-    public void afterCompletion(boolean committed) throws EJBException, RemoteException {
-        System.out.println("afterCompletion()");
-    }
-
-    
-    
-    
-     
 
 }

@@ -5,7 +5,6 @@
 package org.conventionsframework.service.impl;
 
 import org.conventionsframework.dao.BaseHibernateDao;
-import org.conventionsframework.exception.BusinessException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
