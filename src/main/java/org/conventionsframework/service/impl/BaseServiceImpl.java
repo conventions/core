@@ -22,6 +22,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import org.conventionsframework.dao.impl.BaseHibernateDaoImpl;
+import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.Service;
 import org.hibernate.Criteria;
@@ -33,29 +34,25 @@ import org.hibernate.transform.ResultTransformer;
 import org.primefaces.model.SortOrder;
 
 /**
- * EJB base service
  *
  * @author Rafael M. Pestano Mar 19, 2011 11:55:37 AM
  */
-public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
-    protected BaseHibernateDao<T,K> dao = new BaseHibernateDaoImpl<T, K>();
-    @Inject @Log
-    private transient Logger log;
+    protected BaseHibernateDao<T, K> dao = new BaseHibernateDaoImpl<T, K>();
     
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public void store(T entity) {
-        try {
-            doStore(entity);
-        } catch (BusinessException be) {
-            throw be;
-        }
+    @Inject
+    @Log
+    private transient Logger log;
 
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void store(T entity) {
+          doStore(entity);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void doStore(T entity) {
+    public final void doStore(T entity) {
         this.beforeStore(entity);
         this.saveOrUpdate(entity);
         this.afterStore(entity);
@@ -70,7 +67,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void remove(T entity) {
         this.doRemove(entity);
     }
@@ -79,8 +76,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     public void beforeRemove(T entity) {
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void doRemove(T entity) {
+    public final void doRemove(T entity) {
         this.beforeRemove(entity);
         this.delete(entity);
         this.afterRemove(entity);
@@ -90,8 +86,8 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     public void afterRemove(T entity) {
     }
 
-     /**
-     * 
+    /**
+     *
      * @param first
      * @param pageSize
      * @param sortField
@@ -141,21 +137,21 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         flushSession();
     }
 
-    @Override
-    public T refresh(T entity) {
-        return (T) getDao().refresh(entity);
+    @TransactionAttribute
+    public T merge(T entity) {
+        return getDao().merge(entity);
     }
 
-   @TransactionAttribute
-   public T merge(T entity){
-        return  getDao().merge(entity);
-    }
-    
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void saveOrUpdate(T entity) {
         getDao().saveOrUpdate(entity);
         flushSession();
+    }
+
+    @Override
+    public T refresh(T entity) {
+        return (T) getDao().refresh(entity);
     }
 
     @Override
@@ -179,11 +175,11 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     @Override
-    public BaseHibernateDao<T,K> getDao() {
+    public BaseHibernateDao<T, K> getDao() {
         return dao;
     }
 
-    public void setDao(BaseHibernateDao<T,K> dao) {
+    public void setDao(BaseHibernateDao<T, K> dao) {
         this.dao = dao;
     }
 
@@ -191,11 +187,6 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     public Session getSession() {
         return dao.getSession();
     }
-    
-    public void setEntityManager(EntityManager entityManager){
-        getDao().setEntityManager(entityManager);
-    }
-
 
     @Override
     public List<T> findByExample(T entity) {
@@ -256,8 +247,14 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     public DetachedCriteria getDetachedCriteria() {
         return DetachedCriteria.forClass(getPersistentClass());
     }
-    
-    
+
+    public void setEntityManagerProvider(EntityManagerProvider entityManagerProvider) {
+        getDao().setEntityManagerProvider(entityManagerProvider);
+    }
+
+    public EntityManagerProvider getEntityManagerProvider() {
+        return getDao().getEntityManagerProvider();
+    }
 
     @Override
     public Criteria getCriteria() {
@@ -279,9 +276,11 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     public void flushSession() {
-        Session session = getSession();
-        if (session.isOpen() && session.isDirty()) {
-            session.flush();
+        if (isConventionsFlushSession()) {
+            Session session = getSession();
+            if (session.isOpen() && session.isDirty()) {
+                session.flush();
+            }
         }
     }
 
@@ -290,7 +289,6 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         return dao.getEntityManager();
     }
 
-   
     /**
      * search persistentClass to set in dao layer
      *
@@ -334,16 +332,24 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         }
         return null;
     }
-    
-    public void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter){
-        try{
+
+    public void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter) {
+        try {
             getDao().addBasicFilterRestrictions(dc, externalFilter);
-            
-        }catch(Exception ex){
-          if(log.isLoggable(Level.FINE)){
+
+        } catch (Exception ex) {
+            if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Problem trying to infer restrictions from filter:" + ex.getMessage());
-            }  
+            }
         }
-        
+
+    }
+
+    /**
+     * @return true if hibernate session should be flushed by conventions after
+     * insert/update methods in baseService false otherwise default is true
+     */
+    public boolean isConventionsFlushSession() {
+        return true;
     }
 }

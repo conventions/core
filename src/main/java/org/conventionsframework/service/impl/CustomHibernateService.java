@@ -13,6 +13,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
+import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.*;
 
@@ -39,43 +40,37 @@ public class CustomHibernateService<T, K extends Serializable> extends BaseServi
     @Log
     private transient Logger log;
     
+    
     @Inject
-    @ConventionsEntityManager(type = Type.CUSTOM)
-    private EntityManagerProvider entityManagerProvider;
-
-    @Inject
-    public void CustomHibernateService(InjectionPoint ip) {
+    public void CustomHibernateService(@ConventionsEntityManager(type= Type.CUSTOM) EntityManagerProvider entityManagerProvider,InjectionPoint ip) {
         try {
             getDao().setPersistentClass(this.findPersistentClass(ip));
-            getDao().setEntityManager(entityManagerProvider.getEntityManager());
+            getDao().setEntityManagerProvider(entityManagerProvider);
         } catch (Exception ex) {
             if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Conventions:could not resolve persistent class for service:" + this.getClass().getSimpleName() + ", message:" + ex.getMessage());
             }
         }
     }
+    
+     
 
     @Override
     @Transactional
-    public void doStore(T entity) {
-        super.doStore(entity);
+    public void store(T entity) {
+        super.store(entity);
     }
 
     @Override
     @Transactional
-    public void doRemove(T entity) {
-        super.doRemove(entity);
+    public void remove(T entity) {
+        super.remove(entity);
     }
 
     @Override
     @Transactional
     public void delete(T entity) {
         super.delete(entity);
-    }
-
-    @Override
-    public void remove(T entity) {
-        super.remove(entity);
     }
 
     @Override
@@ -90,10 +85,6 @@ public class CustomHibernateService<T, K extends Serializable> extends BaseServi
         super.saveOrUpdate(entity);
     }
 
-    @Override
-    public void store(T entity) {
-        super.store(entity);
-    }
 
     @Override
     @Transactional

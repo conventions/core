@@ -18,12 +18,11 @@ package org.conventionsframework.dao.impl;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import org.conventionsframework.dao.BaseHibernateDao;
+import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.qualifier.Log;
 import org.hibernate.Criteria;
@@ -38,7 +37,6 @@ import org.primefaces.model.SortOrder;
  * 
  * @author Rafael M. Pestano Jul 23, 2012 8:58:11 PM
  */
-@Dependent
 public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibernateDao<T, K>,Serializable {
     
     private Class<T> persistentClass;
@@ -46,30 +44,15 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
     @Inject @Log
     private transient Logger log;
     
-    private EntityManager entityManager;
+    private EntityManagerProvider entityManagerProvider;
 
     public BaseHibernateDaoImpl() {
     }
 
-    public BaseHibernateDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public BaseHibernateDaoImpl(EntityManagerProvider entityManagerProvider) {
+        this.entityManagerProvider = entityManagerProvider;
     }
 
-    public BaseHibernateDaoImpl(Class<T> persistentClass, EntityManager entityManager) {
-        this.persistentClass = persistentClass;
-        this.entityManager = entityManager;
-    }
-    
-    public  EntityManager getEntityManager(){
-        return entityManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-    
-    
-    
 
     @Override
     public Session getSession() {
@@ -81,6 +64,18 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
             }
         }
         return session;
+    }
+    
+     public EntityManagerProvider getEntityManagerProvider() {
+        return entityManagerProvider;
+    }
+
+    public void setEntityManagerProvider(EntityManagerProvider entityManagerProvider) {
+        this.entityManagerProvider = entityManagerProvider;
+    }
+
+    public EntityManager getEntityManager() {
+       return getEntityManagerProvider().getEntityManager();
     }
 
     /**
@@ -373,6 +368,5 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
        
 
     }
-    
     
 }

@@ -15,13 +15,8 @@
  */
 package org.conventionsframework.entitymanager;
 
-import org.conventionsframework.producer.*;
-import javax.ejb.Local;
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Disposes;
-import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
@@ -32,9 +27,8 @@ import org.conventionsframework.qualifier.Type;
  *
  * @author Rafael M. Pestano
  */
-@Local
-@Stateless
 @Dependent
+@Stateless
 @ConventionsEntityManager(type = Type.STATELESS)
 public class StatelessEntityManagerProvider implements EntityManagerProvider {
 

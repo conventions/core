@@ -8,6 +8,7 @@ import org.conventionsframework.util.MessagesController;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -32,7 +33,12 @@ public class ConventionsActionListenerImpl extends ActionListenerImpl implements
                 throw ExceptionUtils.getRootCause(e);
             }
         } catch (BusinessException be) {
-            MessagesController.addError(be.getDetail(), be.getSummary());
+            if(be.getSeverity() != null){
+                 MessagesController.addMessage(be.getSummary(),be.getDetail(),be.getSeverity());
+            }
+            else{
+                MessagesController.addError(be.getSummary(),be.getDetail());
+            }
         } catch (Throwable ex) {//if its uncaught exception go to error page
             MessagesController.addFatal(ex.getMessage());
             FacesContext.getCurrentInstance().getExternalContext().log("UNEXPECTED ERROR:  " + ex.getMessage(), ex);

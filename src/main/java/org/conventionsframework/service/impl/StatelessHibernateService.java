@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.conventionsframework.dao.impl.BaseHibernateDaoImpl;
+import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.*;
 
@@ -27,25 +27,20 @@ public class StatelessHibernateService<T,K extends Serializable> extends BaseSer
     @Inject @Log
     private transient Logger log;
     
-    @Inject @ConventionsEntityManager(type= Type.STATELESS)
-    private EntityManagerProvider entityManagerProvider;
-    
-    public StatelessHibernateService() {
-    }
     
     @Inject
-    public void StatelessHibernateService(InjectionPoint ip){
+    public void StatelessHibernateService(@ConventionsEntityManager(type= Type.STATELESS) EntityManagerProvider entityManagerProvider,InjectionPoint ip) {
         try {
-             getDao().setPersistentClass(this.findPersistentClass(ip));
-             getDao().setEntityManager(entityManagerProvider.getEntityManager());
+            getDao().setPersistentClass(this.findPersistentClass(ip));
+            getDao().setEntityManagerProvider(entityManagerProvider);
         } catch (Exception ex) {
-            if(log.isLoggable(Level.FINE)){
-                log.log(Level.FINE, "Conventions:could not resolve persistent class for service:" + this.getClass().getSimpleName() + ", message:"+ex.getMessage());
-                
+            if (log.isLoggable(Level.FINE)) {
+                log.log(Level.FINE, "Conventions:could not resolve persistent class for service:" + this.getClass().getSimpleName() + ", message:" + ex.getMessage());
             }
         }
     }
-
+    
+    
    
 }
 

@@ -15,7 +15,6 @@
  */
 package org.conventionsframework.entitymanager;
 
-import javax.ejb.Local;
 import javax.ejb.Stateful;
 import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
@@ -24,7 +23,6 @@ import javax.persistence.PersistenceContextType;
 import org.conventionsframework.qualifier.ConventionsEntityManager;
 import org.conventionsframework.qualifier.Type;
 
-@Local
 @Stateful
 @Dependent
 @ConventionsEntityManager(type = Type.STATEFUL)

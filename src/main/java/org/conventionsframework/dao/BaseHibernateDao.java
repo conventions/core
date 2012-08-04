@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.conventionsframework.dao;
 
@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import org.conventionsframework.model.WrappedData;
 import javax.persistence.EntityManager;
+import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -21,7 +22,7 @@ import org.primefaces.model.SortOrder;
  * @author rmpestano
  *
  */
-public interface BaseHibernateDao<T, Id extends Serializable> extends Serializable{
+public interface BaseHibernateDao<T, Id extends Serializable> extends Serializable {
 
     T load(Id id);
 
@@ -30,7 +31,7 @@ public interface BaseHibernateDao<T, Id extends Serializable> extends Serializab
     void save(T entity);
 
     void update(T entity);
-    
+
     T merge(T entity);
 
     void delete(T entity);
@@ -42,47 +43,50 @@ public interface BaseHibernateDao<T, Id extends Serializable> extends Serializab
     List<T> findAll();
 
     List<T> findAll(final Integer first, final Integer max);
-     
+
     WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters);
 
     int countAll();
-    
+
     Class<T> getPersistentClass();
-    
+
     void setPersistentClass(Class<T> persistentClass);
-    
+
     Session getSession();
 
     List<T> findByExample(final T entity);
-    
-    List<T> findByExample(final T entity,int maxResult);
-    
-    List<T> findByExample(final T entity,MatchMode matchMode);
-    
-    List<T> findByExample(final T entity,int maxResult,MatchMode matchMode);
+
+    List<T> findByExample(final T entity, int maxResult);
+
+    List<T> findByExample(final T entity, MatchMode matchMode);
+
+    List<T> findByExample(final T entity, int maxResult, MatchMode matchMode);
 
     T findOneByExample(final T entity);
 
     List<T> findByExample(T exampleInstance, String[] excludeProperty);
 
     T findOneByExample(final T entity, MatchMode matchMode);
-    
+
     List<T> findByCriteria(DetachedCriteria criteriaObject, int first, int maxResult);
 
     List<T> findByCriteria(DetachedCriteria criteriaObject);
-    
-    WrappedData<T> findPaginated(final int first, final int pageSize, String sortField, SortOrder sortOrder, DetachedCriteria dc);
-    
-    Long getRowCount(final DetachedCriteria criteria);
-    
-    DetachedCriteria getDetachedCriteria();
-    
-    Criteria getCriteria();
-    
-    List findByNativeQuery(String nativeQuery,Map params,Class entity,ResultTransformer rt,ScalarReturn scalar);
 
-     EntityManager getEntityManager();
-    
-    void  setEntityManager(EntityManager entityManager);
+    WrappedData<T> findPaginated(final int first, final int pageSize, String sortField, SortOrder sortOrder, DetachedCriteria dc);
+
+    Long getRowCount(final DetachedCriteria criteria);
+
+    DetachedCriteria getDetachedCriteria();
+
+    Criteria getCriteria();
+
+    List findByNativeQuery(String nativeQuery, Map params, Class entity, ResultTransformer rt, ScalarReturn scalar);
+
+    EntityManager getEntityManager();
+
+    EntityManagerProvider getEntityManagerProvider();
+
+    void setEntityManagerProvider(EntityManagerProvider entityManagerProvider);
+
     void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilters);
 }
