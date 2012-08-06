@@ -25,5 +25,6 @@ import javax.persistence.EntityManager;
 public interface EntityManagerProvider extends Serializable{
     
     EntityManager getEntityManager();
+    void setEntityManager(EntityManager entityManager);
     
 }

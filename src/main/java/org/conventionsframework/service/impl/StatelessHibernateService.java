@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.*;
 
