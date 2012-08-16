@@ -40,6 +40,7 @@ public class Paginator<T> implements Serializable{
      private BaseService baseService;
      private Integer rowCount;
      private Map<String,Object> filter = new HashMap<String, Object>();;
+     private List<T> filteredValue;//datatable filteredValue attribute
 
     public Paginator() {
     }
@@ -110,6 +111,14 @@ public class Paginator<T> implements Serializable{
     public void setRowCount(Integer rowCount) {
         this.rowCount = rowCount;
     }
-     
-    
+
+    public List<T> getFilteredValue() {
+        return filteredValue;
+    }
+
+    public void setFilteredValue(List<T> filteredValue) {
+        this.filteredValue = filteredValue;
+    }
+
+   
 }
