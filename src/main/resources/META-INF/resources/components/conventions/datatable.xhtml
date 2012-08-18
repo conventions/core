@@ -8,9 +8,14 @@
 
     <cc:interface >
         <cc:attribute name="addButtonLabbel" default="Add" />
+        <cc:attribute name="draggableColumns" default="false" />
+        <cc:attribute name="editable" default="false" />
         <cc:attribute name="emptyMessage" default="No records founds" />
-        <cc:attribute name="filteredValue" type="java.util.List" default="#{cc.attrs.mbean.paginator.filteredValue}" />
+        <cc:attribute name="filterDelay" default="350" />
+        <cc:attribute name="filterEvent" default="keyup" />
+        <cc:attribute name="filteredValue" type="java.util.List"  default="#{cc.attrs.mbean.paginator.filteredValue}" />
         <cc:attribute name="filteringMessage" default="filtering..."/>
+        <cc:attribute name="liveScroll" default="false" />
         <cc:attribute name="mbean" required="true" type="org.conventionsframework.bean.BaseMBean"/>
         <cc:attribute name="pagingMessage" default="paging..."/>
         <cc:attribute name="paginatorPosition" default="bottom"/>
@@ -26,7 +31,11 @@
         <cc:attribute name="renderPageEvent" default="true" shortDescription="decide if default ajax page event should be rendered, set to false if you want to define your own ajax page event" />
         <cc:attribute name="renderSortEvent" default="true" shortDescription="decide if default ajax sort event should be rendered, set to false if you want to define your own ajax sort event" />
         <cc:attribute name="renderFilterEvent" default="true" shortDescription="decide if default ajax filter event should be rendered, set to false if you want to define your own ajax filter event" />
+        <cc:attribute name="resizableColumns" default="false" />
         <cc:attribute name="rows" default="5" />
+        <cc:attribute name="scrollable" default="false" />
+        <cc:attribute name="selection"  />
+        <cc:attribute name="selectionMode"  />
         <cc:attribute name="value" type="org.conventionsframework.model.LazyDataModel" default="#{cc.attrs.mbean.paginator.dataModel}"/>
         <cc:attribute name="var" default="row"/>
         <cc:attribute name="widgetVar" default="tableVar"/>
@@ -37,13 +46,23 @@
 <cc:implementation xmlns:framework="http://java.sun.com/jsf/composite/components/conventions">
     
     <p:remoteCommand rendered="#{cc.attrs.updateRowCount}" name="updateRowCount" process="@none" update="#{cc.id}_table:#{cc.id}_tableFooter"/>        
-    <p:dataTable value="#{cc.attrs.value}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" var="#{cc.attrs.var}" emptyMessage="#{cc.attrs.emptyMessage}" 
+    <p:dataTable value="#{cc.attrs.value}" rendered="#{not empty cc.attrs.value}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" var="#{cc.attrs.var}" emptyMessage="#{cc.attrs.emptyMessage}" 
                  lazy="true" rowKey="#{cc.attrs.rowKey}"
                  rowIndexVar="#{cc.attrs.rowIndexVar}"
                  filteredValue="#{cc.attrs.filteredValue}"
-                 rowStyleClass="#{cc.attrs.rowStyleClass}" rows="#{cc.attrs.rows}" paginatorPosition="#{cc.attrs.paginatorPosition}"
+                 rowStyleClass="#{cc.attrs.rowStyleClass}" rows="#{cc.attrs.rows}" 
+                 paginatorPosition="#{cc.attrs.paginatorPosition}"
                  paginator="true" paginatorTemplate="#{cc.attrs.paginatorTemplate}"
                  rowsPerPageTemplate="#{cc.attrs.rowsPerPageTemplate}" 
+                 selection="#{cc.attrs.selection}"
+                 selectionMode="#{cc.attrs.selectionMode}"
+                 draggableColumns="#{cc.attrs.draggableColumns}"
+                 editable="#{cc.attrs.editable}"
+                 liveScroll="#{cc.attrs.liveScroll}"
+                 resizableColumns="#{cc.attrs.resizableColumns}"
+                 scrollable="#{cc.attrs.scrollable}"
+                 filterEvent="#{cc.attrs.filterEvent}"
+                 filterDelay="#{cc.attrs.filterDelay}"
                  >
                
                 <p:ajax rendered="#{cc.attrs.renderPageEvent}" event="page" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.pagingMessage}');" oncomplete="unblock('div[id$=#{cc.id}_table]')" />
