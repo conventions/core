@@ -17,6 +17,7 @@ package org.conventionsframework.entitymanager;
 
 import javax.ejb.Stateful;
 import javax.enterprise.context.Dependent;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
@@ -26,6 +27,7 @@ import org.conventionsframework.qualifier.Type;
 @Stateful
 @Dependent
 @ConventionsEntityManager(type = Type.STATEFUL)
+@Named(ConventionsEntityManager.STATEFUL_ENTITY_MANAGER)
 public class StatefulEntityManagerProvider implements EntityManagerProvider {
 
     @PersistenceContext(type = PersistenceContextType.EXTENDED)

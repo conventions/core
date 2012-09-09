@@ -17,6 +17,7 @@ package org.conventionsframework.entitymanager;
 
 import javax.ejb.Stateless;
 import javax.enterprise.context.Dependent;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
@@ -30,6 +31,7 @@ import org.conventionsframework.qualifier.Type;
 @Dependent
 @Stateless
 @ConventionsEntityManager(type = Type.STATELESS)
+@Named(ConventionsEntityManager.STATELESS_ENTITY_MANAGER)
 public class StatelessEntityManagerProvider implements EntityManagerProvider {
 
     @PersistenceContext(type = PersistenceContextType.TRANSACTION)
@@ -39,7 +41,8 @@ public class StatelessEntityManagerProvider implements EntityManagerProvider {
         return entityManager;
     }
     
-      public void setEntityManager(EntityManager entityManager) {
+    public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+      
 }

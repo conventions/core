@@ -7,6 +7,8 @@ package org.conventionsframework.util;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.apache.myfaces.extensions.cdi.core.api.provider.BeanManagerProvider;
 
 /**
@@ -15,10 +17,15 @@ import org.apache.myfaces.extensions.cdi.core.api.provider.BeanManagerProvider;
  */
 public class BeanManagerController {
 
-    public static BeanManager getBeanManager() {
-            return BeanManagerProvider.getInstance().getBeanManager();
-    }
-
+  public static BeanManager getBeanManager() {
+        try {
+            InitialContext initialContext = new InitialContext();
+            return (BeanManager) initialContext.lookup("java:comp/BeanManager");
+        } catch (NamingException e) {
+            e.printStackTrace();
+            return null;
+        }
+  }
     public static Object getBeanByName(String name) // eg. name=availableCountryDao
     {
         BeanManager bm = getBeanManager();

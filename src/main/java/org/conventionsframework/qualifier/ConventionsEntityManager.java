@@ -17,6 +17,11 @@ import javax.inject.Qualifier;
 public @interface ConventionsEntityManager {
     
     Type type() default Type.CUSTOM;
+
+    
+    public static final String STATELESS_ENTITY_MANAGER = "statelessEntityManagerProvider";
+    public static final String STATEFUL_ENTITY_MANAGER = "statefulEntityManagerProvider";
+    public static final String CUSTOM_ENTITY_MANAGER = "customEntityManagerProvider";
     
 }
 

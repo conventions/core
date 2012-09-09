@@ -114,4 +114,9 @@
         </attribute>
         
 </tag>
+        <function>
+            <function-class>org.conventionsframework.facelets.Functions</function-class>
+            <function-name>size</function-name>
+            <function-signature>java.lang.Integer size(java.util.List)</function-signature>
+        </function>
 </facelet-taglib>
