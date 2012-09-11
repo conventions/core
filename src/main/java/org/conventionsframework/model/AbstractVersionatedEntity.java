@@ -17,7 +17,7 @@ import javax.persistence.Version;
  * @author rmpestano Dec 11, 2011 5:04:59 PM
  */
 @MappedSuperclass
-public abstract class AbstractVersionatedBaseEntity<T extends Serializable> extends AbstractBaseEntity<T> {
+public abstract class AbstractVersionatedEntity<T extends Serializable> extends AbstractBaseEntity<T> {
     
     private Date createDate;
     private Date updateDate;

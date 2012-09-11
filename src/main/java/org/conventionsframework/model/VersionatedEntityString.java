@@ -15,7 +15,7 @@ import javax.persistence.MappedSuperclass;
  * @author rmpestano Aug 21, 2011 9:33:12 AM
  */
 @MappedSuperclass
-public abstract class VersionatedBaseEntityLong extends AbstractVersionatedBaseEntity<Long>  {
+public abstract class VersionatedEntityString extends AbstractVersionatedEntity<Long>  {
     
     private Long id;
     

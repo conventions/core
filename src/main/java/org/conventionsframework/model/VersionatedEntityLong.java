@@ -15,22 +15,21 @@ import javax.persistence.MappedSuperclass;
  * @author rmpestano Aug 21, 2011 9:33:12 AM
  */
 @MappedSuperclass
-public abstract class BaseEntityString extends AbstractBaseEntity<String> {
+public abstract class VersionatedEntityLong extends AbstractVersionatedEntity<Long>  {
     
-    private String id;
+    private Long id;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Override
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
     @Override
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
-    
 
    
     
