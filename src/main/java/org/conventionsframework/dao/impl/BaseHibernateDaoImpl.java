@@ -311,7 +311,8 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
      *
      * @param nativeQuery
      * @param params
-     * @param class entity
+     * @param class entity to be queried, if no entity is passed persistentClass
+     * will be used
      * @param result transformer
      * @param Scalar
      * @return
@@ -327,6 +328,8 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         }
         if (entity != null) {
             query.addEntity(entity);
+        } else {
+            query.addEntity(getPersistentClass());
         }
 
         Set<Map.Entry> rawParameters = params.entrySet();

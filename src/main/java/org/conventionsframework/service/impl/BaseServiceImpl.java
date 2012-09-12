@@ -39,6 +39,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import org.conventionsframework.dao.impl.BaseHibernateDaoImpl;
+import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.Service;
 import org.hibernate.Criteria;
@@ -296,7 +297,10 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     public void setPersistentClass(Class<T> clazz) {
         dao.setPersistentClass(clazz);
     }
-    
+
+    public void setEntityManagerProvider(EntityManagerProvider entityManagerProvider) {
+       getDao().setEntityManagerProvider(entityManagerProvider);
+    }
     
 
     /**

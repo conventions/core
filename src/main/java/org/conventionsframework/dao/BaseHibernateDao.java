@@ -103,6 +103,8 @@ public interface BaseHibernateDao<T, Id extends Serializable> extends Serializab
     EntityManager getEntityManager();
 
     abstract EntityManagerProvider getEntityManagerProvider();
+    
+    void setEntityManagerProvider(EntityManagerProvider entityManagerProvider);
 
     void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilters);
 }
