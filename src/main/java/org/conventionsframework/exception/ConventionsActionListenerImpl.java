@@ -1,6 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Conventions Framework.  
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
  */
 package org.conventionsframework.exception;
 
@@ -8,7 +25,6 @@ import org.conventionsframework.util.MessagesController;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.application.FacesMessage;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -17,9 +33,9 @@ import org.apache.myfaces.application.ActionListenerImpl;
 
 /**
  *
- * @author rmpestano Jun 21, 2011 11:21:08 PM
- * 
- * 
+ * @author Rafael M. Pestano Jun 21, 2011 11:21:08 PM
+ *
+ *
  */
 public class ConventionsActionListenerImpl extends ActionListenerImpl implements Serializable {
 
@@ -33,11 +49,10 @@ public class ConventionsActionListenerImpl extends ActionListenerImpl implements
                 throw ExceptionUtils.getRootCause(e);
             }
         } catch (BusinessException be) {
-            if(be.getSeverity() != null){
-                 MessagesController.addMessage(be.getSummary(),be.getDetail(),be.getSeverity());
-            }
-            else{
-                MessagesController.addError(be.getSummary(),be.getDetail());
+            if (be.getSeverity() != null) {
+                MessagesController.addMessage(be.getSummary(), be.getDetail(), be.getSeverity());
+            } else {
+                MessagesController.addError(be.getSummary(), be.getDetail());
             }
         } catch (Throwable ex) {//if its uncaught exception go to error page
             MessagesController.addFatal(ex.getMessage());

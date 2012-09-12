@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Rafaem M. Pestano.
+ * Copyright 2012 Conventions Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,13 @@
 package org.conventionsframework.query;
 
 import java.io.Serializable;
-import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
-import org.conventionsframework.qualifier.ConventionsEntityManager;
 import org.conventionsframework.qualifier.Query;
 import org.conventionsframework.qualifier.QueryParam;
 import org.conventionsframework.qualifier.QueryParams;
-import org.conventionsframework.qualifier.Type;
 import org.conventionsframework.util.BeanManagerController;
 
 /**

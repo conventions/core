@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 VAIO.
+ * Copyright 2012 Conventions Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Named;
 
@@ -27,13 +26,13 @@ import javax.inject.Named;
  *
  * @author rmpestano
  */
+public final class VersionUtils implements Serializable {
 
-public final class VersionUtils implements Serializable{
-    
     public static final VersionUtils INSTANCE = new VersionUtils();
-    
-    @Produces @Named(value="conventionsVersion")
-    public Version getCoreVersion(){
+
+    @Produces
+    @Named(value = "conventionsVersion")
+    public Version getCoreVersion() {
         try {
             return new Version(new ResourceBundle(getClass().getResourceAsStream("/com/conventions/core/bundle/conventions.properties")).getString("conventions.version"));
         } catch (IOException ex) {
@@ -41,9 +40,9 @@ public final class VersionUtils implements Serializable{
         }
         return null;
     }
-    
+
     public class Version implements Serializable {
-        
+
         private String version;
 
         public Version() {
@@ -52,8 +51,6 @@ public final class VersionUtils implements Serializable{
         public Version(String version) {
             this.version = version;
         }
-        
-        
 
         public String getVersion() {
             return version;
@@ -62,8 +59,5 @@ public final class VersionUtils implements Serializable{
         public void setVersion(String version) {
             this.version = version;
         }
-        
-        
     }
-    
 }

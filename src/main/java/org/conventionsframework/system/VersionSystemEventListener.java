@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 VAIO.
+ * Copyright 2012 Conventions Framework.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,27 @@
 package org.conventionsframework.system;
 
 import org.conventionsframework.util.VersionUtils;
-import org.conventionsframework.util.VersionUtils.Version;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
-import javax.inject.Inject;
 
 /**
  *
  * @author rmpestano
  */
 public class VersionSystemEventListener implements SystemEventListener {
-    
+
     private static final Logger LOGGER = Logger.getLogger(VersionSystemEventListener.class.getName());
-    
-     
+
     @Override
     public void processEvent(SystemEvent se) throws AbortProcessingException {
-         LOGGER.log(Level.INFO, "Running Conventions {0}",  VersionUtils.INSTANCE.getCoreVersion().getVersion());
+        LOGGER.log(Level.INFO, "Running Conventions {0}", VersionUtils.INSTANCE.getCoreVersion().getVersion());
     }
 
     @Override
     public boolean isListenerForSource(Object o) {
         return true;
     }
-    
 }

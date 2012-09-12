@@ -1,16 +1,30 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Conventions Framework.  
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
  */
-
 package org.conventionsframework.service.impl;
 
 import org.conventionsframework.qualifier.Log;
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJBException;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,21 +34,25 @@ import org.conventionsframework.qualifier.*;
 /**
  *
  * Stateful EJB based service
- * @author rmpestano
+ *
+ * @author Rafael M. Pestano Dec 4, 2011 9:37:08 PM
  */
-@Service(type= Type.STATEFUL)
-@Named(value=Service.STATEFUL)
-public class StatefulHibernateService<T,K extends Serializable> extends BaseServiceImpl<T, K> {
-
-    @Inject @Log
-    private transient Logger log;
-    
+@Service(type = Type.STATEFUL)
+@Named(value = Service.STATEFUL)
+public class StatefulHibernateService<T, K extends Serializable> extends BaseServiceImpl<T, K> {
 
     @Inject
-    public void StatefulHibernateService(@ConventionsEntityManager(type= Type.STATEFUL) EntityManagerProvider entityManagerProvider,InjectionPoint ip) {
+    @Log
+    private transient Logger log;
+    protected Class<T> persistenceClass;
+    @Inject
+    @ConventionsEntityManager(type = Type.STATEFUL)
+    protected EntityManagerProvider entityManagerProvider;
+
+    @Inject
+    public void StatefulHibernateService(InjectionPoint ip) {
         try {
-            getDao().setPersistentClass(this.findPersistentClass(ip));
-            getDao().setEntityManagerProvider(entityManagerProvider);
+            this.persistenceClass = this.findPersistentClass(ip);
         } catch (Exception ex) {
             if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Conventions:could not resolve persistent class for service:" + this.getClass().getSimpleName() + ", message:" + ex.getMessage());
@@ -42,5 +60,11 @@ public class StatefulHibernateService<T,K extends Serializable> extends BaseServ
         }
     }
 
+    public Class<T> getPersistentClass() {
+        return persistenceClass;
+    }
 
+    public EntityManagerProvider getEntityManagerProvider() {
+        return entityManagerProvider;
+    }
 }

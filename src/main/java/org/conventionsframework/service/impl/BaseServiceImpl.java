@@ -1,6 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Conventions Framework.  
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
  */
 package org.conventionsframework.service.impl;
 
@@ -17,11 +34,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import org.conventionsframework.dao.impl.BaseHibernateDaoImpl;
-import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.Service;
 import org.hibernate.Criteria;
@@ -37,9 +54,14 @@ import org.primefaces.model.SortOrder;
  * @author Rafael M. Pestano Mar 19, 2011 11:55:37 AM
  */
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
+public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
-    protected BaseHibernateDao<T, K> dao = new BaseHibernateDaoImpl<T, K>();
+    protected BaseHibernateDao<T, K> dao;
+    
+    @PostConstruct
+    public void initialize(){
+        dao = new BaseHibernateDaoImpl<T, K>(getPersistentClass(),getEntityManagerProvider());
+    }
     
     @Inject
     @Log
@@ -163,16 +185,7 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
         return getDao().findAll(first, max);
     }
 
-    @Override
-    public void setPersistentClass(Class<T> persistentClass) {
-        getDao().setPersistentClass(persistentClass);
-    }
-
-    @Override
-    public Class<T> getPersistentClass() {
-        return getDao().getPersistentClass();
-    }
-
+   
     @Override
     public BaseHibernateDao<T, K> getDao() {
         return dao;
@@ -247,14 +260,6 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
         return DetachedCriteria.forClass(getPersistentClass());
     }
 
-    public void setEntityManagerProvider(EntityManagerProvider entityManagerProvider) {
-        getDao().setEntityManagerProvider(entityManagerProvider);
-    }
-
-    public EntityManagerProvider getEntityManagerProvider() {
-        return getDao().getEntityManagerProvider();
-    }
-
     @Override
     public Criteria getCriteria() {
         return dao.getCriteria();
@@ -287,6 +292,12 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
     public EntityManager getEntityManager() {
         return dao.getEntityManager();
     }
+
+    public void setPersistentClass(Class<T> clazz) {
+        dao.setPersistentClass(clazz);
+    }
+    
+    
 
     /**
      * search persistentClass to set in dao layer

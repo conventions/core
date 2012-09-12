@@ -1,6 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Conventions Framework.  
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
  */
 package org.conventionsframework.service.impl;
 
@@ -22,8 +39,10 @@ import org.conventionsframework.qualifier.*;
  * for this service work properly an EntityManagerProvider implementation should
  * be provided
  *
- * an example can be found here: {@link https://github.com/rmpestano/conventions-issuetracker-weld/blob/master/src/br/com/triadworks/issuetracker/entitymanager/provider/IssueTrackerProvider.java}
- * and here: {@link http://code.google.com/p/jsf-conventions-framework/wiki/services}
+ * an example can be found here:
+ * {@link https://github.com/conventions/issuetracker-weld/blob/master/src/br/com/triadworks/issuetracker/entitymanager/provider/IssueTrackerProvider.java}
+ * and here:
+ * {@link http://conventions.github.com/docs/#d0e161}
  *
  * @author Rafael M. Pestano Jun 12, 2012 7:18:29 PM
  */
@@ -32,27 +51,35 @@ import org.conventionsframework.qualifier.*;
 @Named(value = Service.CUSTOM)
 public class CustomHibernateService<T, K extends Serializable> extends BaseServiceImpl<T, K> {
 
+    protected Class<T> persistenceClass;
+    @Inject
+    @ConventionsEntityManager(type = Type.CUSTOM)
+    protected EntityManagerProvider entityManagerProvider;
+
     public CustomHibernateService() {
     }
-    
     @Inject
     @Log
     private transient Logger log;
-    
-    
+
     @Inject
-    public void CustomHibernateService(@ConventionsEntityManager(type= Type.CUSTOM) EntityManagerProvider entityManagerProvider,InjectionPoint ip) {
+    public void CustomHibernateService(InjectionPoint ip) {
         try {
-            getDao().setPersistentClass(this.findPersistentClass(ip));
-            getDao().setEntityManagerProvider(entityManagerProvider);
+            this.persistenceClass = this.findPersistentClass(ip);
         } catch (Exception ex) {
             if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Conventions:could not resolve persistent class for service:" + this.getClass().getSimpleName() + ", message:" + ex.getMessage());
             }
         }
     }
-    
-     
+
+    public Class<T> getPersistentClass() {
+        return persistenceClass;
+    }
+
+    public EntityManagerProvider getEntityManagerProvider() {
+        return entityManagerProvider;
+    }
 
     @Override
     @Transactional
@@ -83,7 +110,6 @@ public class CustomHibernateService<T, K extends Serializable> extends BaseServi
     public void saveOrUpdate(T entity) {
         super.saveOrUpdate(entity);
     }
-
 
     @Override
     @Transactional
