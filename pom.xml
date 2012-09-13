@@ -38,7 +38,7 @@
 
     <issueManagement>
         <system>Github</system>
-        <url>https://github.com/rmpestano/conventions/issues</url>
+        <url>https://github.com/conventions/core/issues</url>
     </issueManagement>
 
     <inceptionYear>2011</inceptionYear>   
@@ -57,9 +57,9 @@
     </developers>
     
     <scm>
-        <connection>scm:git:git://github.com/rmpestano/conventions-core.git</connection>
-        <developerConnection>scm:git:git@github.com:rmpestano/conventions-core.git</developerConnection>
-        <url>git@github.com:rmpestano/conventions-core.git</url>
+        <connection>scm:git:git://github.com/conventions/core.git</connection>
+        <developerConnection>scm:git:git@github.com:conventions/core.git</developerConnection>
+        <url>git@github.com:conventions/core.git</url>
     </scm>
    
     <dependencies>
