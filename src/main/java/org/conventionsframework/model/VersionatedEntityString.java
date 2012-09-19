@@ -32,7 +32,7 @@ import javax.persistence.MappedSuperclass;
  * @author rmpestano Aug 21, 2011 9:33:12 AM
  */
 @MappedSuperclass
-public abstract class VersionatedBaseEntityString extends AbstractVersionatedEntity<String>  {
+public abstract class VersionatedEntityString extends AbstractVersionatedEntity<String>  {
     
     private String id;
     
