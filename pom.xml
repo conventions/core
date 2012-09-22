@@ -120,15 +120,10 @@
         </dependency>
         
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.3</version>
-        </dependency>
-        
-        <dependency>
             <groupId>org.primefaces.extensions</groupId>
             <artifactId>primefaces-extensions</artifactId>
             <version>${prime-ext.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <dependencyManagement>

@@ -49,7 +49,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.MethodExpressionActionListener;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.apache.commons.lang.StringUtils;
 import org.conventionsframework.producer.ResourceBundleProvider;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.model.DefaultMenuModel;
@@ -77,7 +76,7 @@ public class StateController implements Serializable{
     public StateController() {
         stateItens = new LinkedList<StateItem>();
         String stackSize = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("STACK_SIZE");
-        if(StringUtils.isNotEmpty(stackSize)){
+        if(stackSize != null){
             try{
                 STACK_SIZE = Integer.parseInt(stackSize);
             }catch(Exception e){
