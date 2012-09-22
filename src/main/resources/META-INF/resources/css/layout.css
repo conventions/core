@@ -392,8 +392,7 @@ img.right {
     position: fixed;
     z-index: 9999;
 }
-
-.ui-icon back_img{
+ui-icon back{
     background: url("back.png.faces?ln=images");
 }
 

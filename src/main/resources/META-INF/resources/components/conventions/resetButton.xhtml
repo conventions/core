@@ -3,7 +3,6 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:pe="http://primefaces.org/ui/extensions"
     xmlns:composite="http://java.sun.com/jsf/composite">
 
 
@@ -26,11 +25,11 @@
                          process="#{cc.attrs.process}" oncomplete="#{cc.attrs.oncomplete};jQuery('.ui-state-error').removeClass('ui-state-error');" styleClass="#{cc.attrs.styleClass}"
                          style="#{cc.attrs.style}"
                          >
-              <pe:resetInput for="#{cc.attrs.for}"/>  
+              <p:resetInput target="#{cc.attrs.for}"/>  
           </p:commandButton>
 
     </composite:implementation>
 
-</ui:composition>
+</ui:composition>   
 
 
