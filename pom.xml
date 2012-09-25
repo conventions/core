@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.conventionsframework</groupId>
     <artifactId>conventions-core</artifactId>
-    <version>0.9.7-SNAPSHOT</version>
+    <version>0.9.7</version>
     <packaging>jar</packaging>
     <name>conventions-core</name>
     <description>
         <![CDATA[Conventions framework core.]]>
     </description>
-    <url>https://github.com/rmpestano/conventions-core/</url>
+    <url>https://github.com/conventions/core</url>
      <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
