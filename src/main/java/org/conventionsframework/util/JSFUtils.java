@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Conventions Framework.  
+ * Copyright 2011-2012 Conventions Framework.  
  * 
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
