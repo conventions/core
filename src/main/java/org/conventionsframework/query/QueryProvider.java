@@ -36,7 +36,7 @@ import org.conventionsframework.util.BeanManagerController;
 public class QueryProvider implements Serializable{
     
     @AroundInvoke
-    public Object execute(InvocationContext ic){
+    public Object execute(InvocationContext ic) throws Exception{
         Query query = ic.getMethod().getAnnotation(Query.class);
         EntityManagerProvider emp = (EntityManagerProvider) BeanManagerController.getBeanByName(query.entityManagerPrivider());
         javax.persistence.Query q = null;
