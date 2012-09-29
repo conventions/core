@@ -347,9 +347,9 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         return null;
     }
 
-    public void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilter) {
+    public void addBasicFilterRestrictions(DetachedCriteria dc, Map restrictionFilter) {
         try {
-            getDao().addBasicFilterRestrictions(dc, externalFilter);
+            getDao().addBasicFilterRestrictions(dc, restrictionFilter);
 
         } catch (Exception ex) {
             if (log.isLoggable(Level.FINE)) {
