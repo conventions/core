@@ -13,7 +13,7 @@
         <composite:attribute name="footerHeight" default="#{cc.attrs.renderAddButton ? '30px':'15px'}" />
         <composite:attribute name="message" default="Records found" />
         <composite:attribute name="renderAddButton" type="java.lang.Boolean" default="false"/>
-        <composite:attribute name="style" />
+        <composite:attribute name="buttonClass" />
         <composite:attribute name="update" default="@form" />
         <composite:attribute name="value" shortDescription="number of records - if its empty 'mbean.rowCount' will be used" />
         <composite:facet name="footer"/> 
@@ -26,6 +26,7 @@
                                  ajax="#{cc.attrs.ajax}"
                                  value="#{cc.attrs.addButtonValue}"
                                  update="#{cc.attrs.update}"
+                                 styleClass="#{cc.attrs.buttonClass}"
                                  />
                 </center>
                 <div align="right" style="#{cc.attrs.renderAddButton ? 'margin-top: -20px':'margin-top: 2px'}">

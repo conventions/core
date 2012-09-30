@@ -22,7 +22,7 @@
 
     <composite:implementation>
         
-        <p:commandButton rendered="#{cc.attrs.rendered}" action="#{cc.attrs.mbean.store}" value="#{cc.attrs.value}" update="#{cc.attrs.update}"
+        <p:commandButton rendered="#{cc.attrs.rendered}" id="#{cc.attrs.id}" action="#{cc.attrs.mbean.store}" value="#{cc.attrs.value}" update="#{cc.attrs.update}"
                          process="#{cc.attrs.process}" oncomplete="#{cc.attrs.oncomplete}" styleClass="#{cc.attrs.styleClass}"
                          style="#{cc.attrs.style}" ajax="#{cc.attrs.ajax}">
                           <composite:insertChildren />

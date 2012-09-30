@@ -7,14 +7,13 @@
     <composite:interface>
 
       <composite:attribute name="value" default="Add" />
-      <composite:attribute name="id"  />
       <composite:attribute name="update" default="@form" />
       <composite:attribute name="process" default="@this" />
       <composite:attribute name="mbean" required="true" />
       <composite:attribute name="style" />
+      <composite:attribute name="styleClass" />
       <composite:attribute name="rendered" type="java.lang.Boolean" />
       <composite:attribute name="immediate" default="true" />
-      <composite:attribute name="styleClass" />
       <composite:attribute name="oncomplete" />
       <composite:attribute name="ajax" default="true"/>
   </composite:interface>
@@ -29,7 +28,9 @@
                          oncomplete="#{cc.attrs.oncomplete}"
                          process="#{cc.attrs.process}"
                          rendered="#{cc.attrs.rendered}"
+                         id="#{cc.attrs.id}"
                          style="#{cc.attrs.style}"
+                         styleClass="#{cc.attrs.styleClass}"
                          >
              <composite:insertChildren />
         </p:commandButton>
