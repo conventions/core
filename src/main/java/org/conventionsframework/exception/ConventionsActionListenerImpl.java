@@ -30,6 +30,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.myfaces.application.ActionListenerImpl;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -54,6 +55,7 @@ public class ConventionsActionListenerImpl extends ActionListenerImpl implements
             } else {
                 MessagesController.addError(be.getSummary(), be.getDetail());
             }
+            this.focusOnError(be);
         } catch (Throwable ex) {//if its uncaught exception go to error page
             MessagesController.addFatal(ex.getMessage());
             FacesContext.getCurrentInstance().getExternalContext().log("UNEXPECTED ERROR:  " + ex.getMessage(), ex);
@@ -100,6 +102,15 @@ public class ConventionsActionListenerImpl extends ActionListenerImpl implements
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(ConventionsActionListenerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void focusOnError(BusinessException be) {
+        if (be.getId() != null && !"".endsWith(be.getId())) {
+            RequestContext rc = RequestContext.getCurrentInstance();
+            if (rc != null) {
+                rc.execute("document.getElementById('"+be.getId()+"').focus();");
+            }
         }
     }
 }

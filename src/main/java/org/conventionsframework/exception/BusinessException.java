@@ -35,6 +35,7 @@ public class BusinessException extends RuntimeException implements Serializable 
 
     private String summary;
     private String detail;
+    private String id;
     private FacesMessage.Severity severity;
 
     public BusinessException() {
@@ -44,33 +45,84 @@ public class BusinessException extends RuntimeException implements Serializable 
         super(cause);
     }
 
+    /**
+     * 
+     * @param summary exception summary
+     */
     public BusinessException(String summary) {
         super(summary);
         this.summary = summary;
     }
 
+    
+    /**
+     * @param summary exception summary
+     * @param idToFocus view component id to scroll to when exception occurs
+     */
+    public BusinessException(String summary, String idToFocus) {
+        super(summary);
+        this.summary = summary;
+        this.id = idToFocus;
+    }
+
+    /**
+     * @param summary exception summary
+     * @param severity Faces message severity
+     */
     public BusinessException(String summary, FacesMessage.Severity severity) {
         super(summary);
         this.summary = summary;
         this.severity = severity;
     }
+    
+    /**
+     * @param summary exception summary
+     * @param severity Faces message severity
+     * @param idToFocus view component id to scroll to when exception occurs
+     */
+    public BusinessException(String summary, FacesMessage.Severity severity, String idToFocus) {
+        super(summary);
+        this.summary = summary;
+        this.severity = severity;
+        this.id = idToFocus;
+    }
 
     /**
-     *
-     * @param summary
-     * @param detail
+     * @param summary exception summary
+     * @param detail exception detail
+     * @param idToFocus view component id to scroll to when exception occurs
      */
-    public BusinessException(String summary, String detail) {
+    public BusinessException(String summary, String detail, String idToFocus) {
         super(summary);
         this.detail = detail;
         this.summary = summary;
+        this.id = idToFocus;
     }
 
+    /**
+     * @param summary exception summary
+     * @param detail exception detail
+     * @param severity Faces message severity
+     */
     public BusinessException(String summary, String detail, FacesMessage.Severity severity) {
         super(summary);
         this.detail = detail;
         this.summary = summary;
         this.severity = severity;
+    }
+
+    /**
+     * @param summary exception summary
+     * @param detail exception detail
+     * @param severity Faces message severity
+     * @param idToFocus view component id to scroll to when exception occurs
+     */
+    public BusinessException(String summary, String detail, FacesMessage.Severity severity, String idToFocus) {
+        super(summary);
+        this.detail = detail;
+        this.summary = summary;
+        this.severity = severity;
+        this.id = idToFocus;
     }
 
     public String getDetail() {
@@ -91,5 +143,13 @@ public class BusinessException extends RuntimeException implements Serializable 
 
     public Severity getSeverity() {
         return severity;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

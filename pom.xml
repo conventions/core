@@ -23,8 +23,8 @@
         <myfaces.version>2.1.7</myfaces.version>
         <myfaces.codi.version>1.0.5</myfaces.codi.version>
         <hibernate.version>4.1.5.Final</hibernate.version>
-        <primefaces.version>3.3.1</primefaces.version>
-        <prime-ext.version>0.5.1</prime-ext.version>
+        <primefaces.version>3.4.1</primefaces.version>
+        <prime-ext.version>0.6.0</prime-ext.version>
     </properties>
     
     <licenses>

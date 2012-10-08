@@ -49,7 +49,7 @@ public abstract class BaseMBean<T> implements Serializable {
 
     private T entity;
     private T entityAux;
-    private List<T> entityAuxList;
+    private T[] entityAuxList;
     private BaseService baseService;
     private State beanState;
     private Paginator paginator;
@@ -105,11 +105,11 @@ public abstract class BaseMBean<T> implements Serializable {
         return resourceBundleProvider;
     }
 
-    public List<T> getEntityAuxList() {
+    public T[] getEntityAuxList() {
         return entityAuxList;
     }
 
-    public void setEntityAuxList(List<T> entityAuxList) {
+    public void setEntityAuxList(T[] entityAuxList) {
         this.entityAuxList = entityAuxList;
     }
     
