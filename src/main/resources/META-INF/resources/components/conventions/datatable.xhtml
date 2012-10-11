@@ -37,7 +37,6 @@
         <cc:attribute name="selection"  />
         <cc:attribute name="selectionMode"  />
         <cc:attribute name="value" type="org.conventionsframework.model.LazyDataModel" default="#{cc.attrs.mbean.paginator.dataModel}"/>
-        <cc:attribute name="var" default="row"/>
         <cc:attribute name="widgetVar" default="tableVar"/>
         
 </cc:interface>
@@ -46,7 +45,7 @@
 <cc:implementation xmlns:framework="http://java.sun.com/jsf/composite/components/conventions">
     
     <p:remoteCommand rendered="#{cc.attrs.updateRowCount}" name="updateRowCount" process="@none" update="#{cc.id}_table:#{cc.id}_tableFooter"/>        
-    <p:dataTable value="#{cc.attrs.value}" rendered="#{not empty cc.attrs.value}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" var="#{cc.attrs.var}" emptyMessage="#{cc.attrs.emptyMessage}" 
+    <p:dataTable value="#{cc.attrs.value}" rendered="#{not empty cc.attrs.value}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" var="row" emptyMessage="#{cc.attrs.emptyMessage}" 
                  lazy="true" rowKey="#{cc.attrs.rowKey}"
                  rowIndexVar="#{cc.attrs.rowIndexVar}"
                  filteredValue="#{cc.attrs.filteredValue}"
