@@ -109,7 +109,8 @@ public class ConventionsActionListenerImpl extends ActionListenerImpl implements
         if (be.getId() != null && !"".endsWith(be.getId())) {
             RequestContext rc = RequestContext.getCurrentInstance();
             if (rc != null) {
-                rc.execute("document.getElementById('"+be.getId()+"').focus();");
+                String js = "if(document.getElementById('"+be.getId()+"')){document.getElementById('"+be.getId()+"').focus();}";
+                rc.execute(js);
             }
         }
     }
