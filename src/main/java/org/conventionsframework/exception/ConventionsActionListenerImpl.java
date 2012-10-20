@@ -55,7 +55,7 @@ public class ConventionsActionListenerImpl extends ActionListenerImpl implements
             } else {
                 MessagesController.addError(be.getSummary(), be.getDetail());
             }
-            this.focusOnError(be);
+            this.scrollAndFocusOnError(be);
         } catch (Throwable ex) {//if its uncaught exception go to error page
             MessagesController.addFatal(ex.getMessage());
             FacesContext.getCurrentInstance().getExternalContext().log("UNEXPECTED ERROR:  " + ex.getMessage(), ex);
@@ -105,13 +105,17 @@ public class ConventionsActionListenerImpl extends ActionListenerImpl implements
         }
     }
 
-    private void focusOnError(BusinessException be) {
+    private void scrollAndFocusOnError(BusinessException be) {
         if (be.getId() != null && !"".endsWith(be.getId())) {
             RequestContext rc = RequestContext.getCurrentInstance();
+            String componentId = be.getId();
             if (rc != null) {
-                String js = "if(document.getElementById('"+be.getId()+"')){document.getElementById('"+be.getId()+"').focus();}";
+                rc.scrollTo(componentId);
+                String js = "if(document.getElementById('"+componentId+"')){document.getElementById('"+componentId+"').focus();}";
                 rc.execute(js);
             }
         }
     }
+    
+    
 }
