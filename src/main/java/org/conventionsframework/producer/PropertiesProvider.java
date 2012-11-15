@@ -45,13 +45,14 @@ import javax.inject.Named;
 @ApplicationScoped
 public class PropertiesProvider implements Serializable {
     
-    private String defaultPropertiesPath = (String) FacesContext.getCurrentInstance().getExternalContext().getInitParameterMap().get("DEFAULT_PROPERTIES_PATH");
+    private String defaultPropertiesPath;
     private Map<String,Properties> propsMap = new HashMap<String, Properties>();
     private Properties currentProps;
     private Logger log = Logger.getLogger(PropertiesProvider.class.getSimpleName());
 
     
     public PropertiesProvider() {
+        loadDefaultProperties();
         if (defaultPropertiesPath != null) {
             this.loadProperties(defaultPropertiesPath);
             if(log.isLoggable(Level.FINE)){
@@ -67,6 +68,7 @@ public class PropertiesProvider implements Serializable {
     
     public void loadProperties(String pathToFile) {
         if("".endsWith(pathToFile)){//if no file is provided use the default file
+            loadDefaultProperties();
             pathToFile = defaultPropertiesPath;
         }
         try {
@@ -124,6 +126,14 @@ public class PropertiesProvider implements Serializable {
 
     public void setPropsMap(Map<String, Properties> propsMap) {
         this.propsMap = propsMap;
+    }
+
+    private void loadDefaultProperties() {
+         try{
+           defaultPropertiesPath = (String)FacesContext.getCurrentInstance().getExternalContext().getInitParameterMap().get("DEFAULT_PROPERTIES_PATH");
+        }catch(NullPointerException ex){
+            
+        }
     }
     
     
