@@ -47,7 +47,8 @@ public class Paginator<T> implements Serializable{
      private Integer rowCount;
      private Map<String,Object> filter = new HashMap<String, Object>();;
      private List<T> filteredValue;//datatable filteredValue attribute
-
+     private List<T> selection;//datatable selection attribute
+     
     public Paginator() {
     }
      
@@ -124,6 +125,26 @@ public class Paginator<T> implements Serializable{
 
     public void setFilteredValue(List<T> filteredValue) {
         this.filteredValue = filteredValue;
+    }
+
+    public List<T> getSelection() {
+        return selection;
+    }
+
+    public void setSelection(List<T> selection) {
+        this.selection = selection;
+    }
+    
+    public void pageListener(){
+        //override to perform an action on datatable page event
+    }
+    
+    public void sortListener(){
+        //override to perform an action on datatable sort event
+    }
+    
+    public void filterListener(){
+        //override to perform an action on datatable filter event
     }
 
    

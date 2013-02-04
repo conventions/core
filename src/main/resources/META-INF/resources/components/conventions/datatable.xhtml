@@ -3,40 +3,39 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:ui="http://java.sun.com/jsf/facelets">
 
 
-    <cc:interface >
-        <cc:attribute name="addButtonLabbel" default="Add" />
+    <cc:interface>
+        <cc:attribute name="currentPageReportTemplate" default="[ Showing {startRecord} to {endRecord} of {totalRecords} - Page: {currentPage}/{totalPages} ]"/>
         <cc:attribute name="draggableColumns" default="false" />
         <cc:attribute name="editable" default="false" />
         <cc:attribute name="emptyMessage" default="No records founds" />
         <cc:attribute name="filterDelay" default="350" />
         <cc:attribute name="filterEvent" default="keyup" />
-        <cc:attribute name="filteredValue" type="java.util.List"  default="#{cc.attrs.mbean.paginator.filteredValue}" />
         <cc:attribute name="filteringMessage" default="filtering..."/>
         <cc:attribute name="liveScroll" default="false" />
-        <cc:attribute name="mbean" required="true" type="org.conventionsframework.bean.BaseMBean"/>
+        <cc:attribute name="onFilter" shortDescription="javascript function to call on datatable filter event" />
+        <cc:attribute name="onSort" shortDescription="javascript function to call on datatable sort event" />
+        <cc:attribute name="onPage" shortDescription="javascript function to call on datatable page event" />
+        <cc:attribute name="paginator" required="true" type="org.conventionsframework.paginator.Paginator"/>
         <cc:attribute name="pagingMessage" default="paging..."/>
         <cc:attribute name="paginatorPosition" default="bottom"/>
         <cc:attribute name="paginatorTemplate" default="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"/>
-        <cc:attribute name="rowIndexVar" default="rowIndex"/>
-        <cc:attribute name="rowKey" default="#{cc.attrs.var.id}"/>
-        <cc:attribute name="rowStyleClass" default="#{empty cc.attrs.rowIndexVar or cc.attrs.rowIndexVar mod 2 ne 0 ? 'even-row' : ''}"/>
+        <cc:attribute name="rowStyleClass" />
         <cc:attribute name="rowsPerPageTemplate" default="5,10,15,20,30"/>
         <cc:attribute name="sortingMessage" default="sorting..."/>
-        <cc:attribute name="updateRowCount" default="true" shortDescription="update rowCount on filter event"/>
         <cc:attribute name="renderFooter" default="true" />
-        <cc:attribute name="renderAddButton" default="false" />
+        <cc:attribute name="renderAddButton" default="false" shortDescription="render addButton in table footer"/>
         <cc:attribute name="renderPageEvent" default="true" shortDescription="decide if default ajax page event should be rendered, set to false if you want to define your own ajax page event" />
         <cc:attribute name="renderSortEvent" default="true" shortDescription="decide if default ajax sort event should be rendered, set to false if you want to define your own ajax sort event" />
         <cc:attribute name="renderFilterEvent" default="true" shortDescription="decide if default ajax filter event should be rendered, set to false if you want to define your own ajax filter event" />
         <cc:attribute name="resizableColumns" default="false" />
-        <cc:attribute name="rows" default="5" />
+        <cc:attribute name="rows" default="10" />
+        <cc:attribute name="rendered" default="#{true}" />
+        <cc:attribute name="selectionMode" />
         <cc:attribute name="scrollable" default="false" />
-        <cc:attribute name="selection"  />
-        <cc:attribute name="selectionMode"  />
-        <cc:attribute name="value" type="org.conventionsframework.model.LazyDataModel" default="#{cc.attrs.mbean.paginator.dataModel}"/>
         <cc:attribute name="widgetVar" default="tableVar"/>
         
 </cc:interface>
@@ -44,35 +43,33 @@
     <!-- IMPLEMENTATION -->
 <cc:implementation xmlns:framework="http://java.sun.com/jsf/composite/components/conventions">
     
-    <p:remoteCommand rendered="#{cc.attrs.updateRowCount}" name="updateRowCount" process="@none" update="#{cc.id}_table:#{cc.id}_tableFooter"/>        
-    <p:dataTable value="#{cc.attrs.value}" rendered="#{not empty cc.attrs.value}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" var="row" emptyMessage="#{cc.attrs.emptyMessage}" 
-                 lazy="true" rowKey="#{cc.attrs.rowKey}"
-                 rowIndexVar="#{cc.attrs.rowIndexVar}"
-                 filteredValue="#{cc.attrs.filteredValue}"
-                 rowStyleClass="#{cc.attrs.rowStyleClass}" rows="#{cc.attrs.rows}" 
+    <p:dataTable value="#{cc.attrs.paginator.dataModel}" rendered="#{cc.attrs.rendered}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" emptyMessage="#{cc.attrs.emptyMessage}" 
+                 lazy="true"  
+                 rowIndexVar="rowIndex"
+                 filteredValue="#{cc.attrs.paginator.filteredValue}"
+                 rowStyleClass="#{empty cc.attrs.rowStyleClass ? (rowIndex mod 2 ne 0 ? 'even-row' : '') : cc.attrs.rowStyleClass}" rows="#{cc.attrs.rows}" 
                  paginatorPosition="#{cc.attrs.paginatorPosition}"
+                 currentPageReportTemplate="#{cc.attrs.currentPageReportTemplate}"
                  paginator="true" paginatorTemplate="#{cc.attrs.paginatorTemplate}"
                  rowsPerPageTemplate="#{cc.attrs.rowsPerPageTemplate}" 
-                 selection="#{cc.attrs.selection}"
-                 selectionMode="#{cc.attrs.selectionMode}"
                  draggableColumns="#{cc.attrs.draggableColumns}"
-                 editable="#{cc.attrs.editable}"
-                 liveScroll="#{cc.attrs.liveScroll}"
                  resizableColumns="#{cc.attrs.resizableColumns}"
-                 scrollable="#{cc.attrs.scrollable}"
                  filterEvent="#{cc.attrs.filterEvent}"
                  filterDelay="#{cc.attrs.filterDelay}"
+                 selection="#{cc.attrs.paginator.selection}"
+                 var="row"
+                 rowKey="#{row.id}"
                  >
+        
+                <cc:insertFacet name="header"/>
+                
+                <p:ajax rendered="#{cc.attrs.renderPageEvent}" listener="#{cc.attrs.paginator.pageListener}" event="page" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.pagingMessage}');" oncomplete="#{cc.attrs.onPage};unblock('div[id$=#{cc.id}_table]')" />
+                <p:ajax rendered="#{cc.attrs.renderSortEvent}" listener="#{cc.attrs.paginator.sortListener}" event="sort" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.sortingMessage}');" oncomplete="#{cc.attrs.onSort};jQuery('div[id$=#{cc.id}_table]').unblock({ message: null  })"/>
+                <p:ajax rendered="#{cc.attrs.renderFilterEvent}" listener="#{cc.attrs.paginator.filterListener}" event="filter" process="@this" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.filteringMessage}');" oncomplete="#{cc.attrs.onFilter};jQuery('div[id$=#{cc.id}_table]').unblock({ message: null  })"/>
                
-                <p:ajax rendered="#{cc.attrs.renderPageEvent}" event="page" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.pagingMessage}');" oncomplete="unblock('div[id$=#{cc.id}_table]')" />
-                <p:ajax rendered="#{cc.attrs.renderSortEvent}" event="sort" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.sortingMessage}');" oncomplete="jQuery('div[id$=#{cc.id}_table]').unblock({ message: null  })"/>
-                <p:ajax rendered="#{cc.attrs.renderFilterEvent}" event="filter" process="@this" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.filteringMessage}');" oncomplete=";updateRowCount();jQuery('div[id$=#{cc.id}_table]').unblock({ message: null  })"/>
+                <cc:insertChildren />
                
-                <cc:insertChildren/>
-               
-                <f:facet name="footer">
-                   <framework:tableFooter renderAddButton="#{cc.attrs.renderAddButton}" addButtonValue="#{cc.attrs.addButtonLabbel}" rendered="#{cc.attrs.renderFooter}" mbean="#{cc.attrs.mbean}" id="#{cc.id}_tableFooter"/>
-                </f:facet>
+                <cc:insertFacet name="footer"/>
            </p:dataTable>
  </cc:implementation>
 

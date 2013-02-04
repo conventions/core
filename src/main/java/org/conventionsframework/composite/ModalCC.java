@@ -22,6 +22,7 @@
 
 package org.conventionsframework.composite;
 
+import java.io.IOException;
 import javax.el.MethodExpression;
 import javax.faces.component.FacesComponent;
 import javax.faces.component.UINamingContainer;
@@ -40,6 +41,13 @@ public class ModalCC extends UINamingContainer {
         return "javax.faces.NamingContainer"; // Important! Required for composite components.
     }
 
+    @Override
+    public void encodeBegin(FacesContext context) throws IOException {
+        super.encodeBegin(context);
+    }
+
+
+    
     
     public void closeListener(CloseEvent event) {
         FacesContext context = FacesContext.getCurrentInstance();

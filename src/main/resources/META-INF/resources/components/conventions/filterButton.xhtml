@@ -5,7 +5,7 @@
 
 
     <composite:interface>
-        <composite:attribute name="label" default="Filter" />
+        <composite:attribute name="value" default="Filter" />
         <composite:attribute name="mbean" required="true"/>
         <composite:attribute name="onstart" />
         <composite:attribute name="ajax" default="true" />
@@ -16,7 +16,7 @@
   </composite:interface>
 
     <composite:implementation>
-           <p:commandButton  value="#{cc.attrs.label}"
+           <p:commandButton  value="#{cc.attrs.value}"
                              action="#{cc.attrs.mbean.find}"
                              update="#{cc.attrs.update}"
                              ajax="#{cc.attrs.ajax}"

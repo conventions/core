@@ -21,8 +21,6 @@
  */
 package org.conventionsframework.entitymanager;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import org.conventionsframework.qualifier.ConventionsEntityManager;
 import org.conventionsframework.qualifier.Type;
@@ -31,9 +29,7 @@ import org.conventionsframework.qualifier.Type;
  *
  * @author Rafael M. Pestano
  */
-@Dependent
 @ConventionsEntityManager(type = Type.CUSTOM)
-@Named(ConventionsEntityManager.CUSTOM_ENTITY_MANAGER)
 public class CustomEntityManagerProvider implements EntityManagerProvider {
 
     private EntityManager entityManager;
