@@ -35,7 +35,6 @@ import org.conventionsframework.qualifier.PersistentClass;
 import org.conventionsframework.qualifier.Service;
 import org.conventionsframework.service.BaseService;
 import java.lang.annotation.Annotation;
-import java.util.List;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.conventionsframework.paginator.Paginator;

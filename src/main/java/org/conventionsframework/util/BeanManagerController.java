@@ -33,7 +33,7 @@ import javax.naming.NamingException;
  */
 public class BeanManagerController {
 
-  public static BeanManager getBeanManager() {
+    public static BeanManager getBeanManager() {
         try {
             InitialContext initialContext = new InitialContext();
             return (BeanManager) initialContext.lookup("java:comp/BeanManager");
@@ -41,9 +41,9 @@ public class BeanManagerController {
             e.printStackTrace();
             return null;
         }
-  }
-    public static Object getBeanByName(String name) // eg. name=availableCountryDao
-    {
+    }
+
+    public static Object getBeanByName(String name){
         BeanManager bm = getBeanManager();
         Bean bean = bm.getBeans(name).iterator().next();
         CreationalContext ctx = bm.createCreationalContext(bean); // could be inlined below
@@ -51,10 +51,12 @@ public class BeanManagerController {
         return o;
     }
 
-    public static Object getBeanByName(String name, BeanManager bm) {
-        Bean bean = bm.getBeans(name).iterator().next();
-        CreationalContext ctx = bm.createCreationalContext(bean);
-        Object o = bm.getReference(bean, bean.getClass(), ctx);
+    public static Object getBeanByType(Class type) {
+        BeanManager bm = getBeanManager();
+        Bean bean = bm.getBeans(type).iterator().next();
+        CreationalContext ctx = bm.createCreationalContext(bean); // could be inlined below
+        Object o = bm.getReference(bean, bean.getClass(), ctx); // could be inlined with return
         return o;
     }
+
 }

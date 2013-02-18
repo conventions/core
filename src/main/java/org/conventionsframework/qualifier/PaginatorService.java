@@ -35,6 +35,10 @@ public @interface PaginatorService {
     
         @Nonbinding
 	String name() default "";
+        
+        @Nonbinding
+	Class type() default byte.class;
+        
         @Nonbinding
 	Class entity() default byte.class;
         

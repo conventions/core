@@ -57,7 +57,17 @@ public class Paginator<T> implements Serializable{
         if(ip != null && ip.getAnnotated().isAnnotationPresent(PaginatorService.class)){
             PaginatorService paginatorService = ip.getAnnotated().getAnnotation(PaginatorService.class);
             try{
-                 baseService = (BaseService)BeanManagerController.getBeanByName(paginatorService.name());
+                if(!paginatorService.type().isPrimitive()){
+                    //set paginator service by type
+                    baseService = (BaseService)BeanManagerController.getBeanByType(paginatorService.type());
+                 }
+                else if(!"".equals(paginatorService.name()) ){
+                    //set paginator service by name
+                    baseService = (BaseService)BeanManagerController.getBeanByName(paginatorService.name());
+                }
+                else{
+                    throw new IllegalArgumentException("Could not initialize Paginator of " + ip.getMember().getDeclaringClass() +".You need to provide paginatorService name or type attribute");
+                }
                  if(!paginatorService.entity().isPrimitive() && (getBaseService().getPersistentClass() == null || getBaseService().getPersistentClass().isPrimitive())){
                     getBaseService().getDao().setPersistentClass(paginatorService.entity());
                 }
