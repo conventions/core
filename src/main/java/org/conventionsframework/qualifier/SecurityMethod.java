@@ -31,7 +31,7 @@ import javax.interceptor.InterceptorBinding;
 
 /**
  *
- * @author Rafaek M. Pestano Jul 27, 2011 0:22:01 PM
+ * @author Rafael M. Pestano Jul 27, 2011 0:22:01 PM
  */
 @Inherited
 @InterceptorBinding
