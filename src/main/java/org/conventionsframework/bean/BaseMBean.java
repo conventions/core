@@ -59,7 +59,8 @@ public abstract class BaseMBean<T> implements Serializable {
     private Event<ModalInitialization> modalInitEvent;
     @Inject
     private ResourceBundleProvider resourceBundleProvider;
-    @Inject @Log
+    @Inject
+    @Log
     private transient Logger log;
 
     // getter & setters
@@ -111,7 +112,6 @@ public abstract class BaseMBean<T> implements Serializable {
     public void setEntityAuxList(T[] entityAuxList) {
         this.entityAuxList = entityAuxList;
     }
-    
 
     public String getCreateMessage() {
         return createMessage;
@@ -159,8 +159,8 @@ public abstract class BaseMBean<T> implements Serializable {
             }//if no annotation found then try to create via reflection
             return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).newInstance();
         } catch (Exception ex) {
-            if(log.isLoggable(Level.FINE)){
-                log.log(Level.FINE, "Could not create entity for mbean:"+this.getClass().getSimpleName());
+            if (log.isLoggable(Level.FINE)) {
+                log.log(Level.FINE, "Could not create entity for mbean:" + this.getClass().getSimpleName());
                 ex.printStackTrace();
             }
         }
@@ -197,17 +197,17 @@ public abstract class BaseMBean<T> implements Serializable {
         }
         setBeanState(CrudState.UPDATE);
     }
-    
-    public void save(){
-         baseService.saveOrUpdate(entity);
-         if (isInsertState()) {
+
+    public void save() {
+        baseService.saveOrUpdate(entity);
+        if (isInsertState()) {
             MessagesController.addInfo(getCreateMessage());
         } else {
             MessagesController.addInfo(getUpdateMessage());
         }
     }
-    
-    public void save(String msg){
+
+    public void save(String msg) {
         baseService.saveOrUpdate(entity);
         MessagesController.addInfo(msg);
     }
@@ -294,6 +294,7 @@ public abstract class BaseMBean<T> implements Serializable {
     public void initModal(String modalName, Map<String, Object> parameters) {
         modalInitEvent.fire(new ModalInitialization(parameters, modalName));
     }
+
     /**
      * used to pass parameters to a modal
      *
@@ -319,20 +320,33 @@ public abstract class BaseMBean<T> implements Serializable {
         if (getBaseService() != null) {
             return true;
         }
+        boolean initialized = false;
         Service service = AnnotationUtils.findServiceAnnotation(getClass());
-        if (service != null && !"".equals(service.name())) {
-            try {
-                this.setBaseService((BaseService) BeanManagerController.getBeanByName(service.name()));
-                if (!service.entity().isPrimitive() && getBaseService().getPersistentClass() == null || getBaseService().getPersistentClass().isPrimitive()) {
-                    getBaseService().getDao().setPersistentClass(service.entity());
+        if (service != null) {
+            if (!"".equals(service.name())) {
+                try {
+                    this.setBaseService((BaseService) BeanManagerController.getBeanByName(service.name()));
+                    initialized =true;
+                } catch (Exception ex) {
+                    if (log.isLoggable(Level.FINE)) {
+                        Logger.getLogger(getClass().getSimpleName()).log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
+                    }
                 }
-                return true;
-            } catch (Exception ex) {
-                if(log.isLoggable(Level.FINE)){
-                    Logger.getLogger(getClass().getSimpleName()).log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
+            } else if (!service.value().isPrimitive()) {
+                try {
+                    this.setBaseService((BaseService) BeanManagerController.getBeanByType(service.value()));
+                    initialized = true;
+                } catch (Exception ex) {
+                    if (log.isLoggable(Level.FINE)) {
+                        Logger.getLogger(getClass().getSimpleName()).log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
+                    }
                 }
             }
-        }
-        return false;
+            if (!service.entity().isPrimitive() && getBaseService().getPersistentClass() == null || getBaseService().getPersistentClass().isPrimitive()) {
+                getBaseService().getDao().setPersistentClass(service.entity());
+            }
+        }//end if service != null
+
+        return initialized;
     }
 }

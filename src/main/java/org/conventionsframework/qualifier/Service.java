@@ -38,9 +38,12 @@ public @interface Service {
 
     @Nonbinding
     String name() default "";
-
+    
     @Nonbinding
-    Class entity() default Byte.class;
+    Class entity() default byte.class;
+    
+    @Nonbinding
+    Class value() default byte.class;
 
     Type type() default Type.CUSTOM;
     
