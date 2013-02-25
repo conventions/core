@@ -5,14 +5,15 @@
 
 
     <composite:interface>
-        <composite:attribute name="value" default="Filter" />
-        <composite:attribute name="mbean" required="true"/>
-        <composite:attribute name="onstart" />
         <composite:attribute name="ajax" default="true" />
-        <composite:attribute name="oncomplete" />
-        <composite:attribute name="update"/>
         <composite:attribute name="id"/>
+        <composite:attribute name="mbean" required="true"/>
+        <composite:attribute name="onclick"/>
+        <composite:attribute name="oncomplete" />
+        <composite:attribute name="onstart" />
         <composite:attribute name="process" default="@this"/>
+        <composite:attribute name="update"/>
+        <composite:attribute name="value" default="Filter" />
   </composite:interface>
 
     <composite:implementation>
@@ -23,6 +24,7 @@
                              process="#{cc.attrs.process}"
                              onstart="#{cc.attrs.onstart}"
                              id="#{cc.attrs.id}"
+                             onclick="#{cc.attrs.onclick}"
                              oncomplete="#{cc.attrs.oncomplete}"/>
     </composite:implementation>
 

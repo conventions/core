@@ -38,6 +38,7 @@ import java.lang.annotation.Annotation;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.conventionsframework.paginator.Paginator;
+import org.conventionsframework.qualifier.Type;
 
 /**
  * Base implementation of managedBeans
@@ -323,26 +324,44 @@ public abstract class BaseMBean<T> implements Serializable {
         boolean initialized = false;
         Service service = AnnotationUtils.findServiceAnnotation(getClass());
         if (service != null) {
-            if (!"".equals(service.name())) {
+            if (!"".equals(service.name())) { //inject service by name
                 try {
                     this.setBaseService((BaseService) BeanManagerController.getBeanByName(service.name()));
-                    initialized =true;
+                    initialized = true;
                 } catch (Exception ex) {
-                    if (log.isLoggable(Level.FINE)) {
-                        Logger.getLogger(getClass().getSimpleName()).log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
+                    if (log.isLoggable(Level.WARNING)) {
+                        log.log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
                     }
                 }
-            } else if (!service.value().isPrimitive()) {
+            } else if (!service.value().isPrimitive()) {//inject service by value
                 try {
                     this.setBaseService((BaseService) BeanManagerController.getBeanByType(service.value()));
                     initialized = true;
                 } catch (Exception ex) {
-                    if (log.isLoggable(Level.FINE)) {
-                        Logger.getLogger(getClass().getSimpleName()).log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
+                    if (log.isLoggable(Level.WARNING)) {
+                        log.log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
+                    }
+                }
+
+            } else if (getBaseService() == null) {//inject service by type
+                try {
+                    Type type = service.type();
+                    if (type.equals(Type.STATEFUL)) {
+                        this.setBaseService((BaseService) BeanManagerController.getBeanByName(Service.STATEFUL));
+                        initialized = true;
+                    } else if (type.equals(Type.STATELESS)) {
+                        this.setBaseService((BaseService) BeanManagerController.getBeanByName(Service.STATELESS));
+                    } else {
+                        this.setBaseService((BaseService) BeanManagerController.getBeanByName(Service.CUSTOM));
+                    }
+                } catch (Exception ex) {
+                    if (log.isLoggable(Level.WARNING)) {
+                        log.log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
                     }
                 }
             }
-            if (!service.entity().isPrimitive() && getBaseService().getPersistentClass() == null || getBaseService().getPersistentClass().isPrimitive()) {
+
+            if (getBaseService() != null && !service.entity().isPrimitive() && getBaseService().getPersistentClass() == null || getBaseService().getPersistentClass().isPrimitive()) {
                 getBaseService().getDao().setPersistentClass(service.entity());
             }
         }//end if service != null
