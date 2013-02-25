@@ -21,6 +21,9 @@
  */
 package org.conventionsframework.converter;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.conventionsframework.service.BaseService;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -62,9 +65,22 @@ public abstract class AbstractBaseConverter implements Converter {
     @Override
     public String getAsString(FacesContext fc, UIComponent uic, Object o) {
         if (o != null) {
-            return o.toString();
+            try {
+                return o.getClass().getMethod("getId").invoke(o).toString();
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             return "";
         }
+        return "";
     }
 }

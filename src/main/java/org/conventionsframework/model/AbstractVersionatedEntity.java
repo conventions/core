@@ -41,7 +41,7 @@ public abstract class AbstractVersionatedEntity<T extends Serializable> extends 
     private Date updateDate;
     private Integer version;
     
-      @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     public Date getUpdateDate() {
         return updateDate;
     }

@@ -40,11 +40,6 @@ public abstract class AbstractBaseEntity<T extends Serializable> implements Seri
         return getId() == null;
     }
     
-    @Override
-    public String toString() {
-        return "" + getId();
-    }
-    
     @Transient
     public abstract T getId();
 

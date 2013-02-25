@@ -44,7 +44,7 @@
                     <f:converter converterId="#{cc.attrs.converter}" for="comboOneMenu"/>
                     <composite:insertChildren />
                     <f:selectItem itemLabel="#{cc.attrs.emptyMessage}" itemValue="#{null}"/>
-                    <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                    <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{item}" itemValue="#{item}"/>
                     <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
                 </p:selectOneMenu>
             </ui:fragment>    
@@ -60,7 +60,7 @@
                     >
                     <f:converter converterId="#{cc.attrs.converter}" for="comboOneMenu2"/>
                     <composite:insertChildren />
-                    <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                    <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{item}" itemValue="#{item}"/>
                     <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
                 </p:selectOneMenu>
             </ui:fragment>    
@@ -75,7 +75,7 @@
                               >
                 <f:converter converterId="#{cc.attrs.converter}" for="comboOneRadio"/>
                 <composite:insertChildren />
-                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{item}" itemValue="#{item}"/>
                 <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
             </p:selectOneRadio>
 
@@ -89,7 +89,7 @@
                                 >
                 <f:converter converterId="#{cc.attrs.converter}" for="comboOneList"/>
                 <composite:insertChildren />
-                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{item}" itemValue="#{item}"/>
                 <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
             </p:selectOneListbox>
 
@@ -103,7 +103,7 @@
                               >
                 <f:converter converterId="#{cc.attrs.converter}" for="comboManyMenu"/>
                 <composite:insertChildren />
-                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{item}" itemValue="#{item}"/>
                 <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
             </p:selectManyMenu>
 
@@ -117,7 +117,7 @@
                                   >
                 <f:converter converterId="#{cc.attrs.converter}" for="comboManyCheck"/>
                 <composite:insertChildren />
-                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{item}" itemValue="#{item}"/>
                 <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
             </p:selectManyCheckbox>
 
@@ -132,7 +132,7 @@
                                   >
                 <f:converter converterId="#{cc.attrs.converter}" for="comboCheckMenu"/>
                 <composite:insertChildren />
-                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{not empty item.label ? item.label:item}" itemValue="#{item}"/>
+                <f:selectItems value="#{cc.attrs.list}" var="item" itemLabel="#{item}" itemValue="#{item}"/>
                 <p:ajax event="change" update="#{cc.attrs.update}" listener="#{cc.listener}" process="#{cc.attrs.process}"/>
             </p:selectCheckboxMenu>
         </p:outputPanel>
