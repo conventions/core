@@ -6,7 +6,6 @@
 
 
     <composite:interface >
-        <composite:attribute name="invokerName"/>
         <composite:attribute name="mbean" required="true"/>
         <composite:attribute name="update" default="@none" />
         <composite:attribute name="rendered"  type="java.lang.Boolean" />
@@ -21,7 +20,6 @@
                        id="modal_bt"
                        rendered="#{cc.attrs.rendered}"
                        update="#{cc.attrs.update}">
-          <f:setPropertyActionListener value="#{cc.attrs.invokerName}" target="#{cc.attrs.mbean.invokerName}" for="modal_bt"/>
       </p:commandButton>
       
     </composite:implementation>

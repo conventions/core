@@ -69,7 +69,6 @@
                               rendered="#{cc.attrs.type eq 'oneRadio'}"
                               value="#{cc.attrs.value}"
                               style="width:#{cc.attrs.width}px;text-align: #{cc.attrs.alignment};#{cc.attrs.style} "
-                              effect="#{cc.attrs.effect}"
                               required="#{cc.attrs.required}" 
                               requiredMessage="#{cc.attrs.requiredMessage}"
                               >
@@ -128,7 +127,6 @@
                                   required="#{cc.attrs.required}" 
                                   requiredMessage="#{cc.attrs.requiredMessage}"
                                   style="width:#{cc.attrs.width}px;text-align: #{cc.attrs.alignment};#{cc.attrs.style}"
-                                  effect="#{cc.attrs.effect}"
                                   >
                 <f:converter converterId="#{cc.attrs.converter}" for="comboCheckMenu"/>
                 <composite:insertChildren />

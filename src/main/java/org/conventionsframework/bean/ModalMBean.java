@@ -21,9 +21,13 @@
  */
 package org.conventionsframework.bean;
 
+import java.util.Map;
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
+import javax.enterprise.event.Reception;
 import javax.inject.Inject;
 import org.conventionsframework.event.ModalCallback;
+import org.conventionsframework.event.ModalInitialization;
 
  
 /**
@@ -36,21 +40,31 @@ public abstract class ModalMBean<T> extends BaseMBean<T> {
 
     @Inject
     private Event<ModalCallback> modalCallbackEvent;
-    private String invokerName;
+    private Map<String,Object> parameters;
 
     /* fired by modalButton */
     public void invokeModalCallback() {
-        modalCallbackEvent.fire(new ModalCallback(modalCallback(),invokerName));
+        modalCallbackEvent.fire(new ModalCallback(modalCallback()));
     }
 
-    public String getInvokerName() {
-        return invokerName;
+    
+   public void beforeOpen(@Observes(notifyObserver = Reception.IF_EXISTS) ModalInitialization modalInit){
+        parameters = modalInit.getParameters();
+        onOpen();
     }
 
-    public void setInvokerName(String invokerName) {
-        this.invokerName = invokerName;
+    public Map<String, Object> getParameters() {
+        return parameters;
     }
+
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
+    }
+    
     
 
     public abstract Object modalCallback();
+
+    public void onOpen() {
+    }
 }

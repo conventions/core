@@ -14,7 +14,6 @@
         <composite:attribute name="header"/>
         <composite:attribute name="height" default="400"/>
         <composite:attribute name="hideEffect"/>
-        <composite:attribute name="invokerName" shortDescription="Name of the invoker managed bean, its used  only for identifying purposes "/>
         <composite:attribute name="mbean" shortDescription="name of the modalMBean" required="true"/>
         <composite:attribute name="modal" default="#{true}" type="java.lang.Boolean" />
         <composite:attribute name="modalButtonValue" default="Add"/>
@@ -22,7 +21,7 @@
         <composite:attribute name="renderButton" default="#{true}" type="java.lang.Boolean" shortDescription="boolean indicating if the 'modalButton' should be rendered" />
         <composite:attribute name="renderForm" default="#{true}" type="java.lang.Boolean" shortDescription="boolean indicating if the form should be rendered" />
         <composite:attribute name="showEffect"/>
-        <composite:attribute name="update" default="@none" shorDescrition="id of component to update on modalButton click"/>
+        <composite:attribute name="update" default="@none" shortDescription="id of component to update on modalButton click"/>
         <composite:attribute name="onCloseUpdate" default="@none"/>
         <composite:attribute name="widgetVar" required="true"/>
         <composite:attribute name="width" default="650"/>
@@ -51,7 +50,6 @@
                                        rendered="#{cc.attrs.renderButton}"
                                        oncomplete="#{cc.attrs.widgetVar}.hide();" 
                                        update="#{cc.attrs.update}"
-                                       invokerName="#{cc.attrs.invokerName}"
                                        />
                     </center>
                 </h:form>

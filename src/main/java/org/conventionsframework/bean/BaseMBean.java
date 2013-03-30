@@ -35,8 +35,12 @@ import org.conventionsframework.qualifier.PersistentClass;
 import org.conventionsframework.qualifier.Service;
 import org.conventionsframework.service.BaseService;
 import java.lang.annotation.Annotation;
+import java.util.List;
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
+import javax.enterprise.event.Reception;
 import javax.inject.Inject;
+import org.conventionsframework.event.ModalCallback;
 import org.conventionsframework.paginator.Paginator;
 import org.conventionsframework.qualifier.Type;
 
@@ -53,6 +57,7 @@ public abstract class BaseMBean<T> implements Serializable {
     private BaseService baseService;
     private State beanState;
     private Paginator paginator;
+    private Object modalResponse;
     private String createMessage;
     private String deleteMessage;
     private String updateMessage;
@@ -187,6 +192,12 @@ public abstract class BaseMBean<T> implements Serializable {
     public void setPaginator(Paginator paginator) {
         this.paginator = paginator;
     }
+
+    public Object getModalResponse() {
+        return modalResponse;
+    }
+    
+    
 
     //actions
     public void store() {
@@ -367,5 +378,13 @@ public abstract class BaseMBean<T> implements Serializable {
         }//end if service != null
 
         return initialized;
+    }
+    
+    public void modalResponse(@Observes(notifyObserver = Reception.IF_EXISTS) ModalCallback callback) {
+        modalResponse = callback.getResult();
+        afterModalResponse();
+    }
+
+    public void afterModalResponse() {
     }
 }
