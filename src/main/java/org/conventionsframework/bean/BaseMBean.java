@@ -300,16 +300,6 @@ public abstract class BaseMBean<T> implements Serializable {
     /**
      * used to pass parameters to a modal
      *
-     * @param modalName name of the modal which must receive the parameters
-     * @param parameters parameters to send
-     */
-    public void initModal(String modalName, Map<String, Object> parameters) {
-        modalInitEvent.fire(new ModalInitialization(parameters, modalName));
-    }
-
-    /**
-     * used to pass parameters to a modal
-     *
      * @param parameters parameters to send
      */
     public void initModal(Map<String, Object> parameters) {

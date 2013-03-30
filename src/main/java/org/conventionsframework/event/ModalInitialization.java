@@ -32,18 +32,11 @@ import java.util.Map;
  */
 public class ModalInitialization implements Serializable{
     
-    //name of the modal bean which this event is addressed
-    private String modal;
     //parameters to send to the modal
     private Map<String,Object> parameters = new HashMap<String,Object>();
 
     
     
-    public ModalInitialization(Map<String,Object> parameters,String modalName ) {
-        this.modal = modalName;
-        this.parameters = parameters;
-    }
-
     public ModalInitialization(Map<String, Object> parameters) {
         this.parameters = parameters;
     }
@@ -56,14 +49,4 @@ public class ModalInitialization implements Serializable{
         this.parameters = parameters;
     }
 
-    public String getModal() {
-        return modal;
-    }
-
-    public void setModal(String modal) {
-        this.modal = modal;
-    }
-    
-    
-    
 }
