@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
@@ -43,6 +44,7 @@ import org.primefaces.model.SortOrder;
  *
  * @author Rafael M. Pestano Jul 23, 2012 8:58:11 PM
  */
+@Named("baseHibernateDao")
 public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibernateDao<T, K>, Serializable {
     
     private Class<T> persistentClass;
@@ -219,7 +221,7 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
      * @return
      */
     @Override
-    public WrappedData<T> findPaginated(final int first, final int pageSize, String sortField, SortOrder sortOrder, final DetachedCriteria dc) {
+    public WrappedData<T> executePagination(final int first, final int pageSize, String sortField, SortOrder sortOrder, final DetachedCriteria dc) {
         
         int size = getRowCount(dc).intValue();
         
@@ -239,26 +241,7 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         return new WrappedData<T>(data, size);
     }
 
-    /**
-     * basic implementation of pagination without restrictions
-     *
-     * @param first
-     * @param pageSize
-     * @param sortField
-     * @param sortOrder
-     * @param columnFilters primefaces datatable column filters
-     * @param externalFilters filters outside datatable- eg: inputText, sliders,
-     * autocomplete etc..
-     * @return wrapped data with paginated list and rowCount
-     */
-    @Override
-    public WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters) {
-        DetachedCriteria dc = DetachedCriteria.forClass(persistentClass);
-        
-        this.addBasicFilterRestrictions(dc, externalFilters);
-        this.addBasicFilterRestrictions(dc, columnFilters);
-        return this.findPaginated(first, pageSize, sortField, sortOrder, dc);
-    }
+    
     
     @Override
     public Long getRowCount(final DetachedCriteria dc) {

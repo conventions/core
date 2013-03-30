@@ -62,8 +62,6 @@ public interface BaseHibernateDao<T, Id extends Serializable> extends Serializab
 
     List<T> findAll(final Integer first, final Integer max);
 
-    WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters);
-
     int countAll();
 
     abstract Class<T> getPersistentClass();
@@ -90,7 +88,7 @@ public interface BaseHibernateDao<T, Id extends Serializable> extends Serializab
 
     List<T> findByCriteria(DetachedCriteria criteriaObject);
 
-    WrappedData<T> findPaginated(final int first, final int pageSize, String sortField, SortOrder sortOrder, DetachedCriteria dc);
+    WrappedData<T> executePagination(final int first, final int pageSize, String sortField, SortOrder sortOrder, DetachedCriteria dc);
 
     Long getRowCount(final DetachedCriteria criteria);
 

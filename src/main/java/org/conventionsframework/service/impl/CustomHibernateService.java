@@ -31,7 +31,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.myfaces.extensions.cdi.jpa.api.Transactional;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
+import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.qualifier.*;
+import org.hibernate.criterion.DetachedCriteria;
+import org.primefaces.model.SortOrder;
 
 /**
  * Non JavaEE(EJB) dependent Service
@@ -116,4 +119,5 @@ public class CustomHibernateService<T, K extends Serializable> extends BaseServi
     public void update(T entity) {
         super.update(entity);
     }
+
 }

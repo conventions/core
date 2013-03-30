@@ -23,6 +23,9 @@ package org.conventionsframework.service;
 
 import org.conventionsframework.dao.BaseHibernateDao;
 import java.io.Serializable;
+import java.util.Map;
+import org.conventionsframework.model.WrappedData;
+import org.primefaces.model.SortOrder;
 
 /**
  *
@@ -43,5 +46,7 @@ public interface BaseService<T, Id extends Serializable> extends BaseHibernateDa
     void afterRemove(T entity);
     
     BaseHibernateDao getDao();
+    
+    WrappedData<T> findPaginated(final int first, final int pageSize, String sortField, SortOrder sortOrder, Map<String,String> columnFilters, Map<String,Object> externalFilters);
     
 }

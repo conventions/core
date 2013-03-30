@@ -89,7 +89,7 @@ public class Paginator<T> implements Serializable{
                 @Override
                 public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> dataTableFilters) {
                     WrappedData<T> wrappedData;
-                    wrappedData = baseService.configFindPaginated(first, pageSize, sortField, sortOrder, dataTableFilters, filter);
+                    wrappedData = baseService.findPaginated(first, pageSize, sortField, sortOrder, dataTableFilters, filter);
                     rowCount = wrappedData.getRowCount();
                     this.setRowCount(rowCount);//datatable rowCount
                     return wrappedData.getData();

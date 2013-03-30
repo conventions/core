@@ -42,6 +42,7 @@ import org.conventionsframework.dao.impl.BaseHibernateDaoImpl;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.Service;
+import org.conventionsframework.util.BeanManagerController;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -58,20 +59,21 @@ import org.primefaces.model.SortOrder;
 public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
     protected BaseHibernateDao<T, K> dao;
-    
-    @PostConstruct
-    public void initialize(){
-        dao = new BaseHibernateDaoImpl<T, K>(getPersistentClass(),getEntityManagerProvider());
-    }
-    
     @Inject
     @Log
     private transient Logger log;
 
+    @PostConstruct
+    public void initDao() {
+        dao = (BaseHibernateDao<T, K>) BeanManagerController.getBeanByName("baseHibernateDao");
+        dao.setEntityManagerProvider(getEntityManagerProvider());
+        dao.setPersistentClass(getPersistentClass());
+    }
+
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void store(T entity) {
-          doStore(entity);
+        doStore(entity);
     }
 
     public final void doStore(T entity) {
@@ -119,9 +121,11 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
      * autocomplete etc..
      * @return wrapped data with paginated list and rowCount
      */
-    @Override
-    public WrappedData<T> configFindPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilter) {
-        return getDao().configFindPaginated(first, pageSize, sortField, sortOrder, columnFilters, externalFilter);
+    public DetachedCriteria configFindPaginated(Map<String, String> columnFilters, Map<String, Object> externalFilter) {
+        DetachedCriteria dc = getDetachedCriteria();
+        getDao().addBasicFilterRestrictions(dc, externalFilter);
+        getDao().addBasicFilterRestrictions(dc, columnFilters);
+        return dc;
     }
 
     @Override
@@ -186,7 +190,6 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         return getDao().findAll(first, max);
     }
 
-   
     @Override
     public BaseHibernateDao<T, K> getDao() {
         return dao;
@@ -247,8 +250,9 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     @Override
-    public WrappedData<T> findPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, DetachedCriteria dc) {
-        return dao.findPaginated(first, pageSize, sortField, sortOrder, dc);
+    public WrappedData<T> findPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters) {
+        DetachedCriteria dc = configFindPaginated(columnFilters, externalFilters);
+        return dao.executePagination(first, pageSize, sortField, sortOrder, dc);
     }
 
     @Override
@@ -299,9 +303,8 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     public void setEntityManagerProvider(EntityManagerProvider entityManagerProvider) {
-       getDao().setEntityManagerProvider(entityManagerProvider);
+        getDao().setEntityManagerProvider(entityManagerProvider);
     }
-    
 
     /**
      * search persistentClass to set in dao layer
@@ -320,7 +323,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
                 return c;
             }
         }
-        //inspect injection point
+
         if (ip != null && ip.getAnnotated() != null) {
 
             if (ip.getAnnotated().isAnnotationPresent(Service.class)) {
@@ -365,5 +368,9 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
      */
     public boolean isConventionsFlushSession() {
         return true;
+    }
+
+    public WrappedData<T> executePagination(final int first, final int pageSize, String sortField, SortOrder sortOrder, final DetachedCriteria dc) {
+        return getDao().executePagination(first, pageSize, sortField, sortOrder, dc);
     }
 }
