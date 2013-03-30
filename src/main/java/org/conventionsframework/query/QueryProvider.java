@@ -24,6 +24,7 @@ import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.Query;
 import org.conventionsframework.qualifier.QueryParam;
 import org.conventionsframework.qualifier.QueryParams;
+import org.conventionsframework.service.BaseService;
 import org.conventionsframework.util.BeanManagerController;
 
 /**
@@ -38,13 +39,13 @@ public class QueryProvider implements Serializable{
     @AroundInvoke
     public Object execute(InvocationContext ic) throws Exception{
         Query query = ic.getMethod().getAnnotation(Query.class);
-        EntityManagerProvider emp = (EntityManagerProvider) BeanManagerController.getBeanByName(query.entityManagerPrivider());
+        BaseService service = (BaseService) BeanManagerController.getBeanByType(query.service());
         javax.persistence.Query q = null;
         if(!"".equals(query.sql())){
-             q = emp.getEntityManager().createQuery(query.sql());
+             q = service.getEntityManager().createQuery(query.sql());
         }
         else if(!"".equals(query.namedQuery())){
-             q = emp.getEntityManager().createNamedQuery(query.namedQuery());
+             q = service.getEntityManager().createNamedQuery(query.namedQuery());
         }
         
         QueryParams params = ic.getMethod().getAnnotation(QueryParams.class);

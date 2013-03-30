@@ -262,7 +262,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
 
     @Override
     public DetachedCriteria getDetachedCriteria() {
-        return DetachedCriteria.forClass(getPersistentClass());
+        return getDao().getDetachedCriteria();
     }
 
     @Override
