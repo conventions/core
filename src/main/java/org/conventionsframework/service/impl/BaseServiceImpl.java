@@ -127,6 +127,12 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         getDao().addBasicFilterRestrictions(dc, columnFilters);
         return dc;
     }
+    
+    public DetachedCriteria configFindPaginated(Map<String, String> columnFilters, Map<String, Object> externalFilter,DetachedCriteria dc) {
+        getDao().addBasicFilterRestrictions(dc, externalFilter);
+        getDao().addBasicFilterRestrictions(dc, columnFilters);
+        return dc;
+    }
 
     @Override
     public int countAll() {
