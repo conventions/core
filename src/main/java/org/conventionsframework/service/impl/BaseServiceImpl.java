@@ -38,7 +38,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import org.conventionsframework.dao.impl.BaseHibernateDaoImpl;
 import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.Service;
@@ -63,7 +62,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     @Log
     private transient Logger log;
 
-    @PostConstruct
+  
     public void initDao() {
         dao = (BaseHibernateDao<T, K>) BeanManagerController.getBeanByName("baseHibernateDao");
         dao.setEntityManagerProvider(getEntityManagerProvider());
@@ -198,6 +197,9 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
 
     @Override
     public BaseHibernateDao<T, K> getDao() {
+        if(dao == null){
+            initDao();
+        }
         return dao;
     }
 
@@ -300,7 +302,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     @Override
-    public EntityManager getEntityManager() {
+    public final EntityManager getEntityManager() {
         return dao.getEntityManager();
     }
 

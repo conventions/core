@@ -24,6 +24,7 @@ package org.conventionsframework.dao.impl;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,26 +47,26 @@ import org.primefaces.model.SortOrder;
  */
 @Named("baseHibernateDao")
 public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibernateDao<T, K>, Serializable {
-    
+
     private Class<T> persistentClass;
     private Session session;
     @Inject
     @Log
     private transient Logger log;
     private EntityManagerProvider entityManagerProvider;
-    
+
     public BaseHibernateDaoImpl() {
     }
-    
+
     public BaseHibernateDaoImpl(EntityManagerProvider entityManagerProvider) {
         this.entityManagerProvider = entityManagerProvider;
     }
-    
+
     public BaseHibernateDaoImpl(Class<T> persistentClass, EntityManagerProvider entityManagerProvider) {
         this.persistentClass = persistentClass;
         this.entityManagerProvider = entityManagerProvider;
     }
-    
+
     @Override
     public Session getSession() {
         if (session == null || !session.isOpen()) {
@@ -77,74 +78,74 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         }
         return session;
     }
-    
+
     public EntityManagerProvider getEntityManagerProvider() {
         return entityManagerProvider;
     }
-    
+
     public void setEntityManagerProvider(EntityManagerProvider entityManagerProvider) {
         this.entityManagerProvider = entityManagerProvider;
     }
-    
-    public EntityManager getEntityManager() {
+
+    public final EntityManager getEntityManager() {
         return getEntityManagerProvider().getEntityManager();
     }
-    
+
     @Override
     public Class<T> getPersistentClass() {
         return this.persistentClass;
     }
-    
+
     public void setPersistentClass(Class<T> clazz) {
         this.persistentClass = clazz;
     }
-    
+
     @Override
     public T load(K id) {
         return (T) this.getSession().load(this.persistentClass, id);
     }
-    
+
     @Override
     public T get(K id) {
         return (T) this.getSession().get(this.persistentClass, id);
     }
-    
+
     @Override
     public void save(T entity) {
         this.getSession().save(entity);
     }
-    
+
     public T merge(T entity) {
         return (T) getSession().merge(entity);
     }
-    
+
     @Override
     public void update(T entity) {
         this.getSession().update(entity);
     }
-    
+
     @Override
     public void delete(T entity) {
         this.getSession().delete(entity);
     }
-    
+
     @Override
     public T refresh(T entity) {
         this.getSession().refresh(entity);
         return entity;
     }
-    
+
     @Override
     public void saveOrUpdate(T entity) {
         this.getSession().saveOrUpdate(entity);
     }
-    
+
     @Override
     public List<T> findAll() {
         Criteria criteria = getSession().createCriteria(persistentClass);
         return criteria.list();
     }
-    
+
     @Override
     public List<T> findAll(Integer first, Integer max) {
         Criteria criteria = getSession().createCriteria(persistentClass);
@@ -152,29 +153,29 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         criteria.setMaxResults(max);
         return criteria.list();
     }
-    
+
     @Override
     public List<T> findByExample(final T entity) {
         Criteria criteria = getSession().createCriteria(persistentClass);
         criteria.add(Example.create(entity).enableLike(MatchMode.ANYWHERE).ignoreCase());
         return criteria.list();
     }
-    
+
     @Override
     public T findOneByExample(final T entity) {
         Criteria criteria = getSession().createCriteria(persistentClass);
         criteria.add(Example.create(entity).enableLike(MatchMode.ANYWHERE).ignoreCase());
         return (T) criteria.uniqueResult();
-        
+
     }
-    
+
     @Override
     public List<T> findByExample(final T entity, MatchMode matchMode) {
         Criteria criteria = getSession().createCriteria(persistentClass);
         criteria.add(Example.create(entity).enableLike(matchMode).ignoreCase());
         return criteria.list();
     }
-    
+
     @Override
     public List<T> findByExample(final T entity, int maxResult) {
         Criteria criteria = getSession().createCriteria(persistentClass);
@@ -182,7 +183,7 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         criteria.setMaxResults(maxResult);
         return criteria.list();
     }
-    
+
     @Override
     public List<T> findByExample(final T entity, int maxResult, MatchMode matchMode) {
         Criteria criteria = getSession().createCriteria(persistentClass);
@@ -190,15 +191,15 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         criteria.setMaxResults(maxResult);
         return criteria.list();
     }
-    
+
     @Override
     public T findOneByExample(final T entity, MatchMode matchMode) {
         Criteria criteria = getSession().createCriteria(persistentClass);
         criteria.add(Example.create(entity).enableLike(matchMode).ignoreCase());
         return (T) criteria.uniqueResult();
-        
+
     }
-    
+
     @Override
     public List<T> findByExample(T exampleInstance, String[] excludeProperty) {
         Criteria crit = getSession().createCriteria(persistentClass);
@@ -222,27 +223,28 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
      */
     @Override
     public WrappedData<T> executePagination(final int first, final int pageSize, String sortField, SortOrder sortOrder, final DetachedCriteria dc) {
-        
+
         int size = getRowCount(dc).intValue();
-        
-        if (sortField != null && !sortOrder.equals(SortOrder.UNSORTED)) {
+
+        if (sortField != null) {
+            if(sortOrder.equals(SortOrder.UNSORTED)){
+                sortOrder = SortOrder.ASCENDING;
+            }
             if (sortOrder.equals(SortOrder.ASCENDING)) {
                 dc.addOrder(Order.asc(sortField));
             } else {
                 dc.addOrder(Order.desc(sortField));
             }
-            
+
         }
-        
-        
+
+
         List<T> data = this.findByCriteria(dc, first, pageSize);
-        
-        
+
+
         return new WrappedData<T>(data, size);
     }
 
-    
-    
     @Override
     public Long getRowCount(final DetachedCriteria dc) {
         Criteria criteria = dc.getExecutableCriteria(getSession());
@@ -253,7 +255,7 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         dc.setProjection(null).setResultTransformer(Criteria.ROOT_ENTITY);
         return result;
     }
-    
+
     @Override
     public int countAll() {
         Criteria criteria = getSession().createCriteria(persistentClass);
@@ -262,7 +264,7 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         criteria.setMaxResults(1);
         return ((Long) criteria.uniqueResult()).intValue();
     }
-    
+
     @Override
     public List<T> findByCriteria(DetachedCriteria dc, int first, int maxResult) {
         Criteria criteria = dc.getExecutableCriteria(getSession());
@@ -270,17 +272,17 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         criteria.setMaxResults(maxResult);
         return criteria.list();
     }
-    
+
     @Override
     public List<T> findByCriteria(DetachedCriteria dc) {
         return dc.getExecutableCriteria(getSession()).list();
     }
-    
+
     @Override
     public DetachedCriteria getDetachedCriteria() {
         return DetachedCriteria.forClass(persistentClass);
     }
-    
+
     @Override
     public Criteria getCriteria() {
         return getSession().createCriteria(persistentClass);
@@ -310,7 +312,7 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
         } else {
             query.addEntity(getPersistentClass());
         }
-        
+
         Set<Map.Entry> rawParameters = params.entrySet();
         for (Map.Entry entry : rawParameters) {
             query.setParameter(entry.getKey().toString(), entry.getValue());
@@ -336,7 +338,7 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
                 if (entry != null && entry.getValue() != null && !"".equals(entry.getValue())) {
                     Field f;
                     try {
-                        f = persistentClass.getDeclaredField(entry.getKey());
+                        f = getField(persistentClass, entry.getKey());
                         if (f.getType().isAssignableFrom(String.class)) {
                             dc.add(Restrictions.ilike(entry.getKey(), (String) entry.getValue(), MatchMode.ANYWHERE));
                         } else if (f.getType().isAssignableFrom(Integer.class) || f.getType().isAssignableFrom(int.class)) {
@@ -349,12 +351,28 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
                             dc.add(Restrictions.eq(entry.getKey(), (Calendar) entry.getValue()));
                         }
                     } catch (NoSuchFieldException ex) {
+                        if(log.isLoggable(Level.WARNING)){
+                            log.warning("Could not addBasicRestriction from field:" + entry.getKey() + "."+ex.getMessage());
+                        }
                     } catch (SecurityException ex) {
                     }
                 }
             }
         }
-        
-        
+
+
+    }
+
+    private Field getField(Class clazz, String fieldName) throws NoSuchFieldException {
+        try {
+            return clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            Class superClass = clazz.getSuperclass();
+            if (superClass == null) {
+                throw e;
+            } else {
+                return getField(superClass, fieldName);
+            }
+        }
     }
 }
