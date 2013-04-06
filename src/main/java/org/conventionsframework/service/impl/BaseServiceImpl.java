@@ -209,63 +209,63 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
 
     @Override
     public Session getSession() {
-        return dao.getSession();
+        return getDao().getSession();
     }
 
     @Override
     public List<T> findByExample(T entity) {
-        return dao.findByExample(entity);
+        return getDao().findByExample(entity);
     }
 
     @Override
     public List<T> findByExample(final T entity, MatchMode matchMode) {
-        return dao.findByExample(entity, matchMode);
+        return getDao().findByExample(entity, matchMode);
     }
 
     @Override
     public List<T> findByExample(final T entity, int maxResult) {
-        return dao.findByExample(entity, maxResult);
+        return getDao().findByExample(entity, maxResult);
     }
 
     @Override
     public List<T> findByExample(final T entity, int maxResult, MatchMode matchMode) {
-        return dao.findByExample(entity, maxResult, matchMode);
+        return getDao().findByExample(entity, maxResult, matchMode);
     }
 
     @Override
     public T findOneByExample(T entity) {
-        return (T) dao.findOneByExample(entity);
+        return (T) getDao().findOneByExample(entity);
     }
 
     @Override
     public List<T> findByExample(T exampleInstance, String[] excludeProperty) {
-        return dao.findByExample(exampleInstance, excludeProperty);
+        return getDao().findByExample(exampleInstance, excludeProperty);
     }
 
     @Override
     public T findOneByExample(T entity, MatchMode matchMode) {
-        return (T) dao.findOneByExample(entity, matchMode);
+        return (T) getDao().findOneByExample(entity, matchMode);
     }
 
     @Override
     public List<T> findByCriteria(DetachedCriteria criteriaObject, int first, int maxResult) {
-        return dao.findByCriteria(criteriaObject, first, maxResult);
+        return getDao().findByCriteria(criteriaObject, first, maxResult);
     }
 
     @Override
     public List<T> findByCriteria(DetachedCriteria criteriaObject) {
-        return dao.findByCriteria(criteriaObject);
+        return getDao().findByCriteria(criteriaObject);
     }
 
     @Override
     public WrappedData<T> findPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters) {
         DetachedCriteria dc = configFindPaginated(columnFilters, externalFilters);
-        return dao.executePagination(first, pageSize, sortField, sortOrder, dc);
+        return getDao().executePagination(first, pageSize, sortField, sortOrder, dc);
     }
 
     @Override
     public Long getRowCount(DetachedCriteria criteria) {
-        return dao.getRowCount(criteria);
+        return getDao().getRowCount(criteria);
     }
 
     @Override
@@ -275,7 +275,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
 
     @Override
     public Criteria getCriteria() {
-        return dao.getCriteria();
+        return getDao().getCriteria();
     }
 
     /**
@@ -289,7 +289,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
      */
     @Override
     public List findByNativeQuery(String nativeQuery, Map params, Class entity, ResultTransformer rt, ScalarReturn scalar) {
-        return dao.findByNativeQuery(nativeQuery, params, entity, rt, scalar);
+        return getDao().findByNativeQuery(nativeQuery, params, entity, rt, scalar);
     }
 
     public void flushSession() {
@@ -303,11 +303,11 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
 
     @Override
     public final EntityManager getEntityManager() {
-        return dao.getEntityManager();
+        return getDao().getEntityManager();
     }
 
     public void setPersistentClass(Class<T> clazz) {
-        dao.setPersistentClass(clazz);
+        getDao().setPersistentClass(clazz);
     }
 
     public void setEntityManagerProvider(EntityManagerProvider entityManagerProvider) {
