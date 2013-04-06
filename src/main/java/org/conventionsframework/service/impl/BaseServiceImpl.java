@@ -57,7 +57,7 @@ import org.primefaces.model.SortOrder;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
-    protected BaseHibernateDao<T, K> dao;
+    private BaseHibernateDao<T, K> dao;
     @Inject
     @Log
     private transient Logger log;
