@@ -40,15 +40,17 @@ import org.primefaces.model.SortOrder;
  *
  * @author rmpestano 
  */
-
 public class Paginator<T> implements Serializable{
      private LazyDataModel<T> dataModel;
      private BaseService baseService;
      private Integer rowCount;
-     private Map<String,Object> filter = new HashMap<String, Object>();;
+     private Map<String,Object> filter;
      private List<T> filteredValue;//datatable filteredValue attribute
      private List<T> selection;//datatable selection attribute
      private T singleSelection;//datatable single selection
+     @Inject
+     private SessionFilter sessionFilter;
+     private boolean keepFilterInSession = true;//keep external filters in user session
      
     public Paginator() {
     }
@@ -86,6 +88,15 @@ public class Paginator<T> implements Serializable{
     }
     
     private void initDataModel(){
+        if(keepFilterInSession){
+            String sessionFilterKey = baseService.getClass().getSimpleName();
+            filter = getSessionFilter().getFilter(sessionFilterKey);
+            if(filter == null){
+                filter = new HashMap<String, Object>();
+                sessionFilter.addFilter(sessionFilterKey, filter);
+            }
+        }
+        
         dataModel = new LazyDataModel<T>() {
                 @Override
                 public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> dataTableFilters) {
@@ -153,6 +164,15 @@ public class Paginator<T> implements Serializable{
     public void setSelection(List<T> selection) {
         this.selection = selection;
     }
+
+    public boolean isKeepFilterInSession() {
+        return keepFilterInSession;
+    }
+
+    public void setKeepFilterInSession(boolean keepFilterInSession) {
+        this.keepFilterInSession = keepFilterInSession;
+    }
+    
     
     public void pageListener(){
         //override to perform an action on datatable page event
@@ -166,5 +186,10 @@ public class Paginator<T> implements Serializable{
         //override to perform an action on datatable filter event
     }
 
-   
+    public SessionFilter getSessionFilter(){
+        if(sessionFilter == null){//its null when Paginator is created via new operator
+            sessionFilter = (SessionFilter) BeanManagerController.getBeanByType(SessionFilter.class);
+        }
+        return sessionFilter;
+    }
 }
