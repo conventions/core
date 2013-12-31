@@ -75,7 +75,7 @@ public class SecurityAreaRenderer extends CoreRenderer{
         boolean rolesAllowedAttributeDefined = (rolesAllowed != null && !"".equals(rolesAllowed));
         
         if(rolesForbiddenAttributeDefined && rolesAllowedAttributeDefined){
-            throw new FacesException("CONVENTIONS:rolesAllowed and rolesForbidden attributes defined at same time in SecurityArea component placed inside '"+component.getParent().getClientId(context) + "'.\nThese attributes are mutualy exclusive, use only one at a time.");
+            throw new FacesException("CONVENTIONS:rolesAllowed and rolesForbidden attributes defined at same time in SecurityArea component placed inside '"+component.getParent().getClientId(context) + "'.\nThese attributes are mutually exclusive, use only one at a time.");
         }
         
         List<String> userRoles = (List<String>) context.getExternalContext().getSessionMap().get(Constants.USER_ROLES);

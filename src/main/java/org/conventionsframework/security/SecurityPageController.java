@@ -42,8 +42,8 @@ import javax.inject.Named;
 @Named(value = "pageController")
 public class SecurityPageController implements Serializable {
 
-    private String message;//message to show when user has no access to the page
-    private String outcome;//outcome to forward user when user has no access to the page
+    private String message;//message to show when user has no access to the outcome
+    private String outcome;//outcome to forward user when user has no access to the outcome
     @Inject
     private StateController stateController;
 
@@ -58,7 +58,7 @@ public class SecurityPageController implements Serializable {
                     }
                 }
             }
-            //if it gets here user has no access to the page
+            //if it gets here user has no access to the outcome
             if (message != null && !"".endsWith(message)) {
                 MessagesController.addFatal(message);
             }
@@ -92,7 +92,7 @@ public class SecurityPageController implements Serializable {
     /**
      *
      * @return outcome to match a navigation rule when user has no access to the
-     * page
+     * outcome
      */
     public String getOutcome() {
         return outcome;

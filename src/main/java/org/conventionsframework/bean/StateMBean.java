@@ -27,10 +27,12 @@ import org.conventionsframework.event.StatePushEvent;
 import org.conventionsframework.model.StateItem;
 import org.conventionsframework.qualifier.BeanState;
 import org.conventionsframework.qualifier.BeanStates;
+import org.conventionsframework.qualifier.Config;
 import org.conventionsframework.util.AnnotationUtils;
 import java.io.Serializable;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Instance;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -45,7 +47,10 @@ public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable
 
     @Inject
     private Event<StatePushEvent> statePushEvent;
+
+
     private BeanStates beanStates;
+
 
     /**
      * push this bean as an item in {@see StateController#stateItens}
@@ -64,7 +69,7 @@ public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable
             BeanState beanState = AnnotationUtils.findStateAnnotation(getClass());
             if (beanState != null) {
                 if (beanState.beanState().equals(this.getBeanState().getStateName())) {
-                    statePushEvent.fire(new StatePushEvent(new StateItem(beanState.page(), getEntity(), getBeanState(), beanState.title(), this.getClass(), beanState.ajax(), beanState.callback(), beanState.update())));
+                    statePushEvent.fire(new StatePushEvent(new StateItem(beanState.outcome(), getEntity(), getBeanState(), beanState.link(), beanState.title(), this.getClass(), beanState.ajax(), beanState.callback(), beanState.update(),beanState.global(),beanState.resetValues(),beanState.immediate(),beanState.onComplete(),beanState.addViewParam())));
                 }
             }
         }
@@ -80,7 +85,7 @@ public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable
          * preRenderView event which is fired by every ajax call, so to avoid
          * this behavior we check if it is not a postback
          */
-        if (!FacesContext.getCurrentInstance().isPostback() && beanState != null) {//non ajaxCall
+        if (!facesContext.get().isPostback() && beanState != null) {//non ajaxCall
             this.setBeanState(beanState);
             if (beanStates != null) {//avoid unncessary looping
                 this.matchState(beanStates.value());
@@ -96,7 +101,7 @@ public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable
                 BeanState state = AnnotationUtils.findStateAnnotation(getClass());
                 if (states != null) {
                     if (state.beanState().equals(this.getBeanState().getStateName())) {
-                        statePushEvent.fire(new StatePushEvent(new StateItem(state.page(), getEntity(), getBeanState(), state.title(), this.getClass(), state.ajax(), state.callback(), state.update())));
+                        statePushEvent.fire(new StatePushEvent(new StateItem(state.outcome(), getEntity(), getBeanState(), state.link(), state.title(), this.getClass(), state.ajax(), state.callback(), state.update(),state.global(),state.resetValues(),state.immediate(),state.onComplete(),state.addViewParam())));
                     }
                 }
             }
@@ -150,7 +155,7 @@ public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable
 
         for (BeanState beanState : value) {
             if (beanState.beanState().equals(this.getBeanState().getStateName())) {
-                statePushEvent.fire(new StatePushEvent(new StateItem(beanState.page(), getEntity(), getBeanState(), beanState.title(), this.getClass(), beanState.ajax(), beanState.callback(), beanState.update())));
+                statePushEvent.fire(new StatePushEvent(new StateItem(beanState.outcome(), getEntity(), getBeanState(), beanState.link(), beanState.title(), this.getClass(), beanState.ajax(), beanState.callback(), beanState.update(),beanState.global(),beanState.resetValues(),beanState.immediate(),beanState.onComplete(),beanState.addViewParam())));
             }
         }
     }

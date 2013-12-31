@@ -35,6 +35,15 @@ public  class Constants {
         public static final String INSERT_STATE = "insert";
         public static final String UPDATE_STATE = "update";
      }
-      
+
+    public static final class InitialParameters {
+        public static final String DISABLE_CONVENTIONS_FILTER = "DISABLE_CONVENTIONS_FILTER";
+        public static final String INITIAL_PAGE = "INITIAL_PAGE";
+        public static final String ERROR_PAGE = "ERROR_PAGE";
+        public static final String IGNORE_RESOURCE = "IGNORE_RESOURCE";
+
+    }
+
+
       
 }

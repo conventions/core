@@ -16,6 +16,7 @@
  */
 package org.conventionsframework.bean;
 
+import org.conventionsframework.qualifier.Config;
 import org.conventionsframework.util.ResourceBundle;
 import org.conventionsframework.util.BeanManagerController;
 import org.conventionsframework.util.MessagesController;
@@ -35,14 +36,14 @@ import org.conventionsframework.qualifier.PersistentClass;
 import org.conventionsframework.qualifier.Service;
 import org.conventionsframework.service.BaseService;
 import java.lang.annotation.Annotation;
-import java.util.List;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.Reception;
+import javax.enterprise.inject.Instance;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import org.conventionsframework.event.ModalCallback;
 import org.conventionsframework.paginator.Paginator;
-import org.conventionsframework.qualifier.Type;
 
 /**
  * Base implementation of managedBeans
@@ -68,6 +69,10 @@ public abstract class BaseMBean<T> implements Serializable {
     @Inject
     @Log
     private transient Logger log;
+
+    @Inject
+    @Config
+    protected transient Instance<FacesContext> facesContext;
 
     // getter & setters
     public BaseService getBaseService() {
@@ -152,6 +157,9 @@ public abstract class BaseMBean<T> implements Serializable {
         if (initializeService()) { //baseService must be set to create paginator
             paginator = new Paginator(baseService);
         }
+        else{
+            log.warning("Service was not initialized for bean:"+getClass().getSimpleName());
+        }
     }
 
     public T create() {
@@ -165,10 +173,8 @@ public abstract class BaseMBean<T> implements Serializable {
             }//if no annotation found then try to create via reflection
             return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).newInstance();
         } catch (Exception ex) {
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "Could not create entity for mbean:" + this.getClass().getSimpleName());
+                log.log(Level.WARNING, "Could not create entity for mbean:" + this.getClass().getSimpleName());
                 ex.printStackTrace();
-            }
         }
         return null;
     }
@@ -200,7 +206,7 @@ public abstract class BaseMBean<T> implements Serializable {
     
 
     //actions
-    public void store() {
+    public void save() {
         baseService.store(entity);
         if (isInsertState()) {
             MessagesController.addInfo(getCreateMessage());
@@ -210,27 +216,31 @@ public abstract class BaseMBean<T> implements Serializable {
         setBeanState(CrudState.UPDATE);
     }
 
-    public void save() {
-        baseService.saveOrUpdate(entity);
-        if (isInsertState()) {
-            MessagesController.addInfo(getCreateMessage());
-        } else {
-            MessagesController.addInfo(getUpdateMessage());
-        }
-    }
-
     public void save(String msg) {
-        baseService.saveOrUpdate(entity);
+        baseService.store(entity);
         MessagesController.addInfo(msg);
+        setBeanState(CrudState.UPDATE);
     }
 
+    /**
+     * called by framework:removeButton
+     * invoke service.remove using entityAux as param
+     */
     public void delete() {
-        this.remove(entityAux);
-        MessagesController.addInfo(deleteMessage);
+        this.delete(entityAux);
     }
 
-    public void remove(T entity) {
+    /**
+     * invoke service.remove using entity as param
+     * @param entity
+     */
+    public void delete(T entity) {
+        this.delete(entity,deleteMessage);
+    }
+
+    public void delete(T entity, String msg) {
         baseService.remove(entity);
+        MessagesController.addInfo(msg);
     }
 
     /**
@@ -251,14 +261,14 @@ public abstract class BaseMBean<T> implements Serializable {
     }
 
     /**
-     * @return view id default is the calling page
+     * @return view id default is the calling outcome
      */
     public String afterPrepareInsert() {
         return null;
     }
 
     /**
-     * @return view id default is the calling page
+     * @return view id default is the calling outcome
      */
     public String afterPrepareUpdate() {
         return null;
@@ -325,45 +335,29 @@ public abstract class BaseMBean<T> implements Serializable {
         boolean initialized = false;
         Service service = AnnotationUtils.findServiceAnnotation(getClass());
         if (service != null) {
-            if (!"".equals(service.name())) { //inject service by name
+             if (!service.value().equals(BaseService.class)) {//inject service by value
                 try {
-                    this.setBaseService((BaseService) BeanManagerController.getBeanByName(service.name()));
+                    this.setBaseService(BeanManagerController.getBeanByType(service.value()));
                     initialized = true;
                 } catch (Exception ex) {
                     if (log.isLoggable(Level.WARNING)) {
                         log.log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
                     }
                 }
-            } else if (!service.value().isPrimitive()) {//inject service by value
-                try {
-                    this.setBaseService((BaseService) BeanManagerController.getBeanByType(service.value()));
-                    initialized = true;
-                } catch (Exception ex) {
-                    if (log.isLoggable(Level.WARNING)) {
-                        log.log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
-                    }
+            }else if(!service.entity().isPrimitive()){//Managed bean without service, use generic service plus entity attr
+                 baseService = BeanManagerController.getBeanByTypeAndQualifier(service.value(), Service.class);
+                 baseService.setPersistentClass(service.entity());
+                 initialized = true;
+             }
+
+            if (getBaseService() != null && getBaseService().getPersistentClass() == null) {
+                if(!service.entity().isPrimitive()){
+                    getBaseService().setPersistentClass(service.entity());
+                }
+                else{
+                    throw new RuntimeException("Could not find persistent class, user @Service(entity=entity) or @PersistentClass at class level");
                 }
 
-            } else if (getBaseService() == null) {//inject service by type
-                try {
-                    Type type = service.type();
-                    if (type.equals(Type.STATEFUL)) {
-                        this.setBaseService((BaseService) BeanManagerController.getBeanByName(Service.STATEFUL));
-                        initialized = true;
-                    } else if (type.equals(Type.STATELESS)) {
-                        this.setBaseService((BaseService) BeanManagerController.getBeanByName(Service.STATELESS));
-                    } else {
-                        this.setBaseService((BaseService) BeanManagerController.getBeanByName(Service.CUSTOM));
-                    }
-                } catch (Exception ex) {
-                    if (log.isLoggable(Level.WARNING)) {
-                        log.log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
-                    }
-                }
-            }
-
-            if (getBaseService() != null && !service.entity().isPrimitive() && getBaseService().getPersistentClass() == null || getBaseService().getPersistentClass().isPrimitive()) {
-                getBaseService().getDao().setPersistentClass(service.entity());
             }
         }//end if service != null
 

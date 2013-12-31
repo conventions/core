@@ -20,7 +20,7 @@ import java.io.Serializable;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import org.conventionsframework.entitymanager.EntityManagerProvider;
+
 import org.conventionsframework.qualifier.Query;
 import org.conventionsframework.qualifier.QueryParam;
 import org.conventionsframework.qualifier.QueryParams;
@@ -32,7 +32,7 @@ import org.conventionsframework.util.BeanManagerController;
  * @author Rafaem M. Pestano - Sep 8, 2012 5:35:00 PM
  */
 
-@Query
+@Query(service = BaseService.class)
 @Interceptor
 public class QueryProvider implements Serializable{
     

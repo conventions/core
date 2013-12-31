@@ -21,15 +21,15 @@
  */
 package org.conventionsframework.qualifier;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Target;
+import org.conventionsframework.service.BaseService;
+
 import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Qualifier
 @Retention(RUNTIME)
@@ -37,17 +37,9 @@ import javax.inject.Qualifier;
 public @interface Service {
 
     @Nonbinding
-    String name() default "";
-    
-    @Nonbinding
     Class entity() default byte.class;
     
     @Nonbinding
-    Class value() default byte.class;
+    Class<? extends BaseService> value() default BaseService.class;
 
-    Type type() default Type.CUSTOM;
-    
-    public static final String STATELESS = "statelessHibernateService";
-    public static final String STATEFUL = "statefulHibernateService";
-    public static final String CUSTOM = "customHibernateService";
 }

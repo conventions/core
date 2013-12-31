@@ -9,6 +9,7 @@
 
     <composite:interface>
         <composite:attribute name="appendToBody" default="false"  />
+        <composite:attribute name="removeAction" default="delete"  />
         <composite:attribute name="timeout" default="1600"  shortDescription="timeout before closing dialog, useful to show messages before closing" />
         <composite:attribute name="mbean" required="true"/>
         <composite:attribute name="update" />
@@ -21,8 +22,6 @@
         <composite:attribute name="renderMessages" default="true" type="java.lang.Boolean" />
         <composite:attribute name="cancel" default="Cancel" />
         <composite:attribute name="oncomplete" />
-        <composite:attribute name="persistentRemove" default="true" type="java.lang.Boolean" 
-                             shortDescription="if true it will perform a database deletion if false it will call removeFromList method in the mbean" />
     </composite:interface>
 
     <composite:implementation>
@@ -35,7 +34,7 @@
                 </p:outputPanel>
                 <center>
                     <h:panelGrid cellspacing="15" columns="2">
-                        <conv:removeButton value="#{cc.attrs.remove}"  persistentRemove="#{cc.attrs.persistentRemove ? 'true':'false'}" mbean="#{cc.attrs.mbean}" update="#{cc.attrs.update}"
+                        <conv:removeButton value="#{cc.attrs.remove}" deleteAction="#{cc.attrs.removeAction}" mbean="#{cc.attrs.mbean}" update="#{cc.attrs.update}"
                                            oncomplete="closeModalRemoval();#{cc.attrs.oncomplete}" />
                         <p:commandButton value="#{cc.attrs.cancel}" oncomplete="#{cc.attrs.widgetVar}.hide()"/>
                     </h:panelGrid>

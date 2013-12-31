@@ -24,10 +24,8 @@
         <script type="text/javascript">
             function hideMsg(args){
                    if(! args.validationFailed){//beanValidation errors
-                       if(! args.businessError){//exceptions in the managedBean
                            setTimeout("doHide()", #{cc.attrs.timeout});
                        }
-                   }
             }
                     
             function doHide(){

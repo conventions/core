@@ -19,19 +19,24 @@
  * under the License.
  * 
  */
+package org.conventionsframework.qualifier;
 
-package org.conventionsframework.entitymanager;
+import javax.inject.Qualifier;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import java.io.Serializable;
-import javax.persistence.EntityManager;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  *
- * @author VAIO
+ * @author Rafael M. Pestano
+ * 
  */
-public interface EntityManagerProvider extends Serializable{
-    
-    EntityManager getEntityManager();
-    void setEntityManager(EntityManager entityManager);
-    
+@Qualifier
+@Retention(RUNTIME)
+@Target({METHOD, FIELD, PARAMETER, TYPE})
+public @interface Config {
+
+
 }

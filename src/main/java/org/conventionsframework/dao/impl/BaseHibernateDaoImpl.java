@@ -21,18 +21,9 @@
  */
 package org.conventionsframework.dao.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
 import org.conventionsframework.dao.BaseHibernateDao;
-import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.conventionsframework.model.WrappedData;
-import org.conventionsframework.qualifier.Log;
+import org.conventionsframework.qualifier.Dao;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -41,54 +32,56 @@ import org.hibernate.loader.custom.ScalarReturn;
 import org.hibernate.transform.ResultTransformer;
 import org.primefaces.model.SortOrder;
 
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Rafael M. Pestano Jul 23, 2012 8:58:11 PM
  */
-@Named("baseHibernateDao")
+@Dao
 public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibernateDao<T, K>, Serializable {
 
     private Class<T> persistentClass;
     private Session session;
-    @Inject
-    @Log
-    private transient Logger log;
-    private EntityManagerProvider entityManagerProvider;
+
+    EntityManager entityManager;
+
+
+    private final Logger log = Logger.getLogger(getClass().getSimpleName());
+
 
     public BaseHibernateDaoImpl() {
     }
 
-    public BaseHibernateDaoImpl(EntityManagerProvider entityManagerProvider) {
-        this.entityManagerProvider = entityManagerProvider;
+    public BaseHibernateDaoImpl(EntityManager em, Class<T> persistentClass) {
+        this.entityManager = em;
+        this.persistentClass = persistentClass;
     }
 
-    public BaseHibernateDaoImpl(Class<T> persistentClass, EntityManagerProvider entityManagerProvider) {
-        this.persistentClass = persistentClass;
-        this.entityManagerProvider = entityManagerProvider;
-    }
 
     @Override
     public Session getSession() {
         if (session == null || !session.isOpen()) {
-            if (getEntityManager().getDelegate() instanceof org.hibernate.ejb.HibernateEntityManager) {
-                session = ((org.hibernate.ejb.HibernateEntityManager) getEntityManager().getDelegate()).getSession();
-            } else {
-                session = (org.hibernate.Session) getEntityManager().getDelegate();
-            }
+            session = getEntityManager().unwrap(Session.class);
         }
         return session;
     }
 
-    public EntityManagerProvider getEntityManagerProvider() {
-        return entityManagerProvider;
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
-    public void setEntityManagerProvider(EntityManagerProvider entityManagerProvider) {
-        this.entityManagerProvider = entityManagerProvider;
-    }
-
-    public final EntityManager getEntityManager() {
-        return getEntityManagerProvider().getEntityManager();
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -277,6 +270,22 @@ public class BaseHibernateDaoImpl<T, K extends Serializable> implements BaseHibe
     public List<T> findByCriteria(DetachedCriteria dc) {
         return dc.getExecutableCriteria(getSession()).list();
     }
+
+    @Override
+    public T findOneByCriteria(DetachedCriteria dc) {
+        Criteria criteria = dc.getExecutableCriteria(getSession());
+        criteria.setMaxResults(1);
+        criteria.setFirstResult(0);
+        return (T) criteria.uniqueResult();
+    }
+
+    @Override
+    public T findOneByCriteria(Criteria criteria) {
+        criteria.setMaxResults(1);
+        criteria.setFirstResult(0);
+        return (T) criteria.uniqueResult();
+    }
+
 
     @Override
     public DetachedCriteria getDetachedCriteria() {

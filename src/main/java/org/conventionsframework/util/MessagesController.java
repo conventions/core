@@ -21,9 +21,10 @@
  */
 package org.conventionsframework.util;
 
+import org.primefaces.context.RequestContext;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -48,43 +49,39 @@ public class MessagesController {
     }
 
     public static void addError(String summary, String detail) {
-        addBusinessErroCallbackParam();
+        addValidationFailedCallbackParam();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, detail));
     }
 
     public static void addError(String summary) {
-        /* 
-         * businessError param is used by framework:messageHide component
-         * also can be used to keep a dialog open on error
-         */
-        addBusinessErroCallbackParam();
+        addValidationFailedCallbackParam();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, ""));
     }
 
     public static void addFatal(String summary) {
-        addBusinessErroCallbackParam();
+        addValidationFailedCallbackParam();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, summary, ""));
     }
 
     public static void addFatal(String summary, String detail) {
-        RequestContext.getCurrentInstance().addCallbackParam("businessError", true);
+        addValidationFailedCallbackParam();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, summary, detail));
     }
 
     public static void addMessage(String summary, String detail, FacesMessage.Severity severity) {
-        RequestContext.getCurrentInstance().addCallbackParam("businessError", true);
+        addValidationFailedCallbackParam();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
     }
 
     public static void addMessage(String summary, FacesMessage.Severity severity) {
-        addBusinessErroCallbackParam();
+        addValidationFailedCallbackParam();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, ""));
     }
 
-    private static void addBusinessErroCallbackParam() {
+    private static void addValidationFailedCallbackParam() {
         RequestContext rc = RequestContext.getCurrentInstance();
         if (rc != null) {
-            rc.addCallbackParam("businessError", true);
+            rc.addCallbackParam("validationFailed", true);
         }
     }
 }

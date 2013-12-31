@@ -26,6 +26,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.lang.annotation.Annotation;
 
 /**
  *
@@ -43,19 +44,25 @@ public class BeanManagerController {
         }
     }
 
-    public static Object getBeanByName(String name){
-        BeanManager bm = getBeanManager();
-        Bean bean = bm.getBeans(name).iterator().next();
-        CreationalContext ctx = bm.createCreationalContext(bean); // could be inlined below
-        Object o = bm.getReference(bean, bean.getClass(), ctx); // could be inlined with return
-        return o;
-    }
 
-    public static Object getBeanByType(Class type) {
+    public static <T> T getBeanByType(Class<T> type) {
         BeanManager bm = getBeanManager();
         Bean bean = bm.getBeans(type).iterator().next();
         CreationalContext ctx = bm.createCreationalContext(bean); // could be inlined below
-        Object o = bm.getReference(bean, bean.getClass(), ctx); // could be inlined with return
+        T o = (T) bm.getReference(bean, type, ctx); // could be inlined with return
+        return o;
+    }
+
+    public static <T> T getBeanByTypeAndQualifier(Class<T> type, final Class<? extends Annotation> qualifier) {
+        BeanManager bm = getBeanManager();
+        Bean bean = bm.getBeans(type,new Annotation() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return qualifier;
+            }
+        }).iterator().next();
+        CreationalContext ctx = bm.createCreationalContext(bean); // could be inlined below
+        T o = (T) bm.getReference(bean, type, ctx); // could be inlined with return
         return o;
     }
 

@@ -7,28 +7,21 @@
 
 
     <composite:interface>
+      <composite:attribute name="deleteAction" default="delete" />
       <composite:attribute name="value" default="Remove" />
       <composite:attribute name="update"  />
       <composite:attribute name="process" default="@this"  />
       <composite:attribute name="mbean" required="true" />
       <composite:attribute name="style" />
       <composite:attribute name="styleClass" />
-      <composite:attribute name="persistentRemove" default="true" type="java.lang.Boolean" 
-                           shortDescription="if true it will perform a database deletion in the entity controlled by mbean if false it will call removeFromList method in the mbean" />
       <composite:attribute name="oncomplete" />
       <composite:attribute name="ajax" default="true"/>
   </composite:interface>
 
     <composite:implementation>
-        
-        <!-- TODO - passar action por parametro invés de criar dois botões -->
-        <p:commandButton value="#{cc.attrs.value}" rendered="#{cc.attrs.persistentRemove}"  action="#{cc.attrs.mbean.delete}" update="#{cc.attrs.update}" 
+        <p:commandButton value="#{cc.attrs.value}"  action="#{cc.attrs.mbean[cc.attrs.deleteAction]}" update="#{cc.attrs.update}"
                        process="#{cc.attrs.process}" ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete}">
         </p:commandButton>
-        <p:commandButton value="#{cc.attrs.value}" rendered="#{not cc.attrs.persistentRemove}" action="#{cc.attrs.mbean.removeFromList}" update="#{cc.attrs.update}" 
-                       process="#{cc.attrs.process}" ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete}">
-        </p:commandButton>
-
     </composite:implementation>
 
 </ui:composition>

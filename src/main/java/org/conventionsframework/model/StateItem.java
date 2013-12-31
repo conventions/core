@@ -22,39 +22,50 @@
 package org.conventionsframework.model;
 
 import org.conventionsframework.bean.state.State;
+
 import java.io.Serializable;
 
 /**
- *
  * @author rmpestano Aug 8, 2011 7:26:03 PM
- * 
- * Class with represents an item in <code>StateController#stateItens</code>
- * 
- */public class StateItem<T> implements Serializable{
-    
+ *         <p/>
+ *         Class which represents an item in <code>StateController#stateItens</code>
+ */
+public class StateItem<T> implements Serializable {
+
     private String page;
     private State beanState;
     private T entity;
-    private String title;//breadCrumb link value displayed on the page
+    private String title;
+    private String link;//breadCrumb link value displayed on the outcome
     private Class invokerClass;
     private boolean ajax;
+    private boolean global;
+    private boolean resetValues;
+    private boolean immediate;
+    private boolean addViewParam;
     private String callback;
     private String update;
-    
+    private String onComplete;
 
     public StateItem() {
     }
-    
 
-    public StateItem(String page,T entity, State beanState,String title,Class invoker,boolean ajax,String callback,String update) {
-           this.page = page;
-           this.entity = entity;
-           this.beanState = beanState;
-           this.title = title;
-           this.invokerClass = invoker;
-           this.ajax = ajax;
-           this.callback = callback;
-           this.update = update;
+    //TODO builder pattern would be good
+    public StateItem(String page, T entity, State beanState, String value, String title, Class invoker, boolean ajax, String callback, String update, boolean global, boolean resetValues, boolean immediate,String onComplete, boolean addViewParam) {
+        this.page = page;
+        this.entity = entity;
+        this.beanState = beanState;
+        this.title = title;
+        this.link = value;
+        this.invokerClass = invoker;
+        this.ajax = ajax;
+        this.callback = callback;
+        this.update = update;
+        this.global = global;
+        this.resetValues = resetValues;
+        this.immediate = immediate;
+        this.onComplete = onComplete;
+        this.addViewParam = addViewParam;
     }
 
     public State getBeanState() {
@@ -120,10 +131,55 @@ import java.io.Serializable;
     public void setUpdate(String update) {
         this.update = update;
     }
-    
-    
-    
-    
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public boolean isGlobal() {
+        return global;
+    }
+
+    public boolean isResetValues() {
+        return resetValues;
+    }
+
+    public void setGlobal(boolean global) {
+        this.global = global;
+    }
+
+    public void setResetValues(boolean resetValues) {
+        this.resetValues = resetValues;
+    }
+
+    public boolean isImmediate() {
+        return immediate;
+    }
+
+    public void setImmediate(boolean immediate) {
+        this.immediate = immediate;
+    }
+
+    public String getOnComplete() {
+        return onComplete;
+    }
+
+    public void setOnComplete(String onComplete) {
+        this.onComplete = onComplete;
+    }
+
+    public boolean isAddViewParam() {
+        return addViewParam;
+    }
+
+    public void setAddViewParam(boolean addViewParam) {
+        this.addViewParam = addViewParam;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -133,10 +189,10 @@ import java.io.Serializable;
             return false;
         }//the stacks differ in bean state and invoker class
         StateItem other = (StateItem) obj;
-        if(!this.getBeanState().equals(other.getBeanState())){
+        if (!this.getBeanState().equals(other.getBeanState())) {
             return false;
         }
-        if(!this.getInvokerClass().equals(other.invokerClass)){
+        if (!this.getInvokerClass().equals(other.invokerClass)) {
             return false;
         }
         return true;
@@ -147,8 +203,6 @@ import java.io.Serializable;
         int hash = 5;
         return hash;
     }
-    
-    
-    
-    
+
+
 }

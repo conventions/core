@@ -21,11 +21,16 @@
  */
 package org.conventionsframework.bean;
 
-import java.io.IOException;
+import org.conventionsframework.qualifier.Config;
+
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Instance;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  *
@@ -34,11 +39,18 @@ import javax.servlet.http.HttpServletRequest;
 @Named
 @RequestScoped
 public class LogoutMBean {
+
+    @Inject
+    @Config
+    Instance<HttpSession> session;
+
+    @Inject
+    @Config
+    Instance<ExternalContext> externalContext;
     
     public void doLogout() throws IOException{
-        final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        request.getSession(false).invalidate();
-        FacesContext.getCurrentInstance().getExternalContext().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath());
+        session.get().invalidate();
+        externalContext.get().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath());
     }
     
 }

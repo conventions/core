@@ -42,8 +42,8 @@
 
     <!-- IMPLEMENTATION -->
 <cc:implementation xmlns:framework="http://java.sun.com/jsf/composite/components/conventions">
-    
-    <p:dataTable value="#{cc.attrs.paginator.dataModel}" rendered="#{cc.attrs.rendered}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" emptyMessage="#{cc.attrs.emptyMessage}" 
+    <p:remoteCommand rendered="#{cc.attrs.renderFooter}" name="updateFooter" update="@(span[id$=footer])" global="false" />
+    <p:dataTable value="#{cc.attrs.paginator.dataModel}" rendered="#{cc.attrs.rendered}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" emptyMessage="#{cc.attrs.emptyMessage}"
                  lazy="true"  
                  rowIndexVar="rowIndex"
                  filteredValue="#{cc.attrs.paginator.filteredValue}"
@@ -63,9 +63,9 @@
         
                 <cc:insertFacet name="header"/>
                 
-                <p:ajax rendered="#{cc.attrs.renderPageEvent}" listener="#{cc.attrs.paginator.pageListener}" event="page" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.pagingMessage}');" oncomplete="#{cc.attrs.onPage};unblock('div[id$=#{cc.id}_table]')" />
-                <p:ajax rendered="#{cc.attrs.renderSortEvent}" listener="#{cc.attrs.paginator.sortListener}" event="sort" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.sortingMessage}');" oncomplete="#{cc.attrs.onSort};jQuery('div[id$=#{cc.id}_table]').unblock({ message: null  })"/>
-                <p:ajax rendered="#{cc.attrs.renderFilterEvent}" listener="#{cc.attrs.paginator.filterListener}" event="filter" process="@this" onstart="block('div[id$=#{cc.id}_table]','#{cc.attrs.filteringMessage}');" oncomplete="#{cc.attrs.onFilter};jQuery('div[id$=#{cc.id}_table]').unblock({ message: null  })"/>
+                <p:ajax rendered="#{cc.attrs.renderPageEvent}" listener="#{cc.attrs.paginator.pageListener}" event="page" oncomplete="#{cc.attrs.onPage};" />
+                <p:ajax rendered="#{cc.attrs.renderSortEvent}" listener="#{cc.attrs.paginator.sortListener}" event="sort" oncomplete="#{cc.attrs.onSort};"/>
+                <p:ajax rendered="#{cc.attrs.renderFilterEvent}" listener="#{cc.attrs.paginator.filterListener}" event="filter" process="@this" oncomplete="#{cc.attrs.onFilter};updateFooter();"/>
                
                 <cc:insertChildren />
                

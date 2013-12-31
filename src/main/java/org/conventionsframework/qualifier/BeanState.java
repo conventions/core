@@ -21,54 +21,70 @@
  */
 package org.conventionsframework.qualifier;
 
-import static java.lang.annotation.ElementType.*;
+import javax.enterprise.util.Nonbinding;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.enterprise.util.Nonbinding;
+
+import static java.lang.annotation.ElementType.*;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ TYPE, FIELD, METHOD, PARAMETER })
+@Target({TYPE, FIELD, METHOD, PARAMETER})
 public @interface BeanState {
-        
-        
-        /**
-         * 
-         * @return page to return when clicking in a stateItem,
-         * use "" to return to the same page
-         */
-	@Nonbinding
-	String page() default "";
-        /**
-         * 
-         * @return breadCrumb title for this state
-         */
-	@Nonbinding
-	String title();
-        @Nonbinding
-        String beanState();
-        /**
-         * 
-         * @return name of the action to be called when 
-         * clicking in an item, use in the form of #{bean.method}
-         * with String return type,
-         * use "" to call no method
-         * 
-         * NOTE: when using callback the 'page' attribute will
-         * be ignore so if you want to navigate to another page after the callback
-         * specify that in the return of the callback method
-         */
-        @Nonbinding
-        String callback() default "";
-        @Nonbinding
-        boolean ajax() default true;
-        /**
-         * 
-         * @return id of component to update on ajax call
-         * use only in ajaxifyed stateItens
-         */
-        @Nonbinding
-        String update() default "@none";
+
+
+    /**
+     * @return outcome to return when clicking in a stateItem,
+     * use "" to return to the same outcome
+     */
+    @Nonbinding String outcome() default "";
+
+    /**
+     * @return breadCrumb title for this state
+     */
+    @Nonbinding String title() default "";
+
+    /**
+     *
+     * @return breadCrumb link label
+     */
+    @Nonbinding String link();
+
+    @Nonbinding String beanState();
+
+    /**
+     * @return name of the action to be called when
+     * clicking in an item, use in the form of #{bean.method}
+     * with String return type,
+     * use "" to call no method
+     * <p/>
+     * NOTE: when using callback the 'outcome' attribute will
+     * be ignore so if you want to navigate to another outcome after the callback
+     * specify that in the return of the callback method
+     */
+    @Nonbinding String callback() default "";
+
+    @Nonbinding boolean ajax() default true;
+
+    @Nonbinding boolean global() default true;
+
+    @Nonbinding boolean resetValues() default false;
+
+    /**
+     *
+     * add id param to url using entity.getId() as value
+     */
+    @Nonbinding boolean addViewParam() default false;
+
+    /**
+     * @return id of component to update on ajax call
+     * use only in ajaxifyed stateItens
+     */
+    @Nonbinding String update() default "@none";
+
+    @Nonbinding boolean immediate() default true;
+
+    String onComplete() default "";
 }

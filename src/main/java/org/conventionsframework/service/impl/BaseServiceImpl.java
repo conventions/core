@@ -22,26 +22,12 @@
 package org.conventionsframework.service.impl;
 
 import org.conventionsframework.dao.BaseHibernateDao;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import org.conventionsframework.model.WrappedData;
-import org.conventionsframework.qualifier.PersistentClass;
-import org.conventionsframework.service.BaseService;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import org.conventionsframework.entitymanager.EntityManagerProvider;
+import org.conventionsframework.qualifier.Dao;
 import org.conventionsframework.qualifier.Log;
+import org.conventionsframework.qualifier.PersistentClass;
 import org.conventionsframework.qualifier.Service;
-import org.conventionsframework.util.BeanManagerController;
+import org.conventionsframework.service.BaseService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -50,23 +36,48 @@ import org.hibernate.loader.custom.ScalarReturn;
 import org.hibernate.transform.ResultTransformer;
 import org.primefaces.model.SortOrder;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Rafael M. Pestano Mar 19, 2011 11:55:37 AM
+ *
  */
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public abstract class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
+@Service
+public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
 
+    @Inject
+    @Dao
     private BaseHibernateDao<T, K> dao;
+
+    @PersistenceContext
+    EntityManager em;
+
+    Class<T> persistentClass;
+
     @Inject
     @Log
     private transient Logger log;
 
-  
-    public void initDao() {
-        dao = (BaseHibernateDao<T, K>) BeanManagerController.getBeanByName("baseHibernateDao");
-        dao.setEntityManagerProvider(getEntityManagerProvider());
-        dao.setPersistentClass(getPersistentClass());
+
+    @Inject
+    public void initService(InjectionPoint ip) {
+        persistentClass = findPersistentClass(ip);
+        dao.setEntityManager(getEntityManager());
+        dao.setPersistentClass(persistentClass);
     }
 
     @Override
@@ -94,6 +105,7 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     public void remove(T entity) {
         this.doRemove(entity);
     }
+
 
     @Override
     public void beforeRemove(T entity) {
@@ -126,8 +138,8 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         getDao().addBasicFilterRestrictions(dc, columnFilters);
         return dc;
     }
-    
-    public DetachedCriteria configFindPaginated(Map<String, String> columnFilters, Map<String, Object> externalFilter,DetachedCriteria dc) {
+
+    public DetachedCriteria configFindPaginated(Map<String, String> columnFilters, Map<String, Object> externalFilter, DetachedCriteria dc) {
         getDao().addBasicFilterRestrictions(dc, externalFilter);
         getDao().addBasicFilterRestrictions(dc, columnFilters);
         return dc;
@@ -197,9 +209,6 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
 
     @Override
     public BaseHibernateDao<T, K> getDao() {
-        if(dao == null){
-            initDao();
-        }
         return dao;
     }
 
@@ -258,6 +267,16 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     @Override
+    public T findOneByCriteria(Criteria criteria) {
+        return getDao().findOneByCriteria(criteria);
+    }
+
+    @Override
+    public T findOneByCriteria(DetachedCriteria dc) {
+        return getDao().findOneByCriteria(dc);
+    }
+
+    @Override
     public WrappedData<T> findPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters) {
         DetachedCriteria dc = configFindPaginated(columnFilters, externalFilters);
         return getDao().executePagination(first, pageSize, sortField, sortOrder, dc);
@@ -301,18 +320,11 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
         }
     }
 
-    @Override
-    public final EntityManager getEntityManager() {
-        return getDao().getEntityManager();
-    }
 
     public void setPersistentClass(Class<T> clazz) {
         getDao().setPersistentClass(clazz);
     }
 
-    public void setEntityManagerProvider(EntityManagerProvider entityManagerProvider) {
-        getDao().setEntityManagerProvider(entityManagerProvider);
-    }
 
     /**
      * search persistentClass to set in dao layer
@@ -322,7 +334,18 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public Class findPersistentClass(InjectionPoint ip) throws InstantiationException, IllegalAccessException {
+    public Class findPersistentClass(InjectionPoint ip) {
+        ParameterizedType type = null;
+        try{
+           type = (ParameterizedType) ip.getType();
+        }catch (ClassCastException ex){}
+        if(type != null){
+            Type[] typeArgs = type.getActualTypeArguments();
+            if(typeArgs != null && typeArgs.length == 2){
+                return (Class<T>) typeArgs[0];
+            }
+        }
+
         //try to get persistenceClass from class level annotation
         for (Annotation annotation : getClass().getAnnotations()) {
             if (annotation instanceof PersistentClass) {
@@ -370,6 +393,11 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
 
     }
 
+    @Override
+    public Class<T> getPersistentClass() {
+        return persistentClass;
+    }
+
     /**
      * @return true if hibernate session should be flushed by conventions after
      * insert/update methods in baseService false otherwise default is true
@@ -380,5 +408,15 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
 
     public WrappedData<T> executePagination(final int first, final int pageSize, String sortField, SortOrder sortOrder, final DetachedCriteria dc) {
         return getDao().executePagination(first, pageSize, sortField, sortOrder, dc);
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
+    @Override
+    public void setEntityManager(EntityManager em) {
+        this.em = em;
     }
 }

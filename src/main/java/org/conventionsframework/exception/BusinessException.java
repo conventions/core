@@ -21,22 +21,28 @@
  */
 package org.conventionsframework.exception;
 
-import java.io.Serializable;
+import org.conventionsframework.util.RedirectPage;
+
 import javax.ejb.ApplicationException;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
+import java.io.Serializable;
 
 /**
  *
  * @author Rafael M. Pestano Jun 21, 2011 11:01:06 PM
  */
-@ApplicationException
+@ApplicationException(rollback = true)
 public class BusinessException extends RuntimeException implements Serializable {
 
     private String summary;
     private String detail;
     private String id;
     private FacesMessage.Severity severity;
+    private RedirectPage redirectPage;
+
+
+
 
     public BusinessException() {
     }
@@ -54,6 +60,16 @@ public class BusinessException extends RuntimeException implements Serializable 
         this.summary = summary;
     }
 
+    /**
+     *
+     * @param summary exception summary
+     */
+    public BusinessException(String summary,RedirectPage redirectPage) {
+        super(summary);
+        this.summary = summary;
+        this.redirectPage = redirectPage;
+
+    }
     
     /**
      * @param summary exception summary
@@ -151,5 +167,13 @@ public class BusinessException extends RuntimeException implements Serializable 
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public RedirectPage getRedirectPage() {
+        return redirectPage;
+    }
+
+    public void setRedirectPage(RedirectPage redirectPage) {
+        this.redirectPage = redirectPage;
     }
 }

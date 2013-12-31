@@ -21,26 +21,22 @@
  */
 package org.conventionsframework.qualifier;
 
-import static java.lang.annotation.ElementType.*;
+import javax.enterprise.util.Nonbinding;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.enterprise.util.Nonbinding;
+
+import static java.lang.annotation.ElementType.*;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({FIELD, METHOD, PARAMETER})
 public @interface PaginatorService {
-    
-        @Nonbinding
-	String name() default "";
-        
-        @Nonbinding
-	Class type() default byte.class;
-        
-        @Nonbinding
-	Class entity() default byte.class;
-        
-        
+
+    @Nonbinding Class value() default byte.class;
+
+    @Nonbinding Class entity() default byte.class;
+
+
 }

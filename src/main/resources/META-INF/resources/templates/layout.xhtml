@@ -18,8 +18,7 @@
         </h:head>
 
         <h:body onload="if (windown.onload) {onload()}" >
-            <h:outputScript library="js" name="blockUI.js" target="head"/>
-            <h:outputStylesheet library="css" name="layout.css" target="head"/> 
+            <h:outputStylesheet library="css" name="layout.css" target="head"/>
             
             <p:ajaxStatus rendered="#{empty showAjaxStatus or showAjaxStatus}" styleClass="ajaxStatus" >
                 <f:facet name="start">

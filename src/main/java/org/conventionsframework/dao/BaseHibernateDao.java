@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import org.conventionsframework.model.WrappedData;
 import javax.persistence.EntityManager;
-import org.conventionsframework.entitymanager.EntityManagerProvider;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -64,8 +63,6 @@ public interface BaseHibernateDao<T, Id extends Serializable> extends Serializab
 
     int countAll();
 
-    abstract Class<T> getPersistentClass();
-
     void setPersistentClass(Class<T> clazz);
 
     Session getSession();
@@ -98,11 +95,16 @@ public interface BaseHibernateDao<T, Id extends Serializable> extends Serializab
 
     List findByNativeQuery(String nativeQuery, Map params, Class entity, ResultTransformer rt, ScalarReturn scalar);
 
+    void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilters);
+
+    T findOneByCriteria(DetachedCriteria dc);
+
+    T findOneByCriteria(Criteria criteria);
+
+    Class<T> getPersistentClass();
+
     EntityManager getEntityManager();
 
-    abstract EntityManagerProvider getEntityManagerProvider();
-    
-    void setEntityManagerProvider(EntityManagerProvider entityManagerProvider);
+    void setEntityManager(EntityManager em);
 
-    void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilters);
 }

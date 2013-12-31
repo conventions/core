@@ -28,13 +28,14 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
 /**
  *
  * @author Rafael M. Pestano Aug 27, 2011 12:23:17 AM
  */
-public abstract class SecurityMethodInterceptor implements Serializable {
+public abstract class BaseSecurityInterceptor implements Serializable {
 
     @Inject
     private ResourceBundle  resourceBundle;

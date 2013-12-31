@@ -29,9 +29,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
-import org.conventionsframework.entitymanager.StatelessEntityManagerProvider;
+
 import org.conventionsframework.service.BaseService;
-import org.conventionsframework.service.impl.StatelessHibernateService;
 
 @Inherited
 @InterceptorBinding
@@ -40,7 +39,7 @@ import org.conventionsframework.service.impl.StatelessHibernateService;
 public @interface Query {
     
     @Nonbinding
-    Class<? extends BaseService> service() default StatelessHibernateService.class;
+    Class<? extends BaseService> service();
     
     @Nonbinding
     String sql() default "";
