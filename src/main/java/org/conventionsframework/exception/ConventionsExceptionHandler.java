@@ -127,6 +127,9 @@ public class ConventionsExceptionHandler extends ExceptionHandlerWrapper {
          */
 
         ErrorMBean errorMBean = context.getApplication().evaluateExpressionGet(context, "#{convErrorMBean}", ErrorMBean.class);
+        if(errorMBean == null){//will be null when fatal error occour on app startup(before context or beanManager initialized) 
+            throw new RuntimeException("Found problems while initializing application, errorName:"+errorName +" errorMessage:"+errorMessage + " \nSTACKTRACE: "+stackTrace);
+        }
         errorMBean.setErrorMessage(errorMessage);
         errorMBean.setErrorName(errorName);
         errorMBean.setStacktrace(stackTrace);

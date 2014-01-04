@@ -23,6 +23,6 @@ public abstract class BaseSecurityContext implements Serializable {
      * @return <code>true</code> if user is logged in, <code>false</code> otherwise
      */
     protected  Boolean isLoggedIn(){
-        return Boolean.TRUE;
+        return Boolean.TRUE;//by default user is always logged in
     }
 }
