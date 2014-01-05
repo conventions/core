@@ -10,10 +10,9 @@ package org.conventionsframework.filter;
  * @author rmpestano
  */
 
-import org.conventionsframework.qualifier.LoggedIn;
+import org.conventionsframework.security.SecurityContext;
 import org.conventionsframework.util.Constants;
 
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -28,11 +27,13 @@ public class ConventionsFilter implements Filter {
     private static final String INDEX = "/index.html";
     
     @Inject
-    @LoggedIn
-    protected Instance<Boolean> loggedIn;
+    protected SecurityContext securityContext;
 
 
     String initialPage;
+
+    String errorPage;
+
 
     String ignoredResource = null;
 
@@ -57,6 +58,13 @@ public class ConventionsFilter implements Filter {
         else{
             this.initialPage = "/"+initialPage;
         }
+        String errorPage =  filterConfig.getServletContext().getInitParameter(Constants.InitialParameters.ERROR_PAGE);
+        if(errorPage == null || "".equals(errorPage)){
+            this.errorPage = "/error.xhtml";
+        }
+        else{
+            this.errorPage = "/"+errorPage;
+        }
     }
 
     @Override
@@ -69,7 +77,7 @@ public class ConventionsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
          if (skipResource(request)
-        			|| loggedIn.get()) {
+        			|| securityContext.loggedIn()) {
         		chain.doFilter(req, resp);
         } else {
              request.setAttribute("logoff", "true");//let ConventionsExceptionHandler redirect to logon
@@ -86,7 +94,7 @@ public class ConventionsFilter implements Filter {
     
     private boolean skipResource(HttpServletRequest request) {
 		String path = request.getServletPath();
-        return  path.startsWith(FACES_RESOURCES) || path.equalsIgnoreCase(initialPage) || path.equalsIgnoreCase(INDEX)
+        return  path.startsWith(FACES_RESOURCES) || path.equalsIgnoreCase(initialPage) || path.equalsIgnoreCase(INDEX) || path.equalsIgnoreCase(errorPage)
 				 || (ignoredResource != null && path.contains(ignoredResource));
 	}
 }
