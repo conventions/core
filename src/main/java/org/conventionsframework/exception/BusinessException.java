@@ -176,4 +176,8 @@ public class BusinessException extends RuntimeException implements Serializable 
     public void setRedirectPage(RedirectPage redirectPage) {
         this.redirectPage = redirectPage;
     }
+
+    public void setSeverity(Severity severity) {
+        this.severity = severity;
+    }
 }

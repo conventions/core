@@ -60,9 +60,9 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
     protected BaseHibernateDao<T, K> dao;
 
     @PersistenceContext
-    EntityManager em;
+    protected EntityManager em;
 
-    Class<T> persistentClass;
+    private Class<T> persistentClass;
 
     @Inject
     @Log
@@ -85,6 +85,7 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
     public final void doStore(T entity) {
         this.beforeStore(entity);
         getDao().saveOrUpdate(entity);
+        flushSession();
         this.afterStore(entity);
     }
 
@@ -110,6 +111,7 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
     public final void doRemove(T entity) {
         this.beforeRemove(entity);
         getDao().delete(entity);
+        flushSession();
         this.afterRemove(entity);
     }
 

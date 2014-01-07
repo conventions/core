@@ -16,6 +16,7 @@
  */
 package org.conventionsframework.bean;
 
+import org.conventionsframework.exception.BusinessException;
 import org.conventionsframework.qualifier.Config;
 import org.conventionsframework.util.ResourceBundle;
 import org.conventionsframework.util.BeanManagerController;
@@ -227,7 +228,7 @@ public abstract class BaseMBean<T> implements Serializable {
      * invoke service.remove using entityAux as param
      */
     public void delete() {
-        this.delete(entityAux);
+            this.delete(entityAux);
     }
 
     /**
@@ -281,12 +282,7 @@ public abstract class BaseMBean<T> implements Serializable {
     public void find() {
     }
 
-    /**
-     * called on framework:removeButton with persistentRemove = false action
-     *
-     */
-    public void removeFromList() {
-    }
+
 
     /**
      * reset entity state

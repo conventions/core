@@ -21,11 +21,13 @@
  */
 package org.conventionsframework.security;
 
+import org.conventionsframework.exception.BusinessException;
 import org.conventionsframework.qualifier.SecurityMethod;
 import org.conventionsframework.util.MessagesController;
 import org.conventionsframework.util.ResourceBundle;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -42,19 +44,16 @@ public abstract class BaseSecurityInterceptor implements Serializable {
 
     @AroundInvoke
     public Object checkPermission(InvocationContext ic) throws Exception {
-        try {
             String[] rolesAllowed = this.extractMethodRoles(ic.getMethod());
             if (rolesAllowed != null && rolesAllowed.length > 0) {
                 if (!this.checkUserPermissions(rolesAllowed)) {
-                    MessagesController.addFatal(getFatalMessage(ic.getMethod().getAnnotation(SecurityMethod.class).message()));
-                    return null;
+                    BusinessException be = new BusinessException();
+                    be.setSeverity(FacesMessage.SEVERITY_FATAL);
+                    be.setSummary(getFatalMessage(ic.getMethod().getAnnotation(SecurityMethod.class).message()));
+                    throw be;
                 }
             }
             return ic.proceed();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
     }
 
     /**
