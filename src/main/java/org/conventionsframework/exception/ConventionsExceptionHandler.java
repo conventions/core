@@ -89,18 +89,21 @@ public class ConventionsExceptionHandler extends ExceptionHandlerWrapper {
                 initialPage = "/" + initialPage;
             }
             try {
-                String referer = request.getHeader("referer");
+                String referer = request.getHeader("Referer");
+                String recoveryUrlParams = "";
                 if (referer != null && !"".equals(referer)) {
-                    String recoveryUrlParams = "";
                     if (referer.contains("?")) {
                         recoveryUrlParams = referer.substring(referer.lastIndexOf("?") + 1);
                     }
-                    StringBuilder recoveryUrl = new StringBuilder(context.getViewRoot().getViewId());
-                    if (!"".equals(recoveryUrlParams)) {
-                        recoveryUrl.append("?").append(recoveryUrlParams);
-                    }
-                    context.getExternalContext().redirect(externalContext.getRequestContextPath() + initialPage + "?page=" + URLEncoder.encode(recoveryUrl.toString(), "UTF-8"));
+                } else { //try to get params from queryString
+                    recoveryUrlParams = (String) request.getAttribute("queryString");
                 }
+                StringBuilder recoveryUrl = new StringBuilder(context.getViewRoot().getViewId());
+                if (!"".equals(recoveryUrlParams)) {
+                    recoveryUrl.append("?").append(recoveryUrlParams);
+                }
+                context.getExternalContext().redirect(externalContext.getRequestContextPath() + initialPage + "?page=" + URLEncoder.encode(recoveryUrl.toString(), "UTF-8"));
+
             } catch (Exception e) {
                 throw new RuntimeException("Could not redirect to " + initialPage, e);
             }
@@ -127,8 +130,8 @@ public class ConventionsExceptionHandler extends ExceptionHandlerWrapper {
          */
 
         ErrorMBean errorMBean = context.getApplication().evaluateExpressionGet(context, "#{convErrorMBean}", ErrorMBean.class);
-        if(errorMBean == null){//will be null when fatal error occour on app startup(before context or beanManager initialized) 
-            throw new RuntimeException("Found problems while initializing application, errorName:"+errorName +" errorMessage:"+errorMessage + " \nSTACKTRACE: "+stackTrace);
+        if (errorMBean == null) {//will be null when fatal error occour on app startup(before context or beanManager initialized)
+            throw new RuntimeException("Found problems while initializing application, errorName:" + errorName + " errorMessage:" + errorMessage + " \nSTACKTRACE: " + stackTrace);
         }
         errorMBean.setErrorMessage(errorMessage);
         errorMBean.setErrorName(errorName);
@@ -143,6 +146,9 @@ public class ConventionsExceptionHandler extends ExceptionHandlerWrapper {
     private void goToErrorPage(FacesContext context) {
         try {
             ExternalContext ec = context.getExternalContext();
+            if (ec.isResponseCommitted()) {
+                return;
+            }
             String errorPage = ec.getInitParameter(Constants.InitialParameters.ERROR_PAGE);
             if (errorPage == null || "".equals(errorPage)) {
                 errorPage = "/error.xhtml";

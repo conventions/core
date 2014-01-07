@@ -26,6 +26,7 @@ import org.conventionsframework.event.StatePushEvent;
 import org.conventionsframework.model.AbstractBaseEntity;
 import org.conventionsframework.model.StateItem;
 import org.conventionsframework.producer.ResourceBundleProvider;
+import org.conventionsframework.qualifier.Config;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DynamicMenuModel;
 
@@ -35,6 +36,7 @@ import javax.el.MethodExpression;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Instance;
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -61,6 +63,11 @@ public class StateController implements Serializable {
 	@Inject
 	private Event<StatePullEvent> statePullEvent;
 
+    @Inject
+    @Config
+    transient Instance<FacesContext> context;
+
+
 	@Inject
 	private ResourceBundleProvider resourceBundleProvider;
 
@@ -81,7 +88,7 @@ public class StateController implements Serializable {
 	}
 
 	public void onStatePush(@Observes StatePushEvent stackPushEvent) {
-		if (stateItens.contains(stackPushEvent.getStackItem())) {
+ 		if (stateItens.contains(stackPushEvent.getStackItem())) {
 			stateItens.remove(stackPushEvent.getStackItem());
 		}
 		if (stateItens.size() == STACK_SIZE) {
@@ -97,6 +104,9 @@ public class StateController implements Serializable {
 	 * @param item
 	 */
 	public void pullStateItem(int itemIndex) {
+        if(stateItens.isEmpty()){
+            return;
+        }
 		if (itemIndex != -1) {
 			Iterator<StateItem> i = stateItens.iterator();
 			while (i.hasNext()) {
@@ -192,6 +202,14 @@ public class StateController implements Serializable {
         this.pullStateItem(index.intValue());
     }
 
+    public void pullStateItem(){
+        FacesContext facesContext = context.get();
+        if(facesContext != null && !facesContext.isPostback() && facesContext.getExternalContext().getRequestParameterMap().get("itemIndex") != null){
+            Integer itemIndex = Integer.valueOf(facesContext.getExternalContext().getRequestParameterMap().get("itemIndex"));
+            this.pullStateItem(itemIndex);
+        }
+    }
+
 	private void buildStateModel() {
 		stateModel = new DynamicMenuModel();
 		DefaultMenuItem homeItem = new DefaultMenuItem();
@@ -208,6 +226,7 @@ public class StateController implements Serializable {
 			item.setAjax(stateItem.isAjax());
 			item.setGlobal(stateItem.isGlobal());
             item.setResetValues(stateItem.isResetValues());
+            item.setIncludeViewParams(true);
 			item.setTitle(stateItem.getTitle());
             item.setImmediate(stateItem.isImmediate());
 			item.setValue(getItemValue(stateItem.getLink()));
@@ -222,17 +241,21 @@ public class StateController implements Serializable {
                 if(stateItem.isAddViewParam()){
                    url.append("?id=").append(((AbstractBaseEntity)stateItem.getEntity()).getId());
                 }
+                if(url.toString().contains("?")){
+                    url.append("&pullState=true");
+                }else{
+                    url.append("?pullState=true");  //tell statePusher to not call preRenderView event
+                }
+                url.append("&itemIndex=").append(stateItens.indexOf(stateItem));
 				item.setUrl(url.toString());
-			}
+			}else{//if has not outcome set command, note that they are muttually excluse: http://stackoverflow.com/questions/16437336/using-both-setactionexpression-and-seturl-on-menuitem-object-is-not-working
+                item.setCommand("#{stateController.pullStateItem("
+                        + stateItens.indexOf(stateItem) + ")}");
+            }
             if(!"".equals(stateItem.getUpdate())){
                 item.setUpdate(stateItem.getUpdate());
             }
-			/*
-			 * chama actionListener passando historico de navega��o para pode
-			 * retirar itens a frente quando action for invocada via breadCrumb
-			 */
-			item.setCommand("#{stateController.pullStateItem("
-					+ stateItens.indexOf(stateItem) + ")}");
+
 			if (stateItens.indexOf(stateItem) == stateItens.size() - 1) {
 				item.setDisabled(true);
 				item.setStyleClass("ui-state-disabled");
@@ -259,7 +282,8 @@ public class StateController implements Serializable {
 		this.stateItens = stateItems;
 	}
 
-	private String getItemValue(String value) {
+
+    private String getItemValue(String value) {
 		if (resourceBundleProvider.getCurrentBundle() == null) {
 			return value;
 		}

@@ -85,7 +85,8 @@ public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable
          * preRenderView event which is fired by every ajax call, so to avoid
          * this behavior we check if it is not a postback
          */
-        if (!facesContext.get().isPostback() && beanState != null) {//non ajaxCall
+        FacesContext context = facesContext.get();
+        if (!context.isPostback() &&  context.getExternalContext().getRequestParameterMap().get("pullState") == null && beanState != null) {//non ajaxCall
             this.setBeanState(beanState);
             if (beanStates != null) {//avoid unncessary looping
                 this.matchState(beanStates.value());

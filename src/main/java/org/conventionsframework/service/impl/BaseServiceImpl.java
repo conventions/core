@@ -335,17 +335,6 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
      * @throws IllegalAccessException
      */
     public Class findPersistentClass(InjectionPoint ip) {
-        ParameterizedType type = null;
-        try{
-           type = (ParameterizedType) ip.getType();
-        }catch (ClassCastException ex){}
-        if(type != null){
-            Type[] typeArgs = type.getActualTypeArguments();
-            if(typeArgs != null && typeArgs.length == 2){
-                return (Class<T>) typeArgs[0];
-            }
-        }
-
         //try to get persistenceClass from class level annotation
         for (Annotation annotation : getClass().getAnnotations()) {
             if (annotation instanceof PersistentClass) {
@@ -356,7 +345,17 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
         }
 
         if (ip != null && ip.getAnnotated() != null) {
-
+            ParameterizedType type = null;
+            try{
+                //get type from generic injection @Inject BaseService<Entity,ID>
+                type = (ParameterizedType) ip.getType();
+            }catch (ClassCastException ex){}
+            if(type != null){
+                Type[] typeArgs = type.getActualTypeArguments();
+                if(typeArgs != null && typeArgs.length == 2){
+                    return (Class<T>) typeArgs[0];
+                }
+            }
             if (ip.getAnnotated().isAnnotationPresent(Service.class)) {
                 //try to get persistentClass from injectionPoint via @Service(entity=SomeClass.class) annotation
                 Class persistentClass = ip.getAnnotated().getAnnotation(Service.class).entity();

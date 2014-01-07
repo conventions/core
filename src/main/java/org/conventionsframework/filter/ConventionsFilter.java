@@ -79,7 +79,7 @@ public class ConventionsFilter implements Filter {
          if (skipResource(request)
         			|| securityContext.loggedIn()) {
         		chain.doFilter(req, resp);
-        } else {
+        } else  {
              request.setAttribute("logoff", "true");//let ConventionsExceptionHandler redirect to logon
                  request.setAttribute("queryString", request.getQueryString());
              chain.doFilter(req,resp);
@@ -94,7 +94,7 @@ public class ConventionsFilter implements Filter {
     
     private boolean skipResource(HttpServletRequest request) {
 		String path = request.getServletPath();
-        return  path.startsWith(FACES_RESOURCES) || path.equalsIgnoreCase(initialPage) || path.equalsIgnoreCase(INDEX) || path.equalsIgnoreCase(errorPage)
+        return  path.startsWith(FACES_RESOURCES) || path.equalsIgnoreCase(initialPage) || path.equalsIgnoreCase(INDEX)
 				 || (ignoredResource != null && path.contains(ignoredResource));
 	}
 }

@@ -21,12 +21,7 @@
  */
 package org.conventionsframework.dao;
 
-import org.conventionsframework.model.AbstractBaseEntity;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 import org.conventionsframework.model.WrappedData;
-import javax.persistence.EntityManager;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -34,6 +29,11 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.loader.custom.ScalarReturn;
 import org.hibernate.transform.ResultTransformer;
 import org.primefaces.model.SortOrder;
+
+import javax.persistence.EntityManager;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Rafael M. Pestano
@@ -55,7 +55,7 @@ public interface BaseHibernateDao<T, Id extends Serializable> extends Serializab
 
     T refresh(T entity);
 
-    void saveOrUpdate(T entity);
+     void saveOrUpdate(T entity);
 
     List<T> findAll();
 
