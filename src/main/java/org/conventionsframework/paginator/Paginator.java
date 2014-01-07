@@ -78,15 +78,15 @@ public class Paginator<T> implements Serializable {
                             Type[] typeArgs = type.getActualTypeArguments();
                             if (typeArgs != null && typeArgs.length == 1) {
                                 baseService = BeanManagerController.getBeanByTypeAndQualifier(BaseService.class, Service.class);
-                                baseService.setPersistentClass((Class<T>) typeArgs[0]);
+                                baseService.getDao().setPersistentClass((Class<T>) typeArgs[0]);
                             }
                         }
                     } catch (Exception ex) {
                         throw new IllegalArgumentException("Could not initialize Paginator of " + ip.getMember().getDeclaringClass() + ".You need to provide paginatorService name or type attribute");
                     }
                 }
-                if (!paginatorService.entity().isPrimitive() && (getBaseService().getPersistentClass() == null || getBaseService().getPersistentClass().isPrimitive())) {
-                    getBaseService().setPersistentClass(paginatorService.entity());
+                if (!paginatorService.entity().isPrimitive() && (getBaseService().getDao().getPersistentClass() == null || getBaseService().getDao().getPersistentClass().isPrimitive())) {
+                    getBaseService().getDao().setPersistentClass(paginatorService.entity());
                 }
                 initDataModel();
             } catch (Exception ex) {

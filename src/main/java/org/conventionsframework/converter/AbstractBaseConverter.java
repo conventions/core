@@ -21,13 +21,14 @@
  */
 package org.conventionsframework.converter;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.conventionsframework.service.BaseService;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -52,7 +53,7 @@ public abstract class AbstractBaseConverter implements Converter {
         }
         try {
             Long id = new Long(value);
-            return getBaseService().get(id);
+            return getBaseService().getDao().get(id);
         } catch (ClassCastException ex) {
             ex.printStackTrace();
             return value;

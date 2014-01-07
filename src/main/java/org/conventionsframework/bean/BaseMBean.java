@@ -346,13 +346,13 @@ public abstract class BaseMBean<T> implements Serializable {
                 }
             }else if(!service.entity().isPrimitive()){//Managed bean without service, use generic service plus entity attr
                  baseService = BeanManagerController.getBeanByTypeAndQualifier(service.value(), Service.class);
-                 baseService.setPersistentClass(service.entity());
+                 baseService.getDao().setPersistentClass(service.entity());
                  initialized = true;
              }
 
-            if (getBaseService() != null && getBaseService().getPersistentClass() == null) {
+            if (getBaseService() != null && getBaseService().getDao().getPersistentClass() == null) {
                 if(!service.entity().isPrimitive()){
-                    getBaseService().setPersistentClass(service.entity());
+                    getBaseService().getDao().setPersistentClass(service.entity());
                 }
                 else{
                     throw new RuntimeException("Could not find persistent class, user @Service(entity=entity) or @PersistentClass at class level");

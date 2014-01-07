@@ -16,16 +16,16 @@
 
 package org.conventionsframework.query;
 
-import java.io.Serializable;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
-
 import org.conventionsframework.qualifier.Query;
 import org.conventionsframework.qualifier.QueryParam;
 import org.conventionsframework.qualifier.QueryParams;
 import org.conventionsframework.service.BaseService;
 import org.conventionsframework.util.BeanManagerController;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
+import java.io.Serializable;
 
 /**
  *
@@ -42,10 +42,10 @@ public class QueryProvider implements Serializable{
         BaseService service = (BaseService) BeanManagerController.getBeanByType(query.service());
         javax.persistence.Query q = null;
         if(!"".equals(query.sql())){
-             q = service.getEntityManager().createQuery(query.sql());
+             q = service.getDao().getEntityManager().createQuery(query.sql());
         }
         else if(!"".equals(query.namedQuery())){
-             q = service.getEntityManager().createNamedQuery(query.namedQuery());
+             q = service.getDao().getEntityManager().createNamedQuery(query.namedQuery());
         }
         
         QueryParams params = ic.getMethod().getAnnotation(QueryParams.class);

@@ -31,9 +31,6 @@ import org.conventionsframework.service.BaseService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.loader.custom.ScalarReturn;
-import org.hibernate.transform.ResultTransformer;
 import org.primefaces.model.SortOrder;
 
 import javax.ejb.TransactionAttribute;
@@ -46,7 +43,6 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,7 +57,7 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
 
     @Inject
     @Dao
-    private BaseHibernateDao<T, K> dao;
+    protected BaseHibernateDao<T, K> dao;
 
     @PersistenceContext
     EntityManager em;
@@ -88,7 +84,7 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
 
     public final void doStore(T entity) {
         this.beforeStore(entity);
-        this.saveOrUpdate(entity);
+        getDao().saveOrUpdate(entity);
         this.afterStore(entity);
     }
 
@@ -113,7 +109,7 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
 
     public final void doRemove(T entity) {
         this.beforeRemove(entity);
-        this.delete(entity);
+        getDao().delete(entity);
         this.afterRemove(entity);
     }
 
@@ -145,67 +141,6 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
         return dc;
     }
 
-    @Override
-    public int countAll() {
-        return getDao().countAll();
-    }
-
-    @Override
-    public T load(K id) {
-        return (T) getDao().load(id);
-    }
-
-    @Override
-    public T get(K id) {
-        return (T) getDao().get(id);
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void save(T entity) {
-        getDao().save(entity);
-        flushSession();
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void update(T entity) {
-        getDao().update(entity);
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void delete(T entity) {
-        getDao().delete(entity);
-        flushSession();
-    }
-
-    @TransactionAttribute
-    public T merge(T entity) {
-        return getDao().merge(entity);
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void saveOrUpdate(T entity) {
-        getDao().saveOrUpdate(entity);
-        flushSession();
-    }
-
-    @Override
-    public T refresh(T entity) {
-        return (T) getDao().refresh(entity);
-    }
-
-    @Override
-    public List<T> findAll() {
-        return getDao().findAll();
-    }
-
-    @Override
-    public List<T> findAll(Integer first, Integer max) {
-        return getDao().findAll(first, max);
-    }
 
     @Override
     public BaseHibernateDao<T, K> getDao() {
@@ -216,75 +151,11 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
         this.dao = dao;
     }
 
-    @Override
-    public Session getSession() {
-        return getDao().getSession();
-    }
-
-    @Override
-    public List<T> findByExample(T entity) {
-        return getDao().findByExample(entity);
-    }
-
-    @Override
-    public List<T> findByExample(final T entity, MatchMode matchMode) {
-        return getDao().findByExample(entity, matchMode);
-    }
-
-    @Override
-    public List<T> findByExample(final T entity, int maxResult) {
-        return getDao().findByExample(entity, maxResult);
-    }
-
-    @Override
-    public List<T> findByExample(final T entity, int maxResult, MatchMode matchMode) {
-        return getDao().findByExample(entity, maxResult, matchMode);
-    }
-
-    @Override
-    public T findOneByExample(T entity) {
-        return (T) getDao().findOneByExample(entity);
-    }
-
-    @Override
-    public List<T> findByExample(T exampleInstance, String[] excludeProperty) {
-        return getDao().findByExample(exampleInstance, excludeProperty);
-    }
-
-    @Override
-    public T findOneByExample(T entity, MatchMode matchMode) {
-        return (T) getDao().findOneByExample(entity, matchMode);
-    }
-
-    @Override
-    public List<T> findByCriteria(DetachedCriteria criteriaObject, int first, int maxResult) {
-        return getDao().findByCriteria(criteriaObject, first, maxResult);
-    }
-
-    @Override
-    public List<T> findByCriteria(DetachedCriteria criteriaObject) {
-        return getDao().findByCriteria(criteriaObject);
-    }
-
-    @Override
-    public T findOneByCriteria(Criteria criteria) {
-        return getDao().findOneByCriteria(criteria);
-    }
-
-    @Override
-    public T findOneByCriteria(DetachedCriteria dc) {
-        return getDao().findOneByCriteria(dc);
-    }
 
     @Override
     public WrappedData<T> findPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters) {
         DetachedCriteria dc = configFindPaginated(columnFilters, externalFilters);
         return getDao().executePagination(first, pageSize, sortField, sortOrder, dc);
-    }
-
-    @Override
-    public Long getRowCount(DetachedCriteria criteria) {
-        return getDao().getRowCount(criteria);
     }
 
     @Override
@@ -297,23 +168,10 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
         return getDao().getCriteria();
     }
 
-    /**
-     *
-     * @param nativeQuery
-     * @param params
-     * @param class entity
-     * @param result transformer
-     * @param Scalar
-     * @return
-     */
-    @Override
-    public List findByNativeQuery(String nativeQuery, Map params, Class entity, ResultTransformer rt, ScalarReturn scalar) {
-        return getDao().findByNativeQuery(nativeQuery, params, entity, rt, scalar);
-    }
 
     public void flushSession() {
         if (isConventionsFlushSession()) {
-            Session session = getSession();
+            Session session = getDao().getSession();
             if (session.isOpen() && session.isDirty()) {
                 session.flush();
             }
