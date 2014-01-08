@@ -18,6 +18,7 @@ package org.conventionsframework.bean;
 
 import org.conventionsframework.exception.BusinessException;
 import org.conventionsframework.qualifier.Config;
+import org.conventionsframework.security.SecurityContext;
 import org.conventionsframework.util.ResourceBundle;
 import org.conventionsframework.util.BeanManagerController;
 import org.conventionsframework.util.MessagesController;
@@ -70,6 +71,9 @@ public abstract class BaseMBean<T> implements Serializable {
     @Inject
     @Log
     private transient Logger log;
+
+    @Inject
+    SecurityContext securityContext;
 
     @Inject
     @Config

@@ -6,4 +6,6 @@ package org.conventionsframework.security;
 public interface SecurityContext {
 
     Boolean loggedIn();
+
+    Boolean hasRole(String role);
 }
