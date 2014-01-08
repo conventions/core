@@ -14,7 +14,7 @@ public class DefaultSecurityContext implements Serializable, SecurityContext {
         return  Boolean.TRUE;
     }
 
-    public Boolean hasRole(String role){
+    public Boolean hasRole(String... role){
         return Boolean.TRUE;
     }
 

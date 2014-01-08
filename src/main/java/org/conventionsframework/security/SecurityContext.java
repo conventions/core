@@ -7,5 +7,5 @@ public interface SecurityContext {
 
     Boolean loggedIn();
 
-    Boolean hasRole(String role);
+    Boolean hasRole(String... role);
 }
