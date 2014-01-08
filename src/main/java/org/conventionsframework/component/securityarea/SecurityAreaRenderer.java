@@ -107,7 +107,7 @@ public class SecurityAreaRenderer extends CoreRenderer {
 
         String[] forbiddenRoles = rolesForbidden.split("[\\s,;]+");
 
-        if (securityContext.hasRole(forbiddenRoles)) {
+        if (securityContext.hasAnyRole(forbiddenRoles)) {
             return Boolean.TRUE;
         }
         return false;//user role is NOT between forbidden roles
@@ -123,7 +123,7 @@ public class SecurityAreaRenderer extends CoreRenderer {
     private boolean checkRolesAllowed(String rolesAllowed) {
         String[] allowedRoles =  rolesAllowed.split("[\\s,;]+");
         if (allowedRoles != null) {
-            if(securityContext.hasRole(allowedRoles)){
+            if(securityContext.hasAnyRole(allowedRoles)){
                 return Boolean.TRUE;
             }
         }
