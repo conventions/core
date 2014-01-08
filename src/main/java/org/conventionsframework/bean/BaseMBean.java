@@ -73,7 +73,7 @@ public abstract class BaseMBean<T> implements Serializable {
     private transient Logger log;
 
     @Inject
-    SecurityContext securityContext;
+    protected SecurityContext securityContext;
 
     @Inject
     @Config
