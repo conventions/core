@@ -36,13 +36,13 @@ public class StateItem<T> implements Serializable {
     private State beanState;
     private T entity;
     private String title;
-    private String link;//breadCrumb link value displayed on the outcome
+    private String value;//breadCrumb link value displayed on the outcome
     private Class invokerClass;
     private boolean ajax;
     private boolean global;
     private boolean resetValues;
     private boolean immediate;
-    private boolean addViewParam;
+    private boolean addEntityIdParam;//add entity id param in stateItem outcome
     private String callback;
     private String update;
     private String onComplete;
@@ -51,12 +51,12 @@ public class StateItem<T> implements Serializable {
     }
 
     //TODO builder pattern would be good
-    public StateItem(String page, T entity, State beanState, String value, String title, Class invoker, boolean ajax, String callback, String update, boolean global, boolean resetValues, boolean immediate,String onComplete, boolean addViewParam) {
+    public StateItem(String page, T entity, State beanState, String value, String title, Class invoker, boolean ajax, String callback, String update, boolean global, boolean resetValues, boolean immediate,String onComplete, boolean addEntityIdParam) {
         this.page = page;
         this.entity = entity;
         this.beanState = beanState;
         this.title = title;
-        this.link = value;
+        this.value = value;
         this.invokerClass = invoker;
         this.ajax = ajax;
         this.callback = callback;
@@ -65,7 +65,7 @@ public class StateItem<T> implements Serializable {
         this.resetValues = resetValues;
         this.immediate = immediate;
         this.onComplete = onComplete;
-        this.addViewParam = addViewParam;
+        this.addEntityIdParam = addEntityIdParam;
     }
 
     public State getBeanState() {
@@ -132,12 +132,12 @@ public class StateItem<T> implements Serializable {
         this.update = update;
     }
 
-    public String getLink() {
-        return link;
+    public String getValue() {
+        return value;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setValue(String link) {
+        this.value = link;
     }
 
     public boolean isGlobal() {
@@ -172,12 +172,12 @@ public class StateItem<T> implements Serializable {
         this.onComplete = onComplete;
     }
 
-    public boolean isAddViewParam() {
-        return addViewParam;
+    public boolean isAddEntityIdParam() {
+        return addEntityIdParam;
     }
 
-    public void setAddViewParam(boolean addViewParam) {
-        this.addViewParam = addViewParam;
+    public void setAddEntityIdParam(boolean addEntityId) {
+        this.addEntityIdParam = addEntityId;
     }
 
     @Override
@@ -187,7 +187,7 @@ public class StateItem<T> implements Serializable {
         }
         if (getClass() != obj.getClass()) {
             return false;
-        }//the stacks differ in bean state and invoker class
+        }//the stateItens differ in bean state and invoker class
         StateItem other = (StateItem) obj;
         if (!this.getBeanState().equals(other.getBeanState())) {
             return false;

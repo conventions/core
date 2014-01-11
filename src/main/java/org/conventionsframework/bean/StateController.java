@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,20 +87,20 @@ public class StateController implements Serializable {
 	}
 
 	public void onStatePush(@Observes StatePushEvent stackPushEvent) {
- 		if (stateItens.contains(stackPushEvent.getStackItem())) {
-			stateItens.remove(stackPushEvent.getStackItem());
+ 		if (stateItens.contains(stackPushEvent.getStateItem())) {
+			stateItens.remove(stackPushEvent.getStateItem());
 		}
 		if (stateItens.size() == STACK_SIZE) {
 			stateItens.removeFirst();
 		}
-		stateItens.add(stackPushEvent.getStackItem());
+		stateItens.add(stackPushEvent.getStateItem());
 		buildStateModel();
 	}
 
 	/**
 	 * Remove all itens in 'front' of the clicked item
 	 * 
-	 * @param item
+	 * @param itemIndex
 	 */
 	public void pullStateItem(int itemIndex) {
         if(stateItens.isEmpty()){
@@ -226,10 +225,9 @@ public class StateController implements Serializable {
 			item.setAjax(stateItem.isAjax());
 			item.setGlobal(stateItem.isGlobal());
             item.setResetValues(stateItem.isResetValues());
-            item.setIncludeViewParams(true);
 			item.setTitle(stateItem.getTitle());
             item.setImmediate(stateItem.isImmediate());
-			item.setValue(getItemValue(stateItem.getLink()));
+			item.setValue(getItemValue(stateItem.getValue()));
             if(!"".equals(stateItem.getOnComplete())){
                 item.setOncomplete(stateItem.getOnComplete());
             }
@@ -237,8 +235,9 @@ public class StateController implements Serializable {
 					.createUniqueId()
 					+ "_state");
 			if (!"".equals(stateItem.getPage())) {
+                item.setIncludeViewParams(true);
                 StringBuilder url = new StringBuilder(stateItem.getPage());
-                if(stateItem.isAddViewParam()){
+                if(stateItem.isAddEntityIdParam()){
                    url.append("?id=").append(((AbstractBaseEntity)stateItem.getEntity()).getId());
                 }
                 if(url.toString().contains("?")){

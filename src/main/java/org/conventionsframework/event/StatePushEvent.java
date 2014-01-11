@@ -22,7 +22,6 @@
 
 package org.conventionsframework.event;
 
-import org.conventionsframework.bean.StateController;
 import org.conventionsframework.model.StateItem;
 import java.io.Serializable;
 
@@ -36,22 +35,22 @@ import java.io.Serializable;
 
 public class StatePushEvent implements Serializable{
     
-    private StateItem stackItem;
+    private StateItem stateItem;
 
     public StatePushEvent() {
     }
 
     
     public StatePushEvent(StateItem itemToPush) {
-        this.stackItem = itemToPush;
+        this.stateItem = itemToPush;
     }
 
-    public StateItem getStackItem() {
-        return stackItem;
+    public StateItem getStateItem() {
+        return stateItem;
     }
 
-    public void setStackItem(StateItem item) {
-        this.stackItem = item;
+    public void setStateItem(StateItem item) {
+        this.stateItem = item;
     }
     
 }

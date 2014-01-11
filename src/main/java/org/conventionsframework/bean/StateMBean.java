@@ -69,7 +69,7 @@ public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable
             BeanState beanState = AnnotationUtils.findStateAnnotation(getClass());
             if (beanState != null) {
                 if (beanState.beanState().equals(this.getBeanState().getStateName())) {
-                    statePushEvent.fire(new StatePushEvent(new StateItem(beanState.outcome(), getEntity(), getBeanState(), beanState.link(), beanState.title(), this.getClass(), beanState.ajax(), beanState.callback(), beanState.update(),beanState.global(),beanState.resetValues(),beanState.immediate(),beanState.onComplete(),beanState.addViewParam())));
+                    statePushEvent.fire(new StatePushEvent(new StateItem(beanState.outcome(), getEntity(), getBeanState(), beanState.value(), beanState.title(), this.getClass(), beanState.ajax(), beanState.callback(), beanState.update(),beanState.global(),beanState.resetValues(),beanState.immediate(),beanState.onComplete(),beanState.addViewParam())));
                 }
             }
         }
@@ -102,7 +102,7 @@ public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable
                 BeanState state = AnnotationUtils.findStateAnnotation(getClass());
                 if (states != null) {
                     if (state.beanState().equals(this.getBeanState().getStateName())) {
-                        statePushEvent.fire(new StatePushEvent(new StateItem(state.outcome(), getEntity(), getBeanState(), state.link(), state.title(), this.getClass(), state.ajax(), state.callback(), state.update(),state.global(),state.resetValues(),state.immediate(),state.onComplete(),state.addViewParam())));
+                        statePushEvent.fire(new StatePushEvent(new StateItem(state.outcome(), getEntity(), getBeanState(), state.value(), state.title(), this.getClass(), state.ajax(), state.callback(), state.update(),state.global(),state.resetValues(),state.immediate(),state.onComplete(),state.addViewParam())));
                     }
                 }
             }
@@ -156,7 +156,7 @@ public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable
 
         for (BeanState beanState : value) {
             if (beanState.beanState().equals(this.getBeanState().getStateName())) {
-                statePushEvent.fire(new StatePushEvent(new StateItem(beanState.outcome(), getEntity(), getBeanState(), beanState.link(), beanState.title(), this.getClass(), beanState.ajax(), beanState.callback(), beanState.update(),beanState.global(),beanState.resetValues(),beanState.immediate(),beanState.onComplete(),beanState.addViewParam())));
+                statePushEvent.fire(new StatePushEvent(new StateItem(beanState.outcome(), getEntity(), getBeanState(), beanState.value(), beanState.title(), this.getClass(), beanState.ajax(), beanState.callback(), beanState.update(),beanState.global(),beanState.resetValues(),beanState.immediate(),beanState.onComplete(),beanState.addViewParam())));
             }
         }
     }

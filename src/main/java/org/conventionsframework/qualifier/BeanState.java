@@ -50,7 +50,7 @@ public @interface BeanState {
      *
      * @return breadCrumb link label
      */
-    @Nonbinding String link();
+    @Nonbinding String value();
 
     @Nonbinding String beanState();
 
