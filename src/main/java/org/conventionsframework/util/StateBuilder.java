@@ -72,6 +72,11 @@ public class StateBuilder implements Serializable {
         INSTANCE = this;
     }
 
+    public StateBuilder type (Class<?> type) {
+        this.type = type;
+        return INSTANCE;
+    }
+
     public StateBuilder outcome(String outcome) {
         this.outcome = outcome;
         return INSTANCE;

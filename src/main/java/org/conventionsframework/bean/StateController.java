@@ -49,132 +49,131 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
  * @author rmpestano Aug 8, 2011 7:44:09 PM
  */
 
 @Named("stateController")
 @SessionScoped
 public class StateController implements Serializable {
-	private int STACK_SIZE;
+    private int STACK_SIZE;
 
-	private LinkedList<StateItem> stateItens;
-	@Inject
-	private Event<StatePullEvent> statePullEvent;
+    private LinkedList<StateItem> stateItens;
+    @Inject
+    private Event<StatePullEvent> statePullEvent;
 
     @Inject
     @Config
     transient Instance<FacesContext> context;
 
 
-	@Inject
-	private ResourceBundleProvider resourceBundleProvider;
+    @Inject
+    private ResourceBundleProvider resourceBundleProvider;
 
-	private DynamicMenuModel stateModel;
+    private DynamicMenuModel stateModel;
 
-	public StateController() {
-		stateItens = new LinkedList<StateItem>();
-		String stackSize = FacesContext.getCurrentInstance()
-				.getExternalContext().getInitParameter("STACK_SIZE");
-		if (stackSize != null) {
-			try {
-				STACK_SIZE = Integer.parseInt(stackSize);
-			} catch (Exception e) {
-				STACK_SIZE = 6;
-			}
-		}
-		buildStateModel();
-	}
+    public StateController() {
+        stateItens = new LinkedList<StateItem>();
+        String stackSize = FacesContext.getCurrentInstance()
+                .getExternalContext().getInitParameter("STACK_SIZE");
+        if (stackSize != null) {
+            try {
+                STACK_SIZE = Integer.parseInt(stackSize);
+            } catch (Exception e) {
+                STACK_SIZE = 6;
+            }
+        }
+        buildStateModel();
+    }
 
-	public void onStatePush(@Observes StatePushEvent stackPushEvent) {
- 		if (stateItens.contains(stackPushEvent.getStateItem())) {
-			stateItens.remove(stackPushEvent.getStateItem());
-		}
-		if (stateItens.size() == STACK_SIZE) {
-			stateItens.removeFirst();
-		}
-		stateItens.add(stackPushEvent.getStateItem());
-		buildStateModel();
-	}
+    public void onStatePush(@Observes StatePushEvent stackPushEvent) {
+        if (stateItens.contains(stackPushEvent.getStateItem())) {
+            stateItens.remove(stackPushEvent.getStateItem());
+        }
+        if (stateItens.size() == STACK_SIZE) {
+            stateItens.removeFirst();
+        }
+        stateItens.add(stackPushEvent.getStateItem());
+        buildStateModel();
+    }
 
-	/**
-	 * Remove all itens in 'front' of the clicked item
-	 * 
-	 * @param itemIndex
-	 */
-	public void pullStateItem(int itemIndex) {
-        if(stateItens.isEmpty()){
+    /**
+     * Remove all itens in 'front' of the clicked item
+     *
+     * @param itemIndex
+     */
+    public void pullStateItem(int itemIndex) {
+        if (stateItens.isEmpty()) {
             return;
         }
-		if (itemIndex != -1) {
-			Iterator<StateItem> i = stateItens.iterator();
-			while (i.hasNext()) {
-				StateItem stateItem = i.next();
-				if (stateItens.indexOf(stateItem) > itemIndex) {
-					i.remove();
-				}
-			}
-		}
+        if (itemIndex != -1) {
+            Iterator<StateItem> i = stateItens.iterator();
+            while (i.hasNext()) {
+                StateItem stateItem = i.next();
+                if (stateItens.indexOf(stateItem) > itemIndex) {
+                    i.remove();
+                }
+            }
+        }
         StateItem item = stateItens.get(itemIndex);
         statePullEvent.fire(new StatePullEvent(item));
-		buildStateModel();
+        buildStateModel();
         invokeCallback(item);
     }
 
-	public void clearState() {
-		stateItens.clear();
-	}
+    public void clearState() {
+        stateItens.clear();
+    }
 
-	public void clearStateAndGoHome() {
-		stateItens.clear();
-		try {
-			FacesContext
-					.getCurrentInstance()
-					.getExternalContext()
-					.redirect(
-							FacesContext.getCurrentInstance()
-									.getExternalContext()
-									.getRequestContextPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public void clearStateAndGoHome() {
+        stateItens.clear();
+        try {
+            FacesContext
+                    .getCurrentInstance()
+                    .getExternalContext()
+                    .redirect(
+                            FacesContext.getCurrentInstance()
+                                    .getExternalContext()
+                                    .getRequestContextPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public int getStateItensSize() {
-		return stateItens.size();
-	}
+    public int getStateItensSize() {
+        return stateItens.size();
+    }
 
-	/**
-	 * action called by backButton
-	 * 
-	 * @return outcome to redirect
-	 */
-	public String goBack() {
-		stateItens.removeLast();
-		if (stateItens.isEmpty()) {
-			try {
-				// if stateItens is empty go to index
-				FacesContext
-						.getCurrentInstance()
-						.getExternalContext()
-						.redirect(
-								FacesContext.getCurrentInstance()
-										.getExternalContext()
-										.getRequestContextPath());
-				return null;
-			} catch (IOException ex) {
-				Logger.getLogger(StateController.class.getName()).log(
-						Level.SEVERE, null, ex);
-			}
-		}
+    /**
+     * action called by backButton
+     *
+     * @return outcome to redirect
+     */
+    public String goBack() {
+        stateItens.removeLast();
+        if (stateItens.isEmpty()) {
+            try {
+                // if stateItens is empty go to index
+                FacesContext
+                        .getCurrentInstance()
+                        .getExternalContext()
+                        .redirect(
+                                FacesContext.getCurrentInstance()
+                                        .getExternalContext()
+                                        .getRequestContextPath());
+                return null;
+            } catch (IOException ex) {
+                Logger.getLogger(StateController.class.getName()).log(
+                        Level.SEVERE, null, ex);
+            }
+        }
 
-		// update data in the managed bean
-		StateItem item = stateItens.peekLast();
-		statePullEvent.fire(new StatePullEvent(item));
-		buildStateModel();
-	    invokeCallback(item);
-		return item.getPage();
-	}
+        // update data in the managed bean
+        StateItem item = stateItens.peekLast();
+        statePullEvent.fire(new StatePullEvent(item));
+        buildStateModel();
+        invokeCallback(item);
+        return item.getOutcome();
+    }
 
     private void invokeCallback(StateItem item) {
         if (!"".equals(item.getCallback())) {
@@ -185,118 +184,117 @@ public class StateController implements Serializable {
             ELContext el = FacesContext.getCurrentInstance().getELContext();
             try {
                 MethodExpression me = expressionFactory.createMethodExpression(
-                        el, item.getCallback(), Void.class,new Class[]{});
+                        el, item.getCallback(), Void.class, new Class[]{});
 
                 me.invoke(el, null);
             } catch (NullPointerException ex) {
                 ex.printStackTrace();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void pullStateItem(Long index){
+    public void pullStateItem(Long index) {
         this.pullStateItem(index.intValue());
     }
 
-    public void pullStateItem(){
+    public void pullStateItem() {
         FacesContext facesContext = context.get();
-        if(facesContext != null && !facesContext.isPostback() && facesContext.getExternalContext().getRequestParameterMap().get("itemIndex") != null){
+        if (facesContext != null && !facesContext.isPostback() && facesContext.getExternalContext().getRequestParameterMap().get("itemIndex") != null) {
             Integer itemIndex = Integer.valueOf(facesContext.getExternalContext().getRequestParameterMap().get("itemIndex"));
             this.pullStateItem(itemIndex);
         }
     }
 
-	private void buildStateModel() {
-		stateModel = new DynamicMenuModel();
-		DefaultMenuItem homeItem = new DefaultMenuItem();
-		homeItem.setAjax(false);
-		homeItem.setValue("home");
-		homeItem.setId(FacesContext.getCurrentInstance().getViewRoot()
-				.createUniqueId()
-				+ "_state_home");
-		homeItem.setImmediate(true);
-		homeItem.setCommand("#{stateController.clearStateAndGoHome}");
-		stateModel.addElement(homeItem);
-		for (StateItem stateItem : stateItens) {
-			DefaultMenuItem item = new DefaultMenuItem();
-			item.setAjax(stateItem.isAjax());
-			item.setGlobal(stateItem.isGlobal());
+    private void buildStateModel() {
+        stateModel = new DynamicMenuModel();
+        DefaultMenuItem homeItem = new DefaultMenuItem();
+        homeItem.setAjax(false);
+        homeItem.setValue("home");
+        homeItem.setId(FacesContext.getCurrentInstance().getViewRoot()
+                .createUniqueId()
+                + "_state_home");
+        homeItem.setImmediate(true);
+        homeItem.setCommand("#{stateController.clearStateAndGoHome}");
+        stateModel.addElement(homeItem);
+        for (StateItem stateItem : stateItens) {
+            DefaultMenuItem item = new DefaultMenuItem();
+            item.setAjax(stateItem.isAjax());
+            item.setGlobal(stateItem.isGlobal());
             item.setResetValues(stateItem.isResetValues());
-			item.setTitle(stateItem.getTitle());
+            item.setTitle(stateItem.getTitle());
             item.setImmediate(stateItem.isImmediate());
-			item.setValue(getItemValue(stateItem.getValue()));
-            if(!"".equals(stateItem.getOnComplete())){
-                item.setOncomplete(stateItem.getOnComplete());
+            item.setValue(getItemValue(stateItem.getValue()));
+            if (!"".equals(stateItem.getOncomplete())) {
+                item.setOncomplete(stateItem.getOncomplete());
             }
-			item.setId(FacesContext.getCurrentInstance().getViewRoot()
-					.createUniqueId()
-					+ "_state");
-			if (!"".equals(stateItem.getPage())) {
+            item.setId(FacesContext.getCurrentInstance().getViewRoot()
+                    .createUniqueId()
+                    + "_state");
+            if (!"".equals(stateItem.getOutcome())) {
                 item.setIncludeViewParams(true);
-                StringBuilder url = new StringBuilder(stateItem.getPage());
-                if(stateItem.isAddEntityIdParam()){
-                   url.append("?id=").append(((AbstractBaseEntity)stateItem.getEntity()).getId());
+                StringBuilder url = new StringBuilder(stateItem.getOutcome());
+                if (stateItem.isAddEntityIdParam()) {
+                    url.append("?id=").append(((AbstractBaseEntity) stateItem.getEntity()).getId());
                 }
-                if(url.toString().contains("?")){
+                if (url.toString().contains("?")) {
                     url.append("&pullState=true");
-                }else{
+                } else {
                     url.append("?pullState=true");  //tell statePusher to not call preRenderView event
                 }
                 url.append("&itemIndex=").append(stateItens.indexOf(stateItem));
-				item.setUrl(url.toString());
-			}else{//if has not outcome set command, note that they are muttually excluse: http://stackoverflow.com/questions/16437336/using-both-setactionexpression-and-seturl-on-menuitem-object-is-not-working
+                item.setUrl(url.toString());
+            } else {//if has not outcome set command, note that they are muttually excluse: http://stackoverflow.com/questions/16437336/using-both-setactionexpression-and-seturl-on-menuitem-object-is-not-working
                 item.setCommand("#{stateController.pullStateItem("
                         + stateItens.indexOf(stateItem) + ")}");
             }
-            if(!"".equals(stateItem.getUpdate())){
+            if (!"".equals(stateItem.getUpdate())) {
                 item.setUpdate(stateItem.getUpdate());
             }
 
-			if (stateItens.indexOf(stateItem) == stateItens.size() - 1) {
-				item.setDisabled(true);
-				item.setStyleClass("ui-state-disabled");
-			}
-			stateModel.addElement(item);
+            if (stateItens.indexOf(stateItem) == stateItens.size() - 1) {
+                item.setDisabled(true);
+                item.setStyleClass("ui-state-disabled");
+            }
+            stateModel.addElement(item);
 
-		}
+        }
 
-	}
+    }
 
-	public DynamicMenuModel getStateModel() {
-		return stateModel;
-	}
+    public DynamicMenuModel getStateModel() {
+        return stateModel;
+    }
 
-	public void setStateModel(DynamicMenuModel stateModel) {
-		this.stateModel = stateModel;
-	}
+    public void setStateModel(DynamicMenuModel stateModel) {
+        this.stateModel = stateModel;
+    }
 
-	public LinkedList<StateItem> getStateItens() {
-		return stateItens;
-	}
+    public LinkedList<StateItem> getStateItens() {
+        return stateItens;
+    }
 
-	public void setStateItens(LinkedList<StateItem> stateItems) {
-		this.stateItens = stateItems;
-	}
+    public void setStateItens(LinkedList<StateItem> stateItems) {
+        this.stateItens = stateItems;
+    }
 
 
     private String getItemValue(String value) {
-		if (resourceBundleProvider.getCurrentBundle() == null) {
-			return value;
-		}
-		String i18nTitle = null;
-		try {
-			i18nTitle = resourceBundleProvider.getCurrentBundle().getString(
+        if (resourceBundleProvider.getCurrentBundle() == null) {
+            return value;
+        }
+        String i18nTitle = null;
+        try {
+            i18nTitle = resourceBundleProvider.getCurrentBundle().getString(
                     value);
-		} catch (Exception re) {
+        } catch (Exception re) {
 
-		}
-		if (i18nTitle != null) {
-			return i18nTitle;
-		}
-		return value;
-	}
+        }
+        if (i18nTitle != null) {
+            return i18nTitle;
+        }
+        return value;
+    }
 
 }

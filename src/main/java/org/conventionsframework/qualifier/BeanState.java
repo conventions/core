@@ -76,7 +76,7 @@ public @interface BeanState {
      *
      * add id param to url using entity.getId() as value
      */
-    @Nonbinding boolean addViewParam() default false;
+    @Nonbinding boolean addEntityIdParam() default false;
 
     /**
      * @return id of component to update on ajax call
@@ -86,5 +86,5 @@ public @interface BeanState {
 
     @Nonbinding boolean immediate() default true;
 
-    String onComplete() default "";
+    String oncomplete() default "";
 }

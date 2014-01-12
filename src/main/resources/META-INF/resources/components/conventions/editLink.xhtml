@@ -34,7 +34,7 @@
         </p:commandLink>
         <p:commandLink value="Edit" rendered="#{not cc.attrs.renderIcon}" immediate="true" action="#{cc.attrs.mbean.prepareUpdate}" update="#{cc.attrs.update}"
                          ajax="#{cc.attrs.ajax}" oncomplete="#{cc.attrs.oncomplete}">
-            <f:setPropertyActionListener target="#{cc.attrs.mbean[target]}" value="#{cc.attrs.row}"/>
+            <f:setPropertyActionListener target="#{cc.attrs.mbean[cc.attrs.target]}" value="#{cc.attrs.row}"/>
         </p:commandLink>
 
     </composite:implementation>

@@ -32,7 +32,7 @@ import java.io.Serializable;
  */
 public class StateItem<T> implements Serializable {
 
-    private String page;
+    private String outcome;
     private State beanState;
     private T entity;
     private String title;
@@ -45,14 +45,14 @@ public class StateItem<T> implements Serializable {
     private boolean addEntityIdParam;//add entity id param in stateItem outcome
     private String callback;
     private String update;
-    private String onComplete;
+    private String oncomplete;
 
     public StateItem() {
     }
 
     //TODO builder pattern would be good
-    public StateItem(String page, T entity, State beanState, String value, String title, Class invoker, boolean ajax, String callback, String update, boolean global, boolean resetValues, boolean immediate,String onComplete, boolean addEntityIdParam) {
-        this.page = page;
+    public StateItem(String outcome, T entity, State beanState, String value, String title, Class invoker, boolean ajax, String callback, String update, boolean global, boolean resetValues, boolean immediate,String oncomplete, boolean addEntityIdParam) {
+        this.outcome = outcome;
         this.entity = entity;
         this.beanState = beanState;
         this.title = title;
@@ -64,7 +64,7 @@ public class StateItem<T> implements Serializable {
         this.global = global;
         this.resetValues = resetValues;
         this.immediate = immediate;
-        this.onComplete = onComplete;
+        this.oncomplete = oncomplete;
         this.addEntityIdParam = addEntityIdParam;
     }
 
@@ -84,12 +84,12 @@ public class StateItem<T> implements Serializable {
         this.entity = entity;
     }
 
-    public String getPage() {
-        return page;
+    public String getOutcome() {
+        return outcome;
     }
 
-    public void setPage(String page) {
-        this.page = page;
+    public void setOutcome(String outcome) {
+        this.outcome = outcome;
     }
 
     public String getTitle() {
@@ -164,12 +164,12 @@ public class StateItem<T> implements Serializable {
         this.immediate = immediate;
     }
 
-    public String getOnComplete() {
-        return onComplete;
+    public String getOncomplete() {
+        return oncomplete;
     }
 
-    public void setOnComplete(String onComplete) {
-        this.onComplete = onComplete;
+    public void setOncomplete(String onComplete) {
+        this.oncomplete = onComplete;
     }
 
     public boolean isAddEntityIdParam() {

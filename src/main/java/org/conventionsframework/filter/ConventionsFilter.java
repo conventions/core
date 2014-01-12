@@ -94,7 +94,7 @@ public class ConventionsFilter implements Filter {
     
     private boolean skipResource(HttpServletRequest request) {
 		String path = request.getServletPath();
-        return  path.startsWith(FACES_RESOURCES) || path.equalsIgnoreCase(initialPage) || path.equalsIgnoreCase(INDEX)
+        return  path.startsWith(FACES_RESOURCES) || path.equalsIgnoreCase(initialPage) || path.equalsIgnoreCase(INDEX) || path.equalsIgnoreCase(errorPage)
 				 || (ignoredResource != null && path.contains(ignoredResource));
 	}
 }
