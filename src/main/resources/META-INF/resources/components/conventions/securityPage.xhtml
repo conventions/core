@@ -8,12 +8,13 @@
     <composite:interface>
         <composite:attribute name="message"  shortDescription="Faces message(fatal) to display when user has no access to the page." />
         <composite:attribute name="outcome"  shortDescription="Navigation rule to be matched when user has no access to the page." />
+        <composite:attribute name="page"  shortDescription="page to redirect when user has no access to the page." />
         <composite:attribute name="rolesAllowed" required="true" shortDescription="comma,space or semicolon separated list of roles allowed to access the page." />
         <composite:attribute name="removeLastBeanState" type="java.lang.Boolean" shortDescription="if true the component will remove the last bean state from StateController stateList - useful if you use statePusher in conjunction with securityPage" default="#{false}" />
     </composite:interface>
     
     <composite:implementation >
-        <f:event type="preRenderView" id="securityPageEvent" rendered="#{cc.rendered}" listener="#{pageController.checkUserAccess(cc.attrs.rolesAllowed,cc.attrs.outcome,cc.attrs.message,cc.attrs.removeLastBeanState)}"/>
+        <f:event type="preRenderView" id="securityPageEvent" rendered="#{cc.rendered}" listener="#{pageController.checkUserAccess(cc.attrs.rolesAllowed,cc.attrs.outcome,cc.attrs.message,cc.attrs.removeLastBeanState,cc.attrs.page)}"/>
     </composite:implementation>
 
 </ui:composition>

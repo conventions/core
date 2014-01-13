@@ -68,16 +68,16 @@ public class ConventionsExceptionHandler extends ExceptionHandlerWrapper {
                 return;
             } else if (exception instanceof ViewExpiredException == false) {
                 //unexpected exceptions
+                //remove enqueued exceptions
+                while (unhandledExceptionQueuedEvents.hasNext()) {
+                    unhandledExceptionQueuedEvents.next();
+                    unhandledExceptionQueuedEvents.remove();
+                }
                 handleFatalError(exception, context);
             }
 
         }
 
-        //remove enqueued exceptions
-        while (unhandledExceptionQueuedEvents.hasNext()) {
-            unhandledExceptionQueuedEvents.next();
-            unhandledExceptionQueuedEvents.remove();
-        }
 
         if (request.getAttribute("logoff") != null && request.getAttribute("logoff").equals("true")) {
             ExternalContext externalContext = context.getExternalContext();
@@ -170,7 +170,7 @@ public class ConventionsExceptionHandler extends ExceptionHandlerWrapper {
             RequestContext rc = RequestContext.getCurrentInstance();
             String componentId = be.getId();
             if (rc != null) {
-                rc.scrollTo(componentId);
+               // rc.scrollTo(componentId);
                 String js = "if(document.getElementById('" + componentId + "')){document.getElementById('" + componentId + "').focus();}";
                 rc.execute(js);
             }

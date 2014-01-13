@@ -23,25 +23,18 @@
 package org.conventionsframework.component.securityarea;
 
 import org.conventionsframework.security.SecurityContext;
-import org.conventionsframework.util.Constants;
+import org.conventionsframework.util.BeanManagerController;
+import org.primefaces.renderkit.CoreRenderer;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-
-import org.primefaces.renderkit.CoreRenderer;
+import java.io.IOException;
 
 /**
  * @author rmpestano
  */
 public class SecurityAreaRenderer extends CoreRenderer {
-
-    @Inject
-    SecurityContext securityContext;
 
 
     @Override
@@ -107,7 +100,7 @@ public class SecurityAreaRenderer extends CoreRenderer {
 
         String[] forbiddenRoles = rolesForbidden.split("[\\s,;]+");
 
-        if (securityContext.hasAnyRole(forbiddenRoles)) {
+        if (BeanManagerController.getBeanByType(SecurityContext.class).hasAnyRole(forbiddenRoles)) {
             return Boolean.TRUE;
         }
         return false;//user role is NOT between forbidden roles
@@ -123,7 +116,7 @@ public class SecurityAreaRenderer extends CoreRenderer {
     private boolean checkRolesAllowed(String rolesAllowed) {
         String[] allowedRoles =  rolesAllowed.split("[\\s,;]+");
         if (allowedRoles != null) {
-            if(securityContext.hasAnyRole(allowedRoles)){
+            if(BeanManagerController.getBeanByType(SecurityContext.class).hasAnyRole(allowedRoles)){
                 return Boolean.TRUE;
             }
         }

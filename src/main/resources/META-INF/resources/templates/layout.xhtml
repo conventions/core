@@ -4,7 +4,6 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:pe="http://primefaces.org/ui/extensions"
       xmlns:framework="http://java.sun.com/jsf/composite/components/conventions"
       xmlns:fn="http://conventions.org/fnc"
       xmlns:p="http://primefaces.org/ui">
@@ -18,18 +17,15 @@
         </h:head>
 
         <h:body onload="if (windown.onload) {onload()}" >
+            <h:panelGroup id="wrapper" layout="block">
             <h:outputStylesheet library="css" name="layout.css" target="head"/>
-            
-            <p:ajaxStatus rendered="#{empty showAjaxStatus or showAjaxStatus}" styleClass="ajaxStatus" >
-                <f:facet name="start">
-                    <h:outputText value="#{empty statusMessage ? 'Loading...':statusMessage}" style="background-color: white;font-size: 12px;color: black;" />
-                </f:facet>
-                <f:facet name="complete">
-                    <h:outputText value="" />
-                </f:facet>
-            </p:ajaxStatus>
-              <pe:layout id="all" widgetVar="mainLayout" fullPage="true"  stateCookie="#{not empty keepLayoutState and keepLayoutState}">
-                  <pe:layoutPane position="north" resizable="true" collapsible="true" size="#{empty stateController.stateItens ? '125':'155'}" minSize="125" rendered="#{empty showTopUnit or showTopUnit}" >
+            <p:dialog widgetVar="loading"  modal="true" height="30px" width="150px" closable="false">
+                loading...
+            </p:dialog>
+            <p:ajaxStatus rendered="#{empty showAjaxStatus or showAjaxStatus}" onstart="loading.show()"
+                          oncomplete="loading.hide()" styleClass="ajaxStatus" />
+              <p:layout id="all" widgetVar="mainLayout" fullPage="true"  stateful="#{not empty keepLayoutState and keepLayoutState}" >
+                  <p:layoutUnit position="north" resizable="true" collapsible="true" size="#{empty stateController.stateItens ? '125':'155'}" minSize="125" rendered="#{empty showTopUnit or showTopUnit}" >
                       <h:form id="headerForm">
                           <ui:insert name="headerForm"/>
                           <div id="before_logo" class="ui-widget ui-widget-header ui-corner-all" >
@@ -56,8 +52,8 @@
                           </div>
                           <framework:stateItens id="historyStack" />
                       </h:form>  
-                  </pe:layoutPane>
-                  <pe:layoutPane position="center" style="margin-top: #{not empty stateController.stateItens ? '0': '-15px'}">
+                  </p:layoutUnit>
+                  <p:layoutUnit position="center" style="margin-top: #{not empty stateController.stateItens ? '0': '-15px'}">
                       <ui:insert name="topCenter"/>
                       <div id="content" class="ui-widget">
                           <div class="post">
@@ -69,23 +65,23 @@
                         
                       <ui:insert name="centerBottom"/>
                         
-                  </pe:layoutPane>
+                  </p:layoutUnit>
                   
                   
-                  <pe:layoutPane position="west" header="#{leftHeader}" resizable="true" collapsible="true" size="#{empty westSize ? 180 : westSize}" rendered="#{empty showLeftUnit or showLeftUnit}">
+                  <p:layoutUnit position="west" header="#{leftHeader}" resizable="true" collapsible="true" size="#{empty westSize ? 180 : westSize}" rendered="#{empty showLeftUnit or showLeftUnit}">
                       <ui:insert name="left"/>
                                    
-                  </pe:layoutPane>     
+                  </p:layoutUnit>     
                   
-                  <pe:layoutPane position="south" collapsible="true" size="#{empty southSize ? 60 : southSize}" resizable="true" >
+                  <p:layoutUnit position="south" collapsible="true" size="#{empty southSize ? 60 : southSize}" resizable="true" >
                       <div id="footer" class="ui-widget ui-widget-header ui-corner-all" >
                           <ui:insert name="footer"/>
                      </div>
-                  </pe:layoutPane>
+                  </p:layoutUnit>
                                
-              </pe:layout>  
+              </p:layout>
               <ui:insert name="popup"/>
-                  
+            </h:panelGroup>
         </h:body>
        <ui:insert name="outer"/>
     </f:view>

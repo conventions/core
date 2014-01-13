@@ -22,17 +22,21 @@
 package org.conventionsframework.security;
 
 import org.conventionsframework.bean.StateController;
+import org.conventionsframework.qualifier.Config;
 import org.conventionsframework.util.Constants;
 import org.conventionsframework.util.MessagesController;
+
+import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Instance;
+import javax.faces.application.NavigationHandler;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.application.NavigationHandler;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  *
@@ -42,12 +46,14 @@ import javax.inject.Named;
 @Named(value = "pageController")
 public class SecurityPageController implements Serializable {
 
-    private String message;//message to show when user has no access to the outcome
-    private String outcome;//outcome to forward user when user has no access to the outcome
     @Inject
     private StateController stateController;
 
-    public void checkUserAccess(String rolesAlowed, String outcome, String message, boolean removeLastState) {
+    @Inject
+    @Config
+    transient Instance<ExternalContext> externalContext;
+
+    public void checkUserAccess(String rolesAlowed, String outcome, String message, boolean removeLastState, String page) {
         if (!FacesContext.getCurrentInstance().isPostback() && rolesAlowed != null && !"".endsWith(rolesAlowed)) {//do not check on ajax requests
             List<String> userRoles = (List<String>) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(Constants.USER_ROLES);
             if (userRoles != null) {
@@ -68,7 +74,7 @@ public class SecurityPageController implements Serializable {
                 }
             }
 
-            if (outcome != null && !"".endsWith(outcome)) {
+            if (outcome != null && !"".endsWith(outcome.trim())) {
                 try {
                     FacesContext context = FacesContext.getCurrentInstance();
                     NavigationHandler navHandler = context.getApplication().getNavigationHandler();
@@ -78,27 +84,21 @@ public class SecurityPageController implements Serializable {
                     Logger.getLogger(SecurityPageController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+
+            if(page != null && !"".endsWith(page)){
+                try{
+                    if(!page.startsWith("/")){
+                        page ="/"+page;
+                    }
+                    ExternalContext ec = externalContext.get();
+                    ec.redirect(ec.getRequestContextPath() + page);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Logger.getLogger(SecurityPageController.class.getName()).log(Level.SEVERE, null, e);
+                }
+            }
         }//end !isPostback
     }
 
-    public String getMessage() {
-        return message;
-    }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    /**
-     *
-     * @return outcome to match a navigation rule when user has no access to the
-     * outcome
-     */
-    public String getOutcome() {
-        return outcome;
-    }
-
-    public void setOutcome(String outcome) {
-        this.outcome = outcome;
-    }
 }
