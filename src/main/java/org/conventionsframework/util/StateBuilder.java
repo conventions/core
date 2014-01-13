@@ -63,7 +63,7 @@ public class StateBuilder implements Serializable {
     public StateBuilder(InjectionPoint ip){
         if(ip != null) {
            this.type = ip.getMember().getDeclaringClass();
-            INSTANCE = this;
+           INSTANCE = this;
         }
     }
 

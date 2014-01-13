@@ -24,7 +24,7 @@ public class StatePusher implements Serializable {
 
     @Inject
     @Log
-    Logger log;
+    transient Logger log;
 
     public void pushState(Boolean ignoreEvent, Boolean dinamic, Object bean, String callback, AbstractBaseEntity entity, boolean global, State state, String outcome, String value, String oncomplete, String update, String title, boolean ajax, boolean immediate, boolean resetValues, boolean addEntityIdParam) {
         if(ignoreEvent){

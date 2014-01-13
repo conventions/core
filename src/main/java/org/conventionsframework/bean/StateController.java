@@ -226,13 +226,13 @@ public class StateController implements Serializable {
             item.setTitle(stateItem.getTitle());
             item.setImmediate(stateItem.isImmediate());
             item.setValue(getItemValue(stateItem.getValue()));
-            if (!"".equals(stateItem.getOncomplete())) {
+            if (stateItem.getOncomplete() != null && !"".equals(stateItem.getOncomplete())) {
                 item.setOncomplete(stateItem.getOncomplete());
             }
             item.setId(FacesContext.getCurrentInstance().getViewRoot()
                     .createUniqueId()
                     + "_state");
-            if (!"".equals(stateItem.getOutcome())) {
+            if (stateItem.getOutcome() != null && !"".equals(stateItem.getOutcome())) {
                 item.setIncludeViewParams(true);
                 StringBuilder url = new StringBuilder(stateItem.getOutcome());
                 if (stateItem.isAddEntityIdParam()) {
@@ -245,7 +245,7 @@ public class StateController implements Serializable {
                 }
                 url.append("&itemIndex=").append(stateItens.indexOf(stateItem));
                 item.setUrl(url.toString());
-            } else {//if has not outcome set command, note that they are muttually excluse: http://stackoverflow.com/questions/16437336/using-both-setactionexpression-and-seturl-on-menuitem-object-is-not-working
+            } else {//if has not outcome set command, note that they are muttually exclusive: http://stackoverflow.com/questions/16437336/using-both-setactionexpression-and-seturl-on-menuitem-object-is-not-working
                 item.setCommand("#{stateController.pullStateItem("
                         + stateItens.indexOf(stateItem) + ")}");
             }
