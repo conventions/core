@@ -6,13 +6,12 @@
 
 
     <composite:interface>
-        <composite:attribute name="entity"/>
         <composite:attribute name="callback"/>
         <composite:attribute name="title"/>
-        <composite:attribute name="outcome"/>
-        <composite:attribute name="value"/>
-        <composite:attribute name="update"/>
-        <composite:attribute name="oncomplete"/>
+        <composite:attribute name="outcome" />
+        <composite:attribute name="value" />
+        <composite:attribute name="update" />
+        <composite:attribute name="oncomplete" />
         <composite:attribute name="ajax" default="#{true}" type="java.lang.Boolean"/>
         <composite:attribute name="global" default="#{true}" type="java.lang.Boolean"/>
         <composite:attribute name="immediate" default="#{true}" type="java.lang.Boolean"/>
@@ -27,7 +26,7 @@
 
     <composite:implementation>
         <f:event type="preRenderView"
-                 listener="#{statePusher.pushState(not cc.rendered,cc.attrs.dinamic,cc.attrs.mbean,cc.attrs.callback, cc.attrs.entity,cc.attrs.global, cc.attrs.state,cc.attrs.outcome,cc.attrs.value, cc.attrs.oncomplete,cc.attrs.update,cc.attrs.title,cc.attrs.ajax,cc.attrs.immediate,cc.attrs.resetValue,cc.attrs.addEntityIdParam)}"/>
+                 listener="#{statePusher.pushState(not cc.rendered,cc.attrs.dinamic,cc.attrs.mbean,cc.attrs.callback, cc.attrs.mbean.entity,cc.attrs.global, cc.attrs.state,cc.attrs.outcome,cc.attrs.value, cc.attrs.oncomplete,cc.attrs.update,cc.attrs.title,cc.attrs.ajax,cc.attrs.immediate,cc.attrs.resetValue,cc.attrs.addEntityIdParam)}"/>
     </composite:implementation>
 
 </ui:composition>
