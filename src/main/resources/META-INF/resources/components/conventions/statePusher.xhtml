@@ -6,27 +6,27 @@
 
 
     <composite:interface>
-        <composite:attribute name="callback"/>
-        <composite:attribute name="title"/>
-        <composite:attribute name="outcome" />
-        <composite:attribute name="value" />
-        <composite:attribute name="update" />
-        <composite:attribute name="oncomplete" />
-        <composite:attribute name="ajax" default="#{true}" type="java.lang.Boolean"/>
-        <composite:attribute name="global" default="#{true}" type="java.lang.Boolean"/>
-        <composite:attribute name="immediate" default="#{true}" type="java.lang.Boolean"/>
-        <composite:attribute name="global" default="#{true}" type="java.lang.Boolean"/>
-        <composite:attribute name="resetValue" default="#{false}" type="java.lang.Boolean"/>
-        <composite:attribute name="addEntityIdParam" default="#{false}" type="java.lang.Boolean"/>
+        <composite:attribute name="callback" default=""/>
+        <composite:attribute name="title" default=""/>
+        <composite:attribute name="outcome" default=""/>
+        <composite:attribute name="value" default=""/>
+        <composite:attribute name="update" default=""/>
+        <composite:attribute name="oncomplete" default=""/>
+        <composite:attribute name="ajax" default="true" />
+        <composite:attribute name="global" default="true"/>
+        <composite:attribute name="immediate" default="true"/>
+        <composite:attribute name="global" default="true" />
+        <composite:attribute name="resetValue" default="false" />
+        <composite:attribute name="addEntityIdParam" default="false"/>
         <composite:attribute name="mbean" required="true" shortDescription="bean which states will be pushed into stateStack"/>
-        <composite:attribute name="dinamic" default="#{false}" type="java.lang.Boolean"/>
+        <composite:attribute name="dinamic" default="false" />
         <composite:attribute name="state" type="org.conventionsframework.bean.state.State" shortDescription="state"
                              required="true"/>
     </composite:interface>
 
     <composite:implementation>
         <f:event type="preRenderView"
-                 listener="#{statePusher.pushState(not cc.rendered,cc.attrs.dinamic,cc.attrs.mbean,cc.attrs.callback, cc.attrs.mbean.entity,cc.attrs.global, cc.attrs.state,cc.attrs.outcome,cc.attrs.value, cc.attrs.oncomplete,cc.attrs.update,cc.attrs.title,cc.attrs.ajax,cc.attrs.immediate,cc.attrs.resetValue,cc.attrs.addEntityIdParam)}"/>
+                 listener="#{statePusher.pushState(not cc.rendered, cc.attrs.dinamic,cc.attrs.mbean,cc.attrs.callback, cc.attrs.mbean.entity,cc.attrs.global, cc.attrs.state,cc.attrs.outcome,cc.attrs.value, cc.attrs.oncomplete,cc.attrs.update,cc.attrs.title,cc.attrs.ajax,cc.attrs.immediate,cc.attrs.resetValue,cc.attrs.addEntityIdParam)}"/>
     </composite:implementation>
 
 </ui:composition>

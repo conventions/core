@@ -2,7 +2,6 @@ package org.conventionsframework.util;
 
 import org.conventionsframework.bean.state.State;
 import org.conventionsframework.event.StatePushEvent;
-import org.conventionsframework.model.AbstractBaseEntity;
 import org.conventionsframework.model.StateItem;
 
 import javax.enterprise.context.Dependent;
@@ -10,6 +9,7 @@ import javax.enterprise.event.Event;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import java.io.Serializable;
+import org.conventionsframework.model.BaseEntity;
 
 /**
  * @author rafael-pestano 11/01/2014 10:06:21
@@ -32,7 +32,7 @@ public class StateBuilder implements Serializable {
 
     private String title = "";
 
-    private AbstractBaseEntity entity;
+    private BaseEntity entity;
 
     private State state;
 
@@ -97,7 +97,7 @@ public class StateBuilder implements Serializable {
         return INSTANCE;
     }
 
-    public StateBuilder entity(AbstractBaseEntity entity) {
+    public StateBuilder entity(BaseEntity entity) {
         this.entity = entity;
         return INSTANCE;
     }

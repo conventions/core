@@ -23,7 +23,6 @@ package org.conventionsframework.bean;
 
 import org.conventionsframework.event.StatePullEvent;
 import org.conventionsframework.event.StatePushEvent;
-import org.conventionsframework.model.AbstractBaseEntity;
 import org.conventionsframework.model.StateItem;
 import org.conventionsframework.producer.ResourceBundleProvider;
 import org.conventionsframework.qualifier.Config;
@@ -47,6 +46,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.conventionsframework.model.BaseEntity;
 
 /**
  * @author rmpestano Aug 8, 2011 7:44:09 PM
@@ -236,7 +236,7 @@ public class StateController implements Serializable {
                 item.setIncludeViewParams(true);
                 StringBuilder url = new StringBuilder(stateItem.getOutcome());
                 if (stateItem.isAddEntityIdParam()) {
-                    url.append("?id=").append(((AbstractBaseEntity) stateItem.getEntity()).getId());
+                    url.append("?id=").append(((BaseEntity) stateItem.getEntity()).getId());
                 }
                 if (url.toString().contains("?")) {
                     url.append("&pullState=true");

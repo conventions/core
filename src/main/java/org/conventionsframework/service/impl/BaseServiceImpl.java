@@ -46,6 +46,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.conventionsframework.model.BaseEntity;
 
 /**
  *
@@ -100,6 +101,9 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void remove(T entity) {
+        if(!getEntityManager().contains(entity)){
+            entity = getDao().load((K) ((BaseEntity)entity).getId());
+        }
         this.doRemove(entity);
     }
 

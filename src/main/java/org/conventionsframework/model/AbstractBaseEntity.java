@@ -32,7 +32,7 @@ import javax.persistence.Transient;
  * @author rmpestano Aug 21, 2011 9:33:12 AM
  */
 @MappedSuperclass
-public abstract class AbstractBaseEntity<T extends Serializable> implements Serializable {
+public abstract class AbstractBaseEntity<T extends Serializable> implements Serializable,BaseEntity<T> {
   
 
     @Transient
@@ -41,6 +41,7 @@ public abstract class AbstractBaseEntity<T extends Serializable> implements Seri
     }
     
     @Transient
+    @Override
     public abstract T getId();
 
     public abstract void setId(T id);

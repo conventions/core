@@ -1,7 +1,7 @@
 package org.conventionsframework.bean;
 
 import org.conventionsframework.bean.state.State;
-import org.conventionsframework.model.AbstractBaseEntity;
+import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.util.BeanManagerController;
 import org.conventionsframework.util.StateBuilder;
@@ -26,27 +26,27 @@ public class StatePusher implements Serializable {
     @Log
     transient Logger log;
 
-    public void pushState(Boolean ignoreEvent, Boolean dinamic, Object bean, String callback, AbstractBaseEntity entity, boolean global, State state, String outcome, String value, String oncomplete, String update, String title, boolean ajax, boolean immediate, boolean resetValues, boolean addEntityIdParam) {
+    public void pushState(boolean ignoreEvent, String dinamic, Object bean, String callback, BaseEntity entity, String global, State state, String outcome, String value, String oncomplete, String update, String title, String ajax, String immediate, String resetValues, String addEntityIdParam) {
         if(ignoreEvent){
             return;
         }
 
-        if(dinamic){
+        if(Boolean.valueOf(dinamic)){
             StateBuilder builder = stateBuilder.type(bean.getClass()).callback(callback).entity(entity).state(state).value(value)
                     .oncomplete(oncomplete).update(update).outcome(outcome).title(title);
-            if (global) {
+            if (Boolean.valueOf(global)) {
                 builder.global();
             }
-            if (ajax) {
+            if (Boolean.valueOf(ajax)) {
                 builder.ajax();
             }
-            if (immediate) {
+            if (Boolean.valueOf(immediate)) {
                 builder.immediate();
             }
-            if (resetValues) {
+            if (Boolean.valueOf(resetValues)) {
                 builder.resetValues();
             }
-            if (addEntityIdParam) {
+            if (Boolean.valueOf(addEntityIdParam)) {
                 builder.addEntityIdParam();
             }
 
