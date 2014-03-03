@@ -47,9 +47,10 @@ public abstract class BaseSecurityInterceptor implements Serializable {
             String[] rolesAllowed = this.extractMethodRoles(ic.getMethod());
             if (rolesAllowed != null && rolesAllowed.length > 0) {
                 if (!this.checkUserPermissions(rolesAllowed)) {
-                    BusinessException be = new BusinessException();
+                    String cause = getFatalMessage(ic.getMethod().getAnnotation(SecurityMethod.class).message());
+                    BusinessException be = new BusinessException(cause);
                     be.setSeverity(FacesMessage.SEVERITY_FATAL);
-                    be.setSummary(getFatalMessage(ic.getMethod().getAnnotation(SecurityMethod.class).message()));
+                    be.setSummary(cause);
                     throw be;
                 }
             }
