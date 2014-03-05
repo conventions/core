@@ -33,11 +33,12 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public abstract class VersionatedEntityLong extends AbstractVersionatedEntity<Long>  {
-    
-    private Long id;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+
     @Override
     public Long getId() {
         return this.id;

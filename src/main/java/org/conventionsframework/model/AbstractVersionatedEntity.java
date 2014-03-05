@@ -22,13 +22,9 @@
 
 package org.conventionsframework.model;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.Version;
 
 /**
  *
@@ -36,12 +32,15 @@ import javax.persistence.Version;
  */
 @MappedSuperclass
 public abstract class AbstractVersionatedEntity<T extends Serializable> extends AbstractBaseEntity<T> {
-    
+
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date createDate;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date updateDate;
+    @Version
     private Integer version;
     
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+
     public Date getUpdateDate() {
         return updateDate;
     }
@@ -50,7 +49,6 @@ public abstract class AbstractVersionatedEntity<T extends Serializable> extends 
         this.updateDate = dataAtualizacao;
     }
 
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     public Date getCreateDate() {
         return createDate;
     }
@@ -59,7 +57,6 @@ public abstract class AbstractVersionatedEntity<T extends Serializable> extends 
         this.createDate = dataCriacao;
     }
 
-    @Version
     public Integer getVersion() {
         return version;
     }

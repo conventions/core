@@ -34,11 +34,11 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public abstract class BaseEntityString extends AbstractBaseEntity<String> {
-    
-    private String id;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
+
     @Override
     public String getId() {
         return this.id;

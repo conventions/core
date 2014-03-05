@@ -28,6 +28,7 @@
                                  update="#{cc.attrs.update}"
                                  styleClass="#{cc.attrs.buttonClass}"
                                  />
+                    <composite:insertChildren/>
                 </center>
                 <div align="right" style="#{cc.attrs.renderAddButton ? 'margin-top: -20px':'margin-top: 2px'}">
                     <h:outputText rendered="#{empty cc.attrs.value}" style="font-size: 10px;padding-right: 5px;margin-right: 5px;" 
