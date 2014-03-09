@@ -25,7 +25,7 @@
             <p:ajaxStatus rendered="#{empty showAjaxStatus or showAjaxStatus}" onstart="loading.show()"
                           oncomplete="loading.hide()" styleClass="ajaxStatus" />
               <p:layout id="all" widgetVar="mainLayout" fullPage="true"  stateful="#{not empty keepLayoutState and keepLayoutState}" >
-                  <p:layoutUnit position="north" resizable="true" collapsible="true" size="#{empty stateController.stateItens ? '125':'155'}" minSize="125" rendered="#{empty showTopUnit or showTopUnit}" >
+                  <p:layoutUnit position="north" resizable="true" collapsible="true" size="#{empty northSize ? (empty stateController.stateItens ? '125':'155'):northSize}" minSize="125" rendered="#{empty showTopUnit or showTopUnit}" >
                       <h:form id="headerForm">
                           <ui:insert name="headerForm"/>
                           <div id="before_logo" class="ui-widget ui-widget-header ui-corner-all" >
