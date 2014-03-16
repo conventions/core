@@ -22,6 +22,7 @@
 package org.conventionsframework.bean;
 
 import org.conventionsframework.qualifier.Config;
+import org.conventionsframework.util.Constants;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Instance;
@@ -49,8 +50,15 @@ public class LogoutMBean {
     Instance<ExternalContext> externalContext;
     
     public void doLogout() throws IOException{
+        String initialPage =  externalContext.get().getInitParameter(Constants.InitialParameters.INITIAL_PAGE);
+        if(initialPage == null || "".equals(initialPage)){
+            initialPage = "/login.xhtml";
+        }
+        else{
+            initialPage = "/"+initialPage;
+        }
         session.get().invalidate();
-        externalContext.get().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath());
+        externalContext.get().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath()+initialPage);
     }
     
 }
