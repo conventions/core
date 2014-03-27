@@ -23,15 +23,14 @@ package org.conventionsframework.security;
 
 import org.conventionsframework.exception.BusinessException;
 import org.conventionsframework.qualifier.SecurityMethod;
-import org.conventionsframework.util.MessagesController;
 import org.conventionsframework.util.ResourceBundle;
-import java.io.Serializable;
-import java.lang.reflect.Method;
+
 import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import java.io.Serializable;
+import java.lang.reflect.Method;
 
 /**
  *
@@ -59,7 +58,7 @@ public abstract class BaseSecurityInterceptor implements Serializable {
 
     /**
      *
-     * @param list of roles allowed to execute the method
+     * @param rolesAllowed list of roles allowed to execute the method
      * @return true if user has permission to execute the method and false
      * otherwise
      */

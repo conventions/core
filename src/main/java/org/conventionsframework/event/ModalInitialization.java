@@ -35,7 +35,7 @@ public class ModalInitialization implements Serializable{
     //parameters to send to the modal
     private Map<String,Object> parameters = new HashMap<String,Object>();
 
-    
+    public ModalInitialization(){}
     
     public ModalInitialization(Map<String, Object> parameters) {
         this.parameters = parameters;
