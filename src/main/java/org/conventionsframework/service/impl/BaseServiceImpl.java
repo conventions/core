@@ -22,6 +22,7 @@
 package org.conventionsframework.service.impl;
 
 import org.conventionsframework.dao.BaseHibernateDao;
+import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.qualifier.Dao;
 import org.conventionsframework.qualifier.Log;
@@ -46,7 +47,6 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.conventionsframework.model.BaseEntity;
 
 /**
  *
@@ -54,7 +54,7 @@ import org.conventionsframework.model.BaseEntity;
  *
  */
 @Service
-public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T, K>, Serializable {
+public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> implements BaseService<T, K>, Serializable {
 
     @Inject
     @Dao
@@ -149,6 +149,7 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
 
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public BaseHibernateDao<T, K> getDao() {
         return dao;
     }
@@ -159,17 +160,20 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
 
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public WrappedData<T> findPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters) {
         DetachedCriteria dc = configFindPaginated(columnFilters, externalFilters);
         return getDao().executePagination(first, pageSize, sortField, sortOrder, dc);
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public DetachedCriteria getDetachedCriteria() {
         return getDao().getDetachedCriteria();
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Criteria getCriteria() {
         return getDao().getCriteria();
     }
@@ -274,6 +278,7 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public EntityManager getEntityManager() {
         return em;
     }
@@ -282,4 +287,5 @@ public class BaseServiceImpl<T, K extends Serializable> implements BaseService<T
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
+
 }

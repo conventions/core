@@ -10,4 +10,5 @@ public interface SecurityContext {
     Boolean hasRole(String role);
 
     Boolean hasAnyRole(String[] role);
+
 }

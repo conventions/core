@@ -22,6 +22,7 @@
 package org.conventionsframework.service;
 
 import org.conventionsframework.dao.BaseHibernateDao;
+import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.WrappedData;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
@@ -35,7 +36,7 @@ import java.util.Map;
  *
  * @author Rafael M. Pestano Mar 19, 2011 9:13:05 AM
  */
-public interface BaseService<T, Id extends Serializable> {
+public interface BaseService<T extends BaseEntity, Id extends Serializable> {
 
     void store(T Entity);
 
@@ -50,6 +51,8 @@ public interface BaseService<T, Id extends Serializable> {
     void afterRemove(T entity);
     
     BaseHibernateDao<T,Id> getDao();
+
+    void setDao(BaseHibernateDao<T,Id> dao);
     
     WrappedData<T> findPaginated(final int first, final int pageSize, String sortField, SortOrder sortOrder, Map<String,String> columnFilters, Map<String,Object> externalFilters);
 

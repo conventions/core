@@ -16,7 +16,7 @@
  */
 package org.conventionsframework.bean;
 
-import org.conventionsframework.exception.BusinessException;
+import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.qualifier.Config;
 import org.conventionsframework.security.SecurityContext;
 import org.conventionsframework.util.ResourceBundle;
@@ -52,7 +52,7 @@ import org.conventionsframework.paginator.Paginator;
  *
  * @author Rafael M. Pestano Mar 17, 2011 10:18:44 PM
  */
-public abstract class BaseMBean<T> implements Serializable {
+public abstract class BaseMBean<T extends BaseEntity<?>> implements Serializable {
 
     private T entity;
     private T entityAux;
@@ -70,7 +70,9 @@ public abstract class BaseMBean<T> implements Serializable {
     private ResourceBundleProvider resourceBundleProvider;
     @Inject
     @Log
-    private transient Logger log;
+    protected transient Logger log;
+
+    private boolean resetBean;//reset bean state via viewParam(resetBean=true/false)
 
     @Inject
     protected SecurityContext securityContext;
@@ -130,6 +132,9 @@ public abstract class BaseMBean<T> implements Serializable {
     }
 
     public String getCreateMessage() {
+        if(createMessage == null){
+            createMessage = "Record created successfully";
+        }
         return createMessage;
     }
 
@@ -138,6 +143,9 @@ public abstract class BaseMBean<T> implements Serializable {
     }
 
     public String getDeleteMessage() {
+        if(deleteMessage == null){
+            deleteMessage = "Record deleted successfully";
+        }
         return deleteMessage;
     }
 
@@ -146,6 +154,9 @@ public abstract class BaseMBean<T> implements Serializable {
     }
 
     public String getUpdateMessage() {
+        if(updateMessage == null){
+            updateMessage = "Record updated successfully";
+        }
         return updateMessage;
     }
 
@@ -156,15 +167,13 @@ public abstract class BaseMBean<T> implements Serializable {
     @PostConstruct
     public void init() {
         setEntity(this.create());
-        setCreateMessage("Record created successfully");
-        setUpdateMessage("Record updated successfully");
-        setDeleteMessage("Record deleted successfully");
         if (initializeService()) { //baseService must be set to create paginator
             paginator = new Paginator(baseService);
         }
         else{
             log.warning("Service was not initialized for bean:"+getClass().getSimpleName());
         }
+        setBeanState(getInitialState());
     }
 
     public T create() {
@@ -207,8 +216,14 @@ public abstract class BaseMBean<T> implements Serializable {
     public Object getModalResponse() {
         return modalResponse;
     }
-    
-    
+
+    public boolean isResetBean() {
+        return resetBean;
+    }
+
+    public void setResetBean(boolean resetBean) {
+        this.resetBean = resetBean;
+    }
 
     //actions
     public void save() {
@@ -370,5 +385,23 @@ public abstract class BaseMBean<T> implements Serializable {
     }
 
     public void afterModalResponse() {
+    }
+
+    public void resetBean(){
+        log.info("resetBean:"+resetBean);
+        log.info("beanState:"+getBeanState());
+        log.info("postBack:"+facesContext.get().isPostback());
+        if(!facesContext.get().isPostback() && resetBean && !getBeanState().equals(getInitialState())){
+            log.info("resetBean2");
+            this.init();
+        }
+    }
+
+    /**
+     * override to init bean with a different State
+     * @return
+     */
+    public State getInitialState() {
+        return CrudState.FIND;
     }
 }

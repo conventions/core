@@ -9,7 +9,6 @@ import java.io.Serializable;
 @SessionScoped
 public class DefaultSecurityContext implements Serializable, SecurityContext {
 
-
     public Boolean loggedIn() {
         return  Boolean.TRUE;
     }

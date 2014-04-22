@@ -21,6 +21,7 @@
  */
 package org.conventionsframework.dao;
 
+import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.WrappedData;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -39,7 +40,7 @@ import java.util.Map;
  * @author Rafael M. Pestano
  *
  */
-public interface BaseHibernateDao<T, Id extends Serializable> extends Serializable {
+public interface BaseHibernateDao<T extends BaseEntity, Id extends Serializable> extends Serializable {
 
     T load(Id id);
 

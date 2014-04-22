@@ -24,6 +24,7 @@ package org.conventionsframework.bean;
 import org.conventionsframework.bean.state.State;
 import org.conventionsframework.event.StatePullEvent;
 import org.conventionsframework.event.StatePushEvent;
+import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.StateItem;
 import org.conventionsframework.qualifier.BeanState;
 import org.conventionsframework.qualifier.BeanStates;
@@ -43,7 +44,7 @@ import javax.inject.Inject;
  * Managed beans with the "power" of being tracked by the StatekController
  * @see StateController
  */
-public abstract class StateMBean<T> extends BaseMBean<T> implements Serializable {
+public abstract class StateMBean<T extends BaseEntity<?>> extends BaseMBean<T> implements Serializable {
 
     @Inject
     private Event<StatePushEvent> statePushEvent;

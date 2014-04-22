@@ -28,15 +28,16 @@ import javax.enterprise.event.Reception;
 import javax.inject.Inject;
 import org.conventionsframework.event.ModalCallback;
 import org.conventionsframework.event.ModalInitialization;
+import org.conventionsframework.model.BaseEntity;
 
- 
+
 /**
  *
  * @author Rafael M. Pestano Apr 26, 2011 11:16:10 PM
  * 
  * Represents managed bean which controls a modal
  */
-public abstract class ModalMBean<T> extends BaseMBean<T> {
+public abstract class ModalMBean<T extends BaseEntity<?>> extends BaseMBean<T> {
 
     @Inject
     private Event<ModalCallback> modalCallbackEvent;
