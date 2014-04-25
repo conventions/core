@@ -24,13 +24,6 @@ package org.conventionsframework.producer;
 import org.conventionsframework.event.LocaleChangeEvent;
 import org.conventionsframework.util.ResourceBundle;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Any;
@@ -38,6 +31,12 @@ import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -74,7 +73,7 @@ public class ResourceBundleProvider implements Serializable {
 					.getLocale().getLanguage();
 		}
 		else{
-			currentLocale = Locale.ENGLISH.getLanguage();
+			currentLocale = Locale.getDefault().getLanguage();
 		}
 		this.changeResourceBundle();
 	}
