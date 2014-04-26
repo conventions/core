@@ -27,39 +27,30 @@ import java.util.List;
  *  
  * @author Rafael M. Pestano Mar 21, 2011 11:50:09 PM
  */
-public class WrappedData<T> {
+public class PaginationResult<T> {
 
-    private List<T> data;
-    private Integer rowCount;
-    private boolean selected;
+    private List<T> page;//database page returned by pagination
+    private Integer rowCount;//rowCount rows returned by pagination
 
-    public WrappedData() {
+    public PaginationResult() {
     }
 
-    public WrappedData(List<T> data, Integer rowCount) {
-        this.data = data;
+    public PaginationResult(List<T> data, Integer rowCount) {
+        this.page = data;
         this.rowCount = rowCount;
     }
 
-    public boolean isSelected() {
-        return selected;
-    }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    
-    public List<T> getData() {
-        return data;
+    public List<T> getPage() {
+        return page;
     }
 
     public Integer getRowCount() {
         return rowCount;
     }
 
-    public void setData(List<T> data) {
-        this.data = data;
+    public void setPage(List<T> page) {
+        this.page = page;
     }
 
     public void setRowCount(Integer rowCount) {

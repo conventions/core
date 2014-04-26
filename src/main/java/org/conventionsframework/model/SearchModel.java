@@ -1,6 +1,5 @@
 package org.conventionsframework.model;
 
-import org.conventionsframework.util.BeanManagerController;
 import org.primefaces.model.SortOrder;
 
 import java.io.Serializable;
@@ -13,8 +12,6 @@ import java.util.Map;
  */
 public class SearchModel<T extends BaseEntity> implements Serializable{
 
-    private LazyDataModel<T> dataModel;
-    private Integer rowCount;
     private int first;
     private int pageSize;
     private Map<String, Object> filter;
@@ -27,9 +24,12 @@ public class SearchModel<T extends BaseEntity> implements Serializable{
 
     public SearchModel() {
        filter = new HashMap<String, Object>();
-       entity = (T) BeanManagerController.getBeanByType(entity.getClass());
     }
 
+    public SearchModel(T entity) {
+        filter = new HashMap<String, Object>();
+        this.entity = entity;
+    }
 
     public int getFirst() {
         return first;
@@ -107,19 +107,4 @@ public class SearchModel<T extends BaseEntity> implements Serializable{
         this.entity = entity;
     }
 
-    public LazyDataModel<T> getDataModel() {
-        return dataModel;
-    }
-
-    public void setDataModel(LazyDataModel<T> dataModel) {
-        this.dataModel = dataModel;
-    }
-
-    public Integer getRowCount() {
-        return rowCount;
-    }
-
-    public void setRowCount(Integer rowCount) {
-        this.rowCount = rowCount;
-    }
 }

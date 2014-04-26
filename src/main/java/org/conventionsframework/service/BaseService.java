@@ -24,7 +24,7 @@ package org.conventionsframework.service;
 import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.SearchModel;
-import org.conventionsframework.model.WrappedData;
+import org.conventionsframework.model.PaginationResult;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 
@@ -37,6 +37,10 @@ import java.io.Serializable;
  */
 public interface BaseService<T extends BaseEntity, Id extends Serializable> {
 
+    /**
+     *
+     * @param Entity
+     */
     void store(T Entity);
 
     void afterStore(T entity);
@@ -52,8 +56,14 @@ public interface BaseService<T extends BaseEntity, Id extends Serializable> {
     BaseHibernateDao<T,Id> getDao();
 
     void setDao(BaseHibernateDao<T,Id> dao);
-    
-    WrappedData<T> findPaginated(SearchModel<T> searchModel);
+
+    /**
+     * database pagination over a search model which contains necessary information
+     * to get a database page
+     * @param searchModel
+     * @return PaginationResult containing database page and total rows returned by pagination
+     */
+    PaginationResult<T> paginate(SearchModel<T> searchModel);
 
     DetachedCriteria getDetachedCriteria();
 

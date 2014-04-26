@@ -26,8 +26,8 @@ import java.util.Map;
  *
  * @author Rafael M. Pestano - Apr 7, 2013 10:59:19 AM
  *
- * gather all paginator filters in a sessionMap where the key is the paginator
- * service
+ * gather all paginator filters in a sessionMap where the key is the paginator entity
+ *
  */
 @SessionScoped
 public class SearchModelCache implements Serializable {

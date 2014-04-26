@@ -24,7 +24,7 @@ package org.conventionsframework.dao.impl;
 import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.SearchModel;
-import org.conventionsframework.model.WrappedData;
+import org.conventionsframework.model.PaginationResult;
 import org.conventionsframework.qualifier.Dao;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
@@ -203,15 +203,25 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
         return crit.list();
     }
 
-    /**
-     * Hibernate implementation of pagination
-     *
-     * @param searchModel
-     * @param dc
-     * @return
-     */
     @Override
-    public WrappedData<T> executePagination(SearchModel<T> searchModel, final DetachedCriteria dc) {
+    public DetachedCriteria configPagination(SearchModel<T> searchModel) {
+        DetachedCriteria dc = getDetachedCriteria();
+        addBasicFilterRestrictions(dc, searchModel.getFilter());
+        Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
+        dc.add(example);
+        return dc;
+    }
+
+    @Override
+    public DetachedCriteria configPagination(SearchModel<T> searchModel, DetachedCriteria dc) {
+        addBasicFilterRestrictions(dc, searchModel.getFilter());
+        Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
+        dc.add(example);
+        return dc;
+    }
+
+    @Override
+    public PaginationResult<T> executePagination(SearchModel<T> searchModel, final DetachedCriteria dc) {
 
         int size = getRowCount(dc).intValue();
          String sortField = searchModel.getSortField();
@@ -231,7 +241,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
         List<T> data = this.findByCriteria(dc, searchModel.getFirst(), searchModel.getPageSize());
 
 
-        return new WrappedData<T>(data, size);
+        return new PaginationResult<T>(data, size);
     }
 
     @Override
@@ -328,7 +338,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
     /**
      * try to infer the restrictions based on the entity being paged, will work
      * only for basic field for more complex restriction such as relationships
-     * override configFindPaginated
+     * override configPagination
      *
      * the method will add a hibernate <b>ilike</b> for string fields and
      * <b>eq<b/> for int/Integer/Long/long/Date/Calendar fields

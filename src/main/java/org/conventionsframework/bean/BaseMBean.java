@@ -17,7 +17,7 @@
 package org.conventionsframework.bean;
 
 import org.conventionsframework.model.BaseEntity;
-import org.conventionsframework.qualifier.Config;
+import org.conventionsframework.qualifier.*;
 import org.conventionsframework.security.SecurityContext;
 import org.conventionsframework.util.ResourceBundle;
 import org.conventionsframework.util.BeanManagerController;
@@ -33,9 +33,6 @@ import javax.annotation.PostConstruct;
 import org.conventionsframework.bean.state.CrudState;
 import org.conventionsframework.bean.state.State;
 import org.conventionsframework.producer.ResourceBundleProvider;
-import org.conventionsframework.qualifier.Log;
-import org.conventionsframework.qualifier.PersistentClass;
-import org.conventionsframework.qualifier.Service;
 import org.conventionsframework.service.BaseService;
 import java.lang.annotation.Annotation;
 import javax.enterprise.event.Event;

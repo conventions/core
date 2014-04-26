@@ -23,8 +23,8 @@ package org.conventionsframework.service.impl;
 
 import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.model.BaseEntity;
+import org.conventionsframework.model.PaginationResult;
 import org.conventionsframework.model.SearchModel;
-import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.qualifier.Dao;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.PersistentClass;
@@ -33,9 +33,6 @@ import org.conventionsframework.service.BaseService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Example;
-import org.hibernate.criterion.MatchMode;
-import org.primefaces.model.SortOrder;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -47,7 +44,6 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -126,24 +122,13 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
     public void afterRemove(T entity) {
     }
 
-    /**
-     *
-     * @param searchModel
-     * @return DetachedCriteria based on searchModel
-     */
-    public DetachedCriteria configFindPaginated(SearchModel<T> searchModel) {
-        DetachedCriteria dc = getDetachedCriteria();
-        getDao().addBasicFilterRestrictions(dc, searchModel.getFilter());
-        Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
-        dc.add(example);
-        return dc;
+
+    public DetachedCriteria configPagination(SearchModel<T> searchModel) {
+        return getDao().configPagination(searchModel);
     }
 
-    public DetachedCriteria configFindPaginated(SearchModel<T> searchModel, DetachedCriteria dc) {
-        getDao().addBasicFilterRestrictions(dc, searchModel.getFilter());
-        Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
-        dc.add(example);
-        return dc;
+    public DetachedCriteria configPagination(SearchModel<T> searchModel, DetachedCriteria dc) {
+        return getDao().configPagination(searchModel,dc);
     }
 
 
@@ -160,8 +145,8 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public WrappedData<T> findPaginated(SearchModel<T> searchModel) {
-        DetachedCriteria dc = configFindPaginated(searchModel);
+    public final PaginationResult<T> paginate(SearchModel<T> searchModel) {
+        DetachedCriteria dc = configPagination(searchModel);
         return getDao().executePagination(searchModel, dc);
     }
 
@@ -247,17 +232,6 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
         return null;
     }
 
-    public void addBasicFilterRestrictions(DetachedCriteria dc, Map restrictionFilter) {
-        try {
-            getDao().addBasicFilterRestrictions(dc, restrictionFilter);
-
-        } catch (Exception ex) {
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "Problem trying to infer restrictions from filter:" + ex.getMessage());
-            }
-        }
-
-    }
 
     @Override
     public Class<T> getPersistentClass() {
@@ -272,7 +246,7 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
         return true;
     }
 
-    public WrappedData<T> executePagination(SearchModel<T> searchModel, final DetachedCriteria dc) {
+    public PaginationResult<T> executePagination(SearchModel<T> searchModel, final DetachedCriteria dc) {
         return getDao().executePagination(searchModel, dc);
     }
 
@@ -286,5 +260,6 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
+
 
 }

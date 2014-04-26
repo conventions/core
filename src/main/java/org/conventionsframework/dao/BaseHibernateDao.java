@@ -22,8 +22,8 @@
 package org.conventionsframework.dao;
 
 import org.conventionsframework.model.BaseEntity;
+import org.conventionsframework.model.PaginationResult;
 import org.conventionsframework.model.SearchModel;
-import org.conventionsframework.model.WrappedData;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -76,9 +76,9 @@ public interface BaseHibernateDao<T extends BaseEntity, Id extends Serializable>
 
     List<T> findByExample(final T entity, int maxResult, MatchMode matchMode);
 
-    T findOneByExample(final T entity);
-
     List<T> findByExample(T exampleInstance, String[] excludeProperty);
+
+    T findOneByExample(final T entity);
 
     T findOneByExample(final T entity, MatchMode matchMode);
 
@@ -86,7 +86,34 @@ public interface BaseHibernateDao<T extends BaseEntity, Id extends Serializable>
 
     List<T> findByCriteria(DetachedCriteria criteriaObject);
 
-    WrappedData<T> executePagination(SearchModel<T> searchModel, DetachedCriteria dc);
+    T findOneByCriteria(DetachedCriteria dc);
+
+    T findOneByCriteria(Criteria criteria);
+
+    /**
+     * @param searchModel
+     * @return a populated detachedCriteria based on given searchModel
+     */
+    DetachedCriteria configPagination(SearchModel<T> searchModel);
+
+    /**
+     *
+     * @param searchModel
+     * @param dc pre populated criteria
+     * @return same pre populated detachedCriteria adding basic restrictions based on filter map
+     * and adds hibernate Example restriction based on searchModel entity
+     *
+     */
+    DetachedCriteria configPagination(SearchModel<T> searchModel, DetachedCriteria dc);
+
+    /**
+     * database pagination over a search model which contains necessary information
+     * to get a database page
+     * @param searchModel
+     * @param dc populated detachedCriteria used to execute database pagination
+     * @return PaginationResult containing database page and total rows returned by pagination
+     */
+    PaginationResult<T> executePagination(SearchModel<T> searchModel, DetachedCriteria dc);
 
     Long getRowCount(final DetachedCriteria criteria);
 
@@ -97,10 +124,6 @@ public interface BaseHibernateDao<T extends BaseEntity, Id extends Serializable>
     List findByNativeQuery(String nativeQuery, Map params, Class entity, ResultTransformer rt, ScalarReturn scalar);
 
     void addBasicFilterRestrictions(DetachedCriteria dc, Map externalFilters);
-
-    T findOneByCriteria(DetachedCriteria dc);
-
-    T findOneByCriteria(Criteria criteria);
 
     Class<T> getPersistentClass();
 
