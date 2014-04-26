@@ -23,14 +23,13 @@ package org.conventionsframework.service;
 
 import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.model.BaseEntity;
+import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.model.WrappedData;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
-import org.primefaces.model.SortOrder;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  *
@@ -54,7 +53,7 @@ public interface BaseService<T extends BaseEntity, Id extends Serializable> {
 
     void setDao(BaseHibernateDao<T,Id> dao);
     
-    WrappedData<T> findPaginated(final int first, final int pageSize, String sortField, SortOrder sortOrder, Map<String,String> columnFilters, Map<String,Object> externalFilters);
+    WrappedData<T> findPaginated(SearchModel<T> searchModel);
 
     DetachedCriteria getDetachedCriteria();
 

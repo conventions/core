@@ -23,6 +23,7 @@ package org.conventionsframework.service.impl;
 
 import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.model.BaseEntity;
+import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.qualifier.Dao;
 import org.conventionsframework.qualifier.Log;
@@ -32,6 +33,8 @@ import org.conventionsframework.service.BaseService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Example;
+import org.hibernate.criterion.MatchMode;
 import org.primefaces.model.SortOrder;
 
 import javax.ejb.TransactionAttribute;
@@ -125,25 +128,21 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
 
     /**
      *
-     * @param first
-     * @param pageSize
-     * @param sortField
-     * @param sortOrder
-     * @param columnFilters primefaces datatable column filters
-     * @param externalFilters filters outside datatable- eg: inputText, sliders,
-     * autocomplete etc..
-     * @return wrapped data with paginated list and rowCount
+     * @param searchModel
+     * @return DetachedCriteria based on searchModel
      */
-    public DetachedCriteria configFindPaginated(Map<String, String> columnFilters, Map<String, Object> externalFilter) {
+    public DetachedCriteria configFindPaginated(SearchModel<T> searchModel) {
         DetachedCriteria dc = getDetachedCriteria();
-        getDao().addBasicFilterRestrictions(dc, externalFilter);
-        getDao().addBasicFilterRestrictions(dc, columnFilters);
+        getDao().addBasicFilterRestrictions(dc, searchModel.getFilter());
+        Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
+        dc.add(example);
         return dc;
     }
 
-    public DetachedCriteria configFindPaginated(Map<String, String> columnFilters, Map<String, Object> externalFilter, DetachedCriteria dc) {
-        getDao().addBasicFilterRestrictions(dc, externalFilter);
-        getDao().addBasicFilterRestrictions(dc, columnFilters);
+    public DetachedCriteria configFindPaginated(SearchModel<T> searchModel, DetachedCriteria dc) {
+        getDao().addBasicFilterRestrictions(dc, searchModel.getFilter());
+        Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
+        dc.add(example);
         return dc;
     }
 
@@ -161,9 +160,9 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public WrappedData<T> findPaginated(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> columnFilters, Map<String, Object> externalFilters) {
-        DetachedCriteria dc = configFindPaginated(columnFilters, externalFilters);
-        return getDao().executePagination(first, pageSize, sortField, sortOrder, dc);
+    public WrappedData<T> findPaginated(SearchModel<T> searchModel) {
+        DetachedCriteria dc = configFindPaginated(searchModel);
+        return getDao().executePagination(searchModel, dc);
     }
 
     @Override
@@ -273,8 +272,8 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
         return true;
     }
 
-    public WrappedData<T> executePagination(final int first, final int pageSize, String sortField, SortOrder sortOrder, final DetachedCriteria dc) {
-        return getDao().executePagination(first, pageSize, sortField, sortOrder, dc);
+    public WrappedData<T> executePagination(SearchModel<T> searchModel, final DetachedCriteria dc) {
+        return getDao().executePagination(searchModel, dc);
     }
 
     @Override

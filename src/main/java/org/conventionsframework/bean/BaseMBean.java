@@ -52,14 +52,15 @@ import org.conventionsframework.paginator.Paginator;
  *
  * @author Rafael M. Pestano Mar 17, 2011 10:18:44 PM
  */
-public abstract class BaseMBean<T extends BaseEntity<?>> implements Serializable {
+public abstract class BaseMBean<T extends BaseEntity> implements Serializable {
 
     private T entity;
     private T entityAux;
     private T[] entityAuxList;
     private BaseService baseService;
     private State beanState;
-    private Paginator paginator;
+    @Inject
+    private Paginator<T> paginator;
     private Object modalResponse;
     private String createMessage;
     private String deleteMessage;
@@ -168,7 +169,7 @@ public abstract class BaseMBean<T extends BaseEntity<?>> implements Serializable
     public void init() {
         setEntity(this.create());
         if (initializeService()) { //baseService must be set to create paginator
-            paginator = new Paginator(baseService);
+            paginator.setBaseService(baseService);
         }
         else{
             log.warning("Service was not initialized for bean:"+getClass().getSimpleName());

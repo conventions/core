@@ -22,6 +22,7 @@
 package org.conventionsframework.dao;
 
 import org.conventionsframework.model.BaseEntity;
+import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.model.WrappedData;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -29,7 +30,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.loader.custom.ScalarReturn;
 import org.hibernate.transform.ResultTransformer;
-import org.primefaces.model.SortOrder;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -86,7 +86,7 @@ public interface BaseHibernateDao<T extends BaseEntity, Id extends Serializable>
 
     List<T> findByCriteria(DetachedCriteria criteriaObject);
 
-    WrappedData<T> executePagination(final int first, final int pageSize, String sortField, SortOrder sortOrder, DetachedCriteria dc);
+    WrappedData<T> executePagination(SearchModel<T> searchModel, DetachedCriteria dc);
 
     Long getRowCount(final DetachedCriteria criteria);
 

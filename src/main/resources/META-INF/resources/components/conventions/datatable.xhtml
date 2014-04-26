@@ -46,7 +46,7 @@
     <p:dataTable value="#{cc.attrs.paginator.dataModel}" rendered="#{cc.attrs.rendered}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" emptyMessage="#{cc.attrs.emptyMessage}"
                  lazy="true"  
                  rowIndexVar="rowIndex"
-                 filteredValue="#{cc.attrs.paginator.filteredValue}"
+                 filteredValue="#{cc.attrs.paginator.searchModel.filteredValue}"
                  rowStyleClass="#{empty cc.attrs.rowStyleClass ? (rowIndex mod 2 ne 0 ? 'even-row' : '') : cc.attrs.rowStyleClass}" rows="#{cc.attrs.rows}" 
                  paginatorPosition="#{cc.attrs.paginatorPosition}"
                  currentPageReportTemplate="#{cc.attrs.currentPageReportTemplate}"
@@ -56,7 +56,7 @@
                  resizableColumns="#{cc.attrs.resizableColumns}"
                  filterEvent="#{cc.attrs.filterEvent}"
                  filterDelay="#{cc.attrs.filterDelay}"
-                 selection="#{cc.attrs.paginator.selection}"
+                 selection="#{cc.attrs.paginator.searchModel.selection}"
                  var="row"
                  rowKey="#{row.id}"
                  >

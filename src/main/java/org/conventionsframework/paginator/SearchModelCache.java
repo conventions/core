@@ -15,10 +15,12 @@
  */
 package org.conventionsframework.paginator;
 
+import org.conventionsframework.model.SearchModel;
+
+import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import javax.enterprise.context.SessionScoped;
 
 /**
  *
@@ -28,27 +30,27 @@ import javax.enterprise.context.SessionScoped;
  * service
  */
 @SessionScoped
-public class SessionFilter implements Serializable {
+public class SearchModelCache implements Serializable {
 
-    private Map<String, Map<String, Object>> sessionFilter = new HashMap<String, Map<String, Object>>();
+    private Map<String, SearchModel<?>> searchCache = new HashMap<String, SearchModel<?>>();
 
-    public void addFilter(String key, Map<String, Object> filter) {
-        sessionFilter.put(key, filter);
+    public void addSearchModel(String key, SearchModel<?> searchModel) {
+        searchCache.put(key, searchModel);
     }
     
-    public void clearFilter(String key) {
-        if (sessionFilter.containsKey(key)) {
-            sessionFilter.get(key).clear();
+    public void resetSearchModel(String key) {
+        if (searchCache.containsKey(key)) {
+            searchCache.put(key, null);
         }
     }
     
-    public Map<String, Object> getFilter(String key){
-        if(sessionFilter.containsKey(key)){
-            return sessionFilter.get(key);
+    public SearchModel<?> getSearchModel(String key){
+        if(searchCache.containsKey(key)){
+            return searchCache.get(key);
         }
         else {
             return null;
         }
     }
-    
+
 }

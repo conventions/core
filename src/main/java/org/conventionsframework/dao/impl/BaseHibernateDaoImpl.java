@@ -23,6 +23,7 @@ package org.conventionsframework.dao.impl;
 
 import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.model.BaseEntity;
+import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.qualifier.Dao;
 import org.hibernate.Criteria;
@@ -205,23 +206,20 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
     /**
      * Hibernate implementation of pagination
      *
-     * @param first
-     * @param pageSize
-     * @param sortField
-     * @param sortOrder
+     * @param searchModel
      * @param dc
      * @return
      */
     @Override
-    public WrappedData<T> executePagination(final int first, final int pageSize, String sortField, SortOrder sortOrder, final DetachedCriteria dc) {
+    public WrappedData<T> executePagination(SearchModel<T> searchModel, final DetachedCriteria dc) {
 
         int size = getRowCount(dc).intValue();
-
+         String sortField = searchModel.getSortField();
         if (sortField != null) {
-            if(sortOrder.equals(SortOrder.UNSORTED)){
-                sortOrder = SortOrder.ASCENDING;
+            if(searchModel.getSortOrder().equals(SortOrder.UNSORTED)){
+                searchModel.setSortOrder(SortOrder.ASCENDING);
             }
-            if (sortOrder.equals(SortOrder.ASCENDING)) {
+            if (searchModel.getSortOrder().equals(SortOrder.ASCENDING)) {
                 dc.addOrder(Order.asc(sortField));
             } else {
                 dc.addOrder(Order.desc(sortField));
@@ -230,8 +228,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 
         }
 
-
-        List<T> data = this.findByCriteria(dc, first, pageSize);
+        List<T> data = this.findByCriteria(dc, searchModel.getFirst(), searchModel.getPageSize());
 
 
         return new WrappedData<T>(data, size);

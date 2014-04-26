@@ -21,23 +21,21 @@
  */
 package org.conventionsframework.paginator;
 
+import org.conventionsframework.model.BaseEntity;
+import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.qualifier.Service;
 import org.conventionsframework.util.BeanManagerController;
-import org.conventionsframework.util.*;
 import org.conventionsframework.model.WrappedData;
 import org.conventionsframework.service.BaseService;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
 
 import org.conventionsframework.model.LazyDataModel;
@@ -47,17 +45,12 @@ import org.primefaces.model.SortOrder;
 /**
  * @author rmpestano
  */
-public class Paginator<T> implements Serializable {
-    private LazyDataModel<T> dataModel;
+public class Paginator<T extends BaseEntity> implements Serializable {
     private BaseService baseService;
-    private Integer rowCount;
-    private Map<String, Object> filter;
-    private List<T> filteredValue;//datatable filteredValue attribute
-    private List<T> selection;//datatable selection attribute
-    private T singleSelection;//datatable single selection
+    private SearchModel<T> searchModel;
+    private boolean keepSearchInSession = true;//keep searchModel in user session
     @Inject
-    private SessionFilter sessionFilter;
-    private boolean keepFilterInSession = true;//keep external filters in user session
+    private SearchModelCache searchModelCache;
 
     public Paginator() {
     }
@@ -102,25 +95,34 @@ public class Paginator<T> implements Serializable {
     }
 
     private void initDataModel() {
-        if (keepFilterInSession) {
-            String sessionFilterKey = baseService.getClass().getSimpleName();
-            filter = getSessionFilter().getFilter(sessionFilterKey);
-            if (filter == null) {
-                filter = new HashMap<String, Object>();
-                sessionFilter.addFilter(sessionFilterKey, filter);
+        if (keepSearchInSession) {
+            String searchKey = baseService.getClass().getSimpleName();
+            searchModel = (SearchModel<T>) getSearchModelCache().getSearchModel(searchKey);
+            if (searchModel == null) {
+                searchModel = new SearchModel<T>();
+                searchModelCache.addSearchModel(searchKey, searchModel);
             }
         }
+        else{
+            searchModel = new SearchModel<T>();
+        }
+       searchModel.setDataModel(new LazyDataModel<T>() {
 
-        dataModel = new LazyDataModel<T>() {
+
             @Override
             public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> dataTableFilters) {
                 WrappedData<T> wrappedData;
-                wrappedData = baseService.findPaginated(first, pageSize, sortField, sortOrder, dataTableFilters, filter);
-                rowCount = wrappedData.getRowCount();
-                this.setRowCount(rowCount);//datatable rowCount
+                searchModel.setFirst(first);
+                searchModel.setPageSize(pageSize);
+                searchModel.setSortField(sortField);
+                searchModel.setSortOrder(sortOrder);
+                searchModel.getFilter().clear();
+                searchModel.getFilter().putAll(dataTableFilters);
+                wrappedData = baseService.findPaginated(searchModel);
+                searchModel.setRowCount(wrappedData.getRowCount());
                 return wrappedData.getData();
             }
-        };
+        });
     }
 
     public BaseService getBaseService() {
@@ -132,59 +134,20 @@ public class Paginator<T> implements Serializable {
     }
 
     public LazyDataModel<T> getDataModel() {
-        return dataModel;
+        return searchModel.getDataModel();
     }
 
     public void setDataModel(LazyDataModel<T> dataModel) {
-        this.dataModel = dataModel;
+       searchModel.setDataModel(dataModel);
     }
 
-    public Map<String, Object> getFilter() {
-        return filter;
+
+    public boolean isKeepSearchInSession() {
+        return keepSearchInSession;
     }
 
-    public void setFilter(Map<String, Object> filters) {
-        this.filter = filters;
-    }
-
-    public T getSingleSelection() {
-        return singleSelection;
-    }
-
-    public void setSingleSelection(T singleSelection) {
-        this.singleSelection = singleSelection;
-    }
-
-    public Integer getRowCount() {
-        return rowCount;
-    }
-
-    public void setRowCount(Integer rowCount) {
-        this.rowCount = rowCount;
-    }
-
-    public List<T> getFilteredValue() {
-        return filteredValue;
-    }
-
-    public void setFilteredValue(List<T> filteredValue) {
-        this.filteredValue = filteredValue;
-    }
-
-    public List<T> getSelection() {
-        return selection;
-    }
-
-    public void setSelection(List<T> selection) {
-        this.selection = selection;
-    }
-
-    public boolean isKeepFilterInSession() {
-        return keepFilterInSession;
-    }
-
-    public void setKeepFilterInSession(boolean keepFilterInSession) {
-        this.keepFilterInSession = keepFilterInSession;
+    public void setKeepSearchInSession(boolean keepSearchInSession) {
+        this.keepSearchInSession = keepSearchInSession;
     }
 
 
@@ -200,10 +163,34 @@ public class Paginator<T> implements Serializable {
         //override to perform an action on datatable filter event
     }
 
-    public SessionFilter getSessionFilter() {
-        if (sessionFilter == null) {//its null when Paginator is created via new operator
-            sessionFilter = (SessionFilter) BeanManagerController.getBeanByType(SessionFilter.class);
+    public SearchModelCache getSearchModelCache() {
+        if (searchModelCache == null) {//its null when Paginator is created via new operator
+            searchModelCache = (SearchModelCache) BeanManagerController.getBeanByType(SearchModelCache.class);
         }
-        return sessionFilter;
+        return searchModelCache;
+    }
+
+    public T getEntity(){
+        return searchModel.getEntity();
+    }
+
+    public Map<String,Object> getFilter(){
+        return searchModel.getFilter();
+    }
+
+    public void setFilter(Map<String,Object> filter){
+        searchModel.setFilter(filter);
+    }
+
+    public SearchModel<T> getSearchModel() {
+        return searchModel;
+    }
+
+    public void setSearchModel(SearchModel<T> searchModel) {
+        this.searchModel = searchModel;
+    }
+
+    public int getRowCount(){
+        return searchModel.getRowCount();
     }
 }
