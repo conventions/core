@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.conventionsframework</groupId>
     <artifactId>conventions-core</artifactId>
-    <version>1.0.0-RC3</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>conventions-core</name>
     <description>
@@ -21,10 +21,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mojarra.version>2.1.7</mojarra.version>
         <myfaces.version>2.1.7</myfaces.version>
-        <myfaces.codi.version>1.0.5</myfaces.codi.version>
+        <myfaces.codi.version>1.0.6</myfaces.codi.version>
         <hibernate.version>4.1.5.Final</hibernate.version>
-        <primefaces.version>4.0</primefaces.version>
-        <prime-ext.version>1.0.0</prime-ext.version>
+        <primefaces.version>5.0.RC1</primefaces.version>
+        <prime-ext.version>2.0.0.RC</prime-ext.version>
     </properties>
     
     <licenses>

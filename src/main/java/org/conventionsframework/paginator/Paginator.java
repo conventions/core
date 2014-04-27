@@ -124,9 +124,8 @@ public class Paginator<T extends BaseEntity> implements Serializable {
         }
         this.setDataModel(new LazyDataModel<T>() {
 
-
             @Override
-            public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> dataTableFilters) {
+            public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> dataTableFilters) {
                 PaginationResult<T> paginationResult;
                 searchModel.setFirst(first);
                 searchModel.setPageSize(pageSize);
