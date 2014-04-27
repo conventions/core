@@ -53,7 +53,6 @@ public class Paginator<T extends BaseEntity> implements Serializable {
     private Integer rowCount;
     private BaseService baseService;
     private SearchModel<T> searchModel;
-    private T entity;
     private boolean keepSearchInSession = true;//keep searchModel in user session
     @Inject
     private SearchModelCache searchModelCache;
@@ -63,69 +62,68 @@ public class Paginator<T extends BaseEntity> implements Serializable {
 
     @Inject
     public void Paginator(InjectionPoint ip) {
-        if (ip != null ) {
-            initEntity(ip);
-            if(ip.getAnnotated().isAnnotationPresent(PaginatorService.class)){
-                initService(ip);//initPaginatorService
+        if (ip != null) {
+            ParameterizedType type = (ParameterizedType) ip.getType();
+            Type[] typeArgs = type.getActualTypeArguments();
+            Class<T> persistentClass = ((Class<T>) typeArgs[0]);
+            if (ip.getAnnotated().isAnnotationPresent(PaginatorService.class)) {
+                initService(ip, persistentClass);//initPaginatorService
             }
-            initDataModel();
+            try {
+                initDataModel(persistentClass);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException("could not initialize paginator datamodel: " + e.getMessage());
+            }
         }
     }
 
-    private void initService(InjectionPoint ip) {
+    private void initService(InjectionPoint ip, Class<T> persistentClass) {
         PaginatorService paginatorService = ip.getAnnotated().getAnnotation(PaginatorService.class);
         try {
             if (!paginatorService.value().isPrimitive()) {
                 //set paginator service by type
                 baseService = (BaseService) BeanManagerController.getBeanByType(paginatorService.value());
             } else {
-                try {
-                    baseService = BeanManagerController.getBeanByTypeAndQualifier(BaseService.class, Service.class);
-                    baseService.getDao().setPersistentClass(entity.getClass());
-                } catch (Exception ex) {
-                    throw new IllegalArgumentException("Could not initialize Paginator of " + ip.getMember().getDeclaringClass() + ".You need to provide paginatorService name or type attribute");
-                }
+                baseService = BeanManagerController.getBeanByTypeAndQualifier(BaseService.class, Service.class);
+                baseService.getDao().setPersistentClass(persistentClass);
             }
             if (!paginatorService.entity().isPrimitive() && (getBaseService().getDao().getPersistentClass() == null || getBaseService().getDao().getPersistentClass().isPrimitive())) {
                 getBaseService().getDao().setPersistentClass(paginatorService.entity());
             }
-        } catch (Exception ex) {
-            Logger.getLogger(Paginator.class.getSimpleName()).log(Level.WARNING, "Conventions: problens setting paginator service " + ex.getMessage());
+        } catch (Exception ex){
             ex.printStackTrace();
+            throw new IllegalArgumentException("Could not initialize Paginator service of " + ip.getMember().getDeclaringClass() + ":" + ex.getMessage());
         }
+
     }
 
-    private void initEntity(InjectionPoint ip) {
-        try {
-            ParameterizedType type = (ParameterizedType) ip.getType();
-            Type[] typeArgs = type.getActualTypeArguments();
-            entity = ((Class<T>) typeArgs[0]).newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(Paginator.class.getSimpleName()).log(Level.WARNING, "Could not initialize Paginator entity " + e.getMessage());
-        }
-    }
 
     public Paginator(BaseService service) {
         this.baseService = service;
-        initDataModel();
+        try {
+            initDataModel(service.getPersistentClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Could not initialize Paginator datamodel: "+e.getMessage());
+        }
     }
 
-    private void initDataModel() {
+    private void initDataModel(Class<T> persistentClass) throws IllegalAccessException, InstantiationException {
         if (keepSearchInSession) {
-            String searchKey = entity.getClass().getSimpleName();
+            String searchKey = persistentClass.getSimpleName();
             searchModel = (SearchModel<T>) getSearchModelCache().getSearchModel(searchKey);
             if (searchModel == null) {
-                searchModel = new SearchModel<T>(entity);
+                searchModel = new SearchModel<T>(persistentClass.newInstance());
                 searchModelCache.addSearchModel(searchKey, searchModel);
             }
         } else {
-            searchModel = new SearchModel<T>(entity);
+            searchModel = new SearchModel<T>(persistentClass.newInstance());
         }
         this.setDataModel(new LazyDataModel<T>() {
 
             @Override
-            public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> dataTableFilters) {
+            public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map dataTableFilters) {
                 PaginationResult<T> paginationResult;
                 searchModel.setFirst(first);
                 searchModel.setPageSize(pageSize);
@@ -193,10 +191,6 @@ public class Paginator<T extends BaseEntity> implements Serializable {
         return searchModelCache;
     }
 
-    public T getEntity() {
-        return entity;
-    }
-
     public Map<String, Object> getFilter() {
         return searchModel.getFilter();
     }
@@ -210,6 +204,14 @@ public class Paginator<T extends BaseEntity> implements Serializable {
     }
 
 
-
-
+    public void resetCache(){
+        getSearchModelCache().resetSearchModel(searchModel.getEntity().getClass().getSimpleName());
+        try {
+            initDataModel(baseService.getPersistentClass());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+    }
 }

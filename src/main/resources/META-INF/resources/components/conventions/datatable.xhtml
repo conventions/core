@@ -42,7 +42,7 @@
 
     <!-- IMPLEMENTATION -->
 <cc:implementation xmlns:framework="http://java.sun.com/jsf/composite/components/conventions">
-    <p:remoteCommand rendered="#{cc.attrs.renderFooter}" name="updateFooter" update="@(span[id$=footer])" global="false" />
+    <p:remoteCommand rendered="#{cc.attrs.renderFooter}" name="updateFooter" update="@(div[id$=footer])" global="false" />
     <p:dataTable value="#{cc.attrs.paginator.dataModel}" rendered="#{cc.attrs.rendered}" widgetVar="#{cc.attrs.widgetVar}" id="#{cc.id}_table" emptyMessage="#{cc.attrs.emptyMessage}"
                  lazy="true"  
                  rowIndexVar="rowIndex"

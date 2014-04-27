@@ -17,6 +17,7 @@
 package org.conventionsframework.bean;
 
 import org.conventionsframework.model.BaseEntity;
+import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.qualifier.*;
 import org.conventionsframework.security.SecurityContext;
 import org.conventionsframework.util.ResourceBundle;
@@ -386,11 +387,7 @@ public abstract class BaseMBean<T extends BaseEntity> implements Serializable {
     }
 
     public void resetBean(){
-        log.info("resetBean:"+resetBean);
-        log.info("beanState:"+getBeanState());
-        log.info("postBack:"+facesContext.get().isPostback());
         if(!facesContext.get().isPostback() && resetBean && !getBeanState().equals(getInitialState())){
-            log.info("resetBean2");
             this.init();
         }
     }
@@ -401,5 +398,21 @@ public abstract class BaseMBean<T extends BaseEntity> implements Serializable {
      */
     public State getInitialState() {
         return CrudState.FIND;
+    }
+
+    public SearchModel<T> getSearchModel(){
+        return paginator.getSearchModel();
+    }
+
+    public T getSearchEntity(){
+        return getSearchModel().getEntity();
+    }
+
+    public void resetSearch(){
+        paginator.resetCache();
+    }
+
+    public String getSearchCriteria(){
+        return null;//datatable footer
     }
 }
