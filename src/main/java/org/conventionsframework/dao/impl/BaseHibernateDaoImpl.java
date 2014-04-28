@@ -207,6 +207,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
     public DetachedCriteria configPagination(SearchModel<T> searchModel) {
         DetachedCriteria dc = getDetachedCriteria();
         addBasicFilterRestrictions(dc, searchModel.getFilter());
+        addBasicFilterRestrictions(dc, searchModel.getDatatableFilter());
         Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
         dc.add(example);
         return dc;
@@ -215,6 +216,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
     @Override
     public DetachedCriteria configPagination(SearchModel<T> searchModel, DetachedCriteria dc) {
         addBasicFilterRestrictions(dc, searchModel.getFilter());
+        addBasicFilterRestrictions(dc, searchModel.getDatatableFilter());
         Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
         dc.add(example);
         return dc;

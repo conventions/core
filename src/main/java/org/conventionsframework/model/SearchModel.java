@@ -15,6 +15,7 @@ public class SearchModel<T extends BaseEntity> implements Serializable{
     private int first;
     private int pageSize;
     private Map<String, Object> filter;
+    private Map datatableFilter;
     private List<T> filteredValue;//datatable filteredValue attribute
     private List<T> selection;//datatable selection attribute
     private T singleSelection;//datatable single selection
@@ -28,6 +29,7 @@ public class SearchModel<T extends BaseEntity> implements Serializable{
 
     public SearchModel(T entity) {
         filter = new HashMap<String, Object>();
+        datatableFilter = new HashMap();
         this.entity = entity;
     }
 
@@ -107,4 +109,11 @@ public class SearchModel<T extends BaseEntity> implements Serializable{
         this.entity = entity;
     }
 
+    public Map getDatatableFilter() {
+        return datatableFilter;
+    }
+
+    public void setDatatableFilter(Map datatableFilter) {
+        this.datatableFilter = datatableFilter;
+    }
 }

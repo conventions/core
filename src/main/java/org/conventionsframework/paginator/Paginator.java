@@ -129,8 +129,8 @@ public class Paginator<T extends BaseEntity> implements Serializable {
                 searchModel.setPageSize(pageSize);
                 searchModel.setSortField(sortField);
                 searchModel.setSortOrder(sortOrder);
-                searchModel.getFilter().clear();
-                searchModel.getFilter().putAll(dataTableFilters);
+                searchModel.getDatatableFilter().clear();
+                searchModel.getDatatableFilter().putAll(dataTableFilters);
                 paginationResult = baseService.paginate(searchModel);
                 rowCount = paginationResult.getRowCount();
                 this.setRowCount(rowCount);
@@ -214,4 +214,9 @@ public class Paginator<T extends BaseEntity> implements Serializable {
             e.printStackTrace();
         }
     }
+
+    public T getEntity(){
+        return searchModel.getEntity();
+    }
+
 }
