@@ -219,4 +219,15 @@ public class Paginator<T extends BaseEntity> implements Serializable {
         return searchModel.getEntity();
     }
 
+    public List<T> getSelection(){
+        return searchModel.getSelection();
+    }
+    public T getSingleSelection(){
+        return searchModel.getSingleSelection();
+    }
+
+    public List<T> getFilteredValue(){
+        return searchModel.getFilteredValue();
+    }
+
 }
