@@ -215,6 +215,11 @@ public class Paginator<T extends BaseEntity> implements Serializable {
         }
     }
 
+    /**
+     *
+     * methods for backward compatibility
+     */
+
     public T getEntity(){
         return searchModel.getEntity();
     }
@@ -222,12 +227,24 @@ public class Paginator<T extends BaseEntity> implements Serializable {
     public List<T> getSelection(){
         return searchModel.getSelection();
     }
+
+    public void setSelection(List<T> selection){
+        searchModel.setSelection(selection);
+    }
     public T getSingleSelection(){
         return searchModel.getSingleSelection();
     }
 
+    public void setSingleSelection(T singleSelection){
+        searchModel.setSingleSelection(singleSelection);
+    }
+
     public List<T> getFilteredValue(){
         return searchModel.getFilteredValue();
+    }
+
+    public void setFilteredValue(List<T> filteredValue){
+        searchModel.setFilteredValue(filteredValue);
     }
 
 }

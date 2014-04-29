@@ -254,7 +254,7 @@ public abstract class BaseMBean<T extends BaseEntity> implements Serializable {
      * @param entity
      */
     public void delete(T entity) {
-        this.delete(entity,deleteMessage);
+        this.delete(entity,getDeleteMessage());
     }
 
     public void delete(T entity, String msg) {
