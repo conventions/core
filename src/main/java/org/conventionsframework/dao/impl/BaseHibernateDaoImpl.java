@@ -34,6 +34,8 @@ import org.hibernate.loader.custom.ScalarReturn;
 import org.hibernate.transform.ResultTransformer;
 import org.primefaces.model.SortOrder;
 
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -46,7 +48,7 @@ import java.util.logging.Logger;
  * @author Rafael M. Pestano Jul 23, 2012 8:58:11 PM
  */
 @Dao
-public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> implements BaseHibernateDao<T, K>, Serializable {
+public class BaseHibernateDaoImpl<T extends BaseEntity> implements BaseHibernateDao<T>, Serializable {
 
     private Class<T> persistentClass;
     private Session session;
@@ -55,7 +57,6 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 
 
     private final Logger log = Logger.getLogger(getClass().getSimpleName());
-
 
 
     public BaseHibernateDaoImpl() {
@@ -93,12 +94,12 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
     }
 
     @Override
-    public T load(K id) {
+    public T load(Serializable id) {
         return (T) this.getSession().load(this.persistentClass, id);
     }
 
     @Override
-    public T get(K id) {
+    public T get(Serializable id) {
         return (T) this.getSession().get(this.persistentClass, id);
     }
 
@@ -118,7 +119,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity, K extends Serializable> 
 
     @Override
     public void delete(T entity) {
-        this.getSession().delete(this.get((K) entity.getId()));
+        this.getSession().delete(this.get((Serializable) entity.getId()));
     }
 
     @Override

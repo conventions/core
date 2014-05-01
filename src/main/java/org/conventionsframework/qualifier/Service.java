@@ -36,13 +36,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({TYPE, FIELD, PARAMETER, METHOD})
 public @interface Service {
 
-    /**
-     * 
-     * provide entity when using Service annotation in a managedBean
-     */
-    @Nonbinding
-    Class entity() default byte.class;
-    
+
     /**
      * 
      * provide value when using Service annotation in a managedBean

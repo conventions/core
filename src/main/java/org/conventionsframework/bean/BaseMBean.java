@@ -55,9 +55,13 @@ public abstract class BaseMBean<T extends BaseEntity> implements Serializable {
     private T entity;
     private T entityAux;
     private T[] entityAuxList;
-    private BaseService baseService;
+    private BaseService<T> baseService;
+    @Inject
+    @Service
+    private Instance<BaseService<T>> baseServiceInstance;
     private State beanState;
     @Inject
+    @Service
     private Paginator<T> paginator;
     private Object modalResponse;
     private String createMessage;
@@ -349,7 +353,7 @@ public abstract class BaseMBean<T extends BaseEntity> implements Serializable {
         boolean initialized = false;
         Service service = AnnotationUtils.findServiceAnnotation(getClass());
         if (service != null) {
-             if (!service.value().equals(BaseService.class)) {//inject service by value
+             if (!service.value().equals(BaseService.class)) {//inject specific service by value
                 try {
                     this.setBaseService(BeanManagerController.getBeanByType(service.value()));
                     initialized = true;
@@ -358,23 +362,12 @@ public abstract class BaseMBean<T extends BaseEntity> implements Serializable {
                         log.log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
                     }
                 }
-            }else if(!service.entity().isPrimitive()){//Managed bean without service, use generic service plus entity attr
-                 baseService = BeanManagerController.getBeanByTypeAndQualifier(service.value(), Service.class);
-                 baseService.getDao().setPersistentClass(service.entity());
+            }else{//use generic service on top of bean's entity
+                 baseService = baseServiceInstance.get();
                  initialized = true;
              }
 
-            if (getBaseService() != null && getBaseService().getDao().getPersistentClass() == null) {
-                if(!service.entity().isPrimitive()){
-                    getBaseService().getDao().setPersistentClass(service.entity());
-                }
-                else{
-                    throw new RuntimeException("Could not find persistent class, user @Service(entity=entity) or @PersistentClass at class level");
-                }
-
-            }
         }//end if service != null
-
         return initialized;
     }
     

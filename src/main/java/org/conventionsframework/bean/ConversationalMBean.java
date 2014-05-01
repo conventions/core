@@ -33,7 +33,7 @@ import javax.inject.Inject;
  *
  * @author Rafael M. Pestano Apr 26, 2011 10:42:23 PM
  */
-public abstract class ConversationalMBean<T extends BaseEntity<?>> extends BaseMBean<T> implements Serializable {
+public abstract class ConversationalMBean<T extends BaseEntity> extends BaseMBean<T> implements Serializable {
     
  
 	private static final long serialVersionUID = 1L;

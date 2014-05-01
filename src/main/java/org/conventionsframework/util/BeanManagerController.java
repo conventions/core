@@ -69,6 +69,7 @@ public class BeanManagerController {
         return o;
     }
 
+
     public static <T> T getBeanByTypeAndQualifier(Class<T> type, final Class<? extends Annotation> qualifier) {
         BeanManager bm = getBeanManager();
         Bean bean = bm.getBeans(type,new Annotation() {

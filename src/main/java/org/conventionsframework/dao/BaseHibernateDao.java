@@ -40,11 +40,11 @@ import java.util.Map;
  * @author Rafael M. Pestano
  *
  */
-public interface BaseHibernateDao<T extends BaseEntity, Id extends Serializable> extends Serializable {
+public interface BaseHibernateDao<T extends BaseEntity> extends Serializable {
 
-    T load(Id id);
+    T load(Serializable id);
 
-    T get(Id id);
+    T get(Serializable id);
 
     void save(T entity);
 

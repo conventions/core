@@ -37,7 +37,7 @@ import org.conventionsframework.model.BaseEntity;
  * 
  * Represents managed bean which controls a modal
  */
-public abstract class ModalMBean<T extends BaseEntity<?>> extends BaseMBean<T> {
+public abstract class ModalMBean<T extends BaseEntity> extends BaseMBean<T> {
 
     @Inject
     private Event<ModalCallback> modalCallbackEvent;

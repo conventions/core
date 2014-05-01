@@ -44,7 +44,7 @@ import javax.inject.Inject;
  * Managed beans with the "power" of being tracked by the StatekController
  * @see StateController
  */
-public abstract class StateMBean<T extends BaseEntity<?>> extends BaseMBean<T> implements Serializable {
+public abstract class StateMBean<T extends BaseEntity> extends BaseMBean<T> implements Serializable {
 
     @Inject
     private Event<StatePushEvent> statePushEvent;

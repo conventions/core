@@ -55,16 +55,15 @@ import java.util.logging.Logger;
  */
 @Service
 @Named("baseService")
-public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> implements BaseService<T, K>, Serializable {
+public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Serializable {
 
     @Inject
     @Dao
-    protected BaseHibernateDao<T, K> dao;
+    protected BaseHibernateDao<T> dao;
 
     @PersistenceContext
     protected EntityManager em;
 
-    private Class<T> persistentClass;
 
     @Inject
     @Log
@@ -73,9 +72,10 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
 
     @Inject
     public void initService(InjectionPoint ip) {
-        persistentClass = findPersistentClass(ip);
+        if(dao.getPersistentClass() == null){
+            dao.setPersistentClass(findPersistentClass(ip));
+        }
         dao.setEntityManager(getEntityManager());
-        dao.setPersistentClass(persistentClass);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void remove(T entity) {
         if(!getEntityManager().contains(entity)){
-            entity = getDao().load((K) ((BaseEntity)entity).getId());
+            entity = getDao().load((Serializable) ((BaseEntity)entity).getId());
         }
         this.doRemove(entity);
     }
@@ -136,11 +136,11 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public BaseHibernateDao<T, K> getDao() {
+    public BaseHibernateDao<T> getDao() {
         return dao;
     }
 
-    public void setDao(BaseHibernateDao<T, K> dao) {
+    public void setDao(BaseHibernateDao<T> dao) {
         this.dao = dao;
     }
 
@@ -189,15 +189,8 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
      * @throws IllegalAccessException
      */
     public Class findPersistentClass(InjectionPoint ip) {
-        //try to get persistenceClass from class level annotation
-        for (Annotation annotation : getClass().getAnnotations()) {
-            if (annotation instanceof PersistentClass) {
-                PersistentClass p = (PersistentClass) annotation;
-                Class c = p.value();
-                return c;
-            }
-        }
 
+        //injectionPoint generic type persistenceClass
         if (ip != null && ip.getAnnotated() != null) {
             ParameterizedType type = null;
             try{
@@ -206,24 +199,26 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
             }catch (ClassCastException ex){}
             if(type != null){
                 Type[] typeArgs = type.getActualTypeArguments();
-                if(typeArgs != null && typeArgs.length == 2){
+                if(typeArgs != null){
                     return (Class<T>) typeArgs[0];
                 }
             }
-            if (ip.getAnnotated().isAnnotationPresent(Service.class)) {
-                //try to get persistentClass from injectionPoint via @Service(entity=SomeClass.class) annotation
-                Class persistentClass = ip.getAnnotated().getAnnotation(Service.class).entity();
-                if (!persistentClass.isPrimitive()) {
-                    return persistentClass;
-                }
-            }
+
+            //injectionPoint PersistenceClass
             if (ip.getAnnotated().isAnnotationPresent(PersistentClass.class)) {
                 Class persistentClass = ip.getAnnotated().getAnnotation(PersistentClass.class).value();
                 if (!persistentClass.isPrimitive()) {
                     return persistentClass;
                 }
             }
-
+             //class level annotation
+            for (Annotation annotation : getClass().getAnnotations()) {
+                if (annotation instanceof PersistentClass) {
+                    PersistentClass p = (PersistentClass) annotation;
+                    Class c = p.value();
+                    return c;
+                }
+            }
         }//end  ip != null && ip.getAnnotated() != null
         // try resolve via reflection
         try {
@@ -235,9 +230,9 @@ public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> imple
     }
 
 
-    @Override
+        @Override
     public Class<T> getPersistentClass() {
-        return persistentClass;
+        return dao.getPersistentClass();
     }
 
     /**

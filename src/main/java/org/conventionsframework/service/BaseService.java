@@ -23,19 +23,18 @@ package org.conventionsframework.service;
 
 import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.model.BaseEntity;
-import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.model.PaginationResult;
+import org.conventionsframework.model.SearchModel;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 
 import javax.persistence.EntityManager;
-import java.io.Serializable;
 
 /**
  *
  * @author Rafael M. Pestano Mar 19, 2011 9:13:05 AM
  */
-public interface BaseService<T extends BaseEntity, Id extends Serializable> {
+public interface BaseService<T extends BaseEntity> {
 
     /**
      *
@@ -53,9 +52,9 @@ public interface BaseService<T extends BaseEntity, Id extends Serializable> {
 
     void afterRemove(T entity);
     
-    BaseHibernateDao<T,Id> getDao();
+    BaseHibernateDao<T> getDao();
 
-    void setDao(BaseHibernateDao<T,Id> dao);
+    void setDao(BaseHibernateDao<T> dao);
 
     /**
      * database pagination over a search model which contains necessary information

@@ -25,7 +25,6 @@ import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.PaginationResult;
 import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.qualifier.Service;
-import org.conventionsframework.service.impl.BaseServiceImpl;
 import org.conventionsframework.util.BeanManagerController;
 import org.conventionsframework.service.BaseService;
 
@@ -34,29 +33,31 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
 import org.conventionsframework.model.LazyDataModel;
-import org.conventionsframework.qualifier.PaginatorService;
 import org.primefaces.model.SortOrder;
 
 /**
  * @author rmpestano
  */
 @Dependent
+@Service
 public class Paginator<T extends BaseEntity> implements Serializable {
 
     private LazyDataModel<T> dataModel;
     private Integer rowCount;
-    private BaseService baseService;
+    private BaseService<T> baseService;
     private SearchModel<T> searchModel;
     private boolean keepSearchInSession = true;//keep searchModel in user session
     @Inject
     private SearchModelCache searchModelCache;
+    @Inject
+    @Service
+    private Instance<BaseService<T>> baseServiceInstance;
 
     public Paginator() {
     }
@@ -67,8 +68,8 @@ public class Paginator<T extends BaseEntity> implements Serializable {
             ParameterizedType type = (ParameterizedType) ip.getType();
             Type[] typeArgs = type.getActualTypeArguments();
             Class<T> persistentClass = ((Class<T>) typeArgs[0]);
-            if (ip.getAnnotated().isAnnotationPresent(PaginatorService.class)) {
-                initService(ip, persistentClass);//initPaginatorService
+            if (ip.getAnnotated().isAnnotationPresent(Service.class)) {
+                initService(ip);
             }
             try {
                 initDataModel(persistentClass);
@@ -79,13 +80,14 @@ public class Paginator<T extends BaseEntity> implements Serializable {
         }
     }
 
-    private void initService(InjectionPoint ip, Class<T> persistentClass) {
-        PaginatorService paginatorService = ip.getAnnotated().getAnnotation(PaginatorService.class);
+    private void initService(InjectionPoint ip) {
+        Service paginatorService = ip.getAnnotated().getAnnotation(Service.class);
         try {
-           //set paginator service by type
-            baseService = (BaseService) BeanManagerController.getBeanByType(paginatorService.value());
-            //service entity
-            baseService.getDao().setPersistentClass(persistentClass);
+            if(!paginatorService.value().equals(BaseService.class)) {
+                //set paginator service by type
+                baseService =  BeanManagerController.getBeanByType(paginatorService.value());
+            }
+
         } catch (Exception ex){
             ex.printStackTrace();
             throw new IllegalArgumentException("Could not initialize Paginator service of " + ip.getMember().getDeclaringClass() + ":" + ex.getMessage());

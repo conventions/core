@@ -22,9 +22,9 @@
 
 package org.conventionsframework.model;
 
-import java.io.Serializable;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import java.io.Serializable;
 
 /**
  * 
@@ -32,7 +32,7 @@ import javax.persistence.Transient;
  * @author rmpestano Aug 21, 2011 9:33:12 AM
  */
 @MappedSuperclass
-public abstract class AbstractBaseEntity<T extends Serializable> implements Serializable,BaseEntity<T> {
+public abstract class AbstractBaseEntity<T extends Serializable> implements Serializable,BaseEntity {
   
 
     @Transient
