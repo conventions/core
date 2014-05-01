@@ -53,6 +53,22 @@ public class BeanManagerController {
         return o;
     }
 
+    public static <T> T getBeanByName(String name) {
+        BeanManager bm = getBeanManager();
+        Bean bean = bm.getBeans(name).iterator().next();
+        CreationalContext ctx = bm.createCreationalContext(bean); // could be inlined below
+        T o = (T) bm.getReference(bean, bean.getBeanClass(), ctx); // could be inlined with return
+        return o;
+    }
+
+    public static <T> T getBeanByNameAndType(String name,Class<T>type ) {
+        BeanManager bm = getBeanManager();
+        Bean bean = bm.getBeans(name).iterator().next();
+        CreationalContext ctx = bm.createCreationalContext(bean); // could be inlined below
+        T o = (T) bm.getReference(bean, type, ctx); // could be inlined with return
+        return o;
+    }
+
     public static <T> T getBeanByTypeAndQualifier(Class<T> type, final Class<? extends Annotation> qualifier) {
         BeanManager bm = getBeanManager();
         Bean bean = bm.getBeans(type,new Annotation() {

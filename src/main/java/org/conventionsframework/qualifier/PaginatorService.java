@@ -34,9 +34,7 @@ import static java.lang.annotation.ElementType.*;
 @Target({FIELD, METHOD, PARAMETER})
 public @interface PaginatorService {
 
-    @Nonbinding Class value() default byte.class;
-
-    @Nonbinding Class entity() default byte.class;
+    @Nonbinding Class value();
 
 
 }

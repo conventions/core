@@ -38,6 +38,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
@@ -53,6 +54,7 @@ import java.util.logging.Logger;
  *
  */
 @Service
+@Named("baseService")
 public class BaseServiceImpl<T extends BaseEntity, K extends Serializable> implements BaseService<T, K>, Serializable {
 
     @Inject

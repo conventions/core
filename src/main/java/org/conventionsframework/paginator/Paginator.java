@@ -25,6 +25,7 @@ import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.PaginationResult;
 import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.qualifier.Service;
+import org.conventionsframework.service.impl.BaseServiceImpl;
 import org.conventionsframework.util.BeanManagerController;
 import org.conventionsframework.service.BaseService;
 
@@ -81,16 +82,10 @@ public class Paginator<T extends BaseEntity> implements Serializable {
     private void initService(InjectionPoint ip, Class<T> persistentClass) {
         PaginatorService paginatorService = ip.getAnnotated().getAnnotation(PaginatorService.class);
         try {
-            if (!paginatorService.value().isPrimitive()) {
-                //set paginator service by type
-                baseService = (BaseService) BeanManagerController.getBeanByType(paginatorService.value());
-            } else {
-                baseService = BeanManagerController.getBeanByTypeAndQualifier(BaseService.class, Service.class);
-                baseService.getDao().setPersistentClass(persistentClass);
-            }
-            if (!paginatorService.entity().isPrimitive() && (getBaseService().getDao().getPersistentClass() == null || getBaseService().getDao().getPersistentClass().isPrimitive())) {
-                getBaseService().getDao().setPersistentClass(paginatorService.entity());
-            }
+           //set paginator service by type
+            baseService = (BaseService) BeanManagerController.getBeanByType(paginatorService.value());
+            //service entity
+            baseService.getDao().setPersistentClass(persistentClass);
         } catch (Exception ex){
             ex.printStackTrace();
             throw new IllegalArgumentException("Could not initialize Paginator service of " + ip.getMember().getDeclaringClass() + ":" + ex.getMessage());
