@@ -21,30 +21,20 @@
  */
 package org.conventionsframework.converter;
 
+import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.service.BaseService;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Rafael M. Pestano
  */
-public abstract class AbstractBaseConverter implements Converter {
+public abstract class BaseConverter implements Converter {
 
-    private BaseService baseService;
-
-    public BaseService getBaseService() {
-        return baseService;
-    }
-
-    public void setBaseService(BaseService baseService) {
-        this.baseService = baseService;
-    }
+    BaseService<?> baseService;
 
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
@@ -53,7 +43,7 @@ public abstract class AbstractBaseConverter implements Converter {
         }
         try {
             Long id = new Long(value);
-            return getBaseService().getDao().get(id);
+            return baseService.getDao().get(id);
         } catch (ClassCastException ex) {
             ex.printStackTrace();
             return value;
@@ -65,23 +55,15 @@ public abstract class AbstractBaseConverter implements Converter {
 
     @Override
     public String getAsString(FacesContext fc, UIComponent uic, Object o) {
-        if (o != null) {
-            try {
-                return o.getClass().getMethod("getId").invoke(o).toString();
-            } catch (NoSuchMethodException ex) {
-                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(AbstractBaseConverter.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        if (o != null && o instanceof BaseEntity && ((BaseEntity) o).getId() != null) {
+                return ((BaseEntity) o).getId().toString();
         } else {
             return "";
         }
-        return "";
+    }
+
+
+    public <T extends BaseEntity> void setBaseService(BaseService<T> baseService) {
+        this.baseService = baseService;
     }
 }

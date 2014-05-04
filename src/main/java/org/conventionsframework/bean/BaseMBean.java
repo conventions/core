@@ -401,6 +401,11 @@ public abstract class BaseMBean<T extends BaseEntity> implements Serializable {
         return getSearchModel().getEntity();
     }
 
+    public void setSearchEntity(T entity){
+        getSearchModel().setEntity(entity);
+    }
+
+
     public void resetSearch(){
         paginator.resetCache();
     }

@@ -108,7 +108,6 @@ public class ConventionsExceptionHandler extends ExceptionHandlerWrapper {
                 throw new RuntimeException("Could not redirect to " + initialPage, e);
             }
         }
-        return;
     }
 
     /**

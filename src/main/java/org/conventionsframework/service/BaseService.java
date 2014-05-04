@@ -56,14 +56,6 @@ public interface BaseService<T extends BaseEntity> {
 
     void setDao(BaseHibernateDao<T> dao);
 
-    /**
-     * database pagination over a search model which contains necessary information
-     * to get a database page
-     * @param searchModel
-     * @return PaginationResult containing database page and total rows returned by pagination
-     */
-    PaginationResult<T> paginate(SearchModel<T> searchModel);
-
     DetachedCriteria getDetachedCriteria();
 
     Criteria getCriteria();
@@ -74,4 +66,11 @@ public interface BaseService<T extends BaseEntity> {
 
     void setEntityManager(EntityManager em);
 
+    /**
+     * database pagination over a search model which contains necessary information
+     * to get a database page
+     * @param searchModel
+     * @return PaginationResult containing database page and total rows returned by pagination
+     */
+    PaginationResult<T> executePagination(SearchModel<T> searchModel);
 }

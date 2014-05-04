@@ -23,8 +23,8 @@ package org.conventionsframework.dao.impl;
 
 import org.conventionsframework.dao.BaseHibernateDao;
 import org.conventionsframework.model.BaseEntity;
-import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.model.PaginationResult;
+import org.conventionsframework.model.SearchModel;
 import org.conventionsframework.qualifier.Dao;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
@@ -34,8 +34,6 @@ import org.hibernate.loader.custom.ScalarReturn;
 import org.hibernate.transform.ResultTransformer;
 import org.primefaces.model.SortOrder;
 
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -218,8 +216,10 @@ public class BaseHibernateDaoImpl<T extends BaseEntity> implements BaseHibernate
     public DetachedCriteria configPagination(SearchModel<T> searchModel, DetachedCriteria dc) {
         addBasicFilterRestrictions(dc, searchModel.getFilter());
         addBasicFilterRestrictions(dc, searchModel.getDatatableFilter());
-        Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
-        dc.add(example);
+        if(searchModel.getEntity() != null){
+            Example example = Example.create(searchModel.getEntity()).enableLike(MatchMode.ANYWHERE).ignoreCase();
+            dc.add(example);
+        }
         return dc;
     }
 
@@ -227,7 +227,7 @@ public class BaseHibernateDaoImpl<T extends BaseEntity> implements BaseHibernate
     public PaginationResult<T> executePagination(SearchModel<T> searchModel, final DetachedCriteria dc) {
 
         int size = getRowCount(dc).intValue();
-         String sortField = searchModel.getSortField();
+        String sortField = searchModel.getSortField();
         if (sortField != null) {
             if(searchModel.getSortOrder().equals(SortOrder.UNSORTED)){
                 searchModel.setSortOrder(SortOrder.ASCENDING);

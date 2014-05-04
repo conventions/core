@@ -61,7 +61,7 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
     @Dao
     protected BaseHibernateDao<T> dao;
 
-    @PersistenceContext
+    @Inject
     protected EntityManager em;
 
 
@@ -133,9 +133,13 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
         return getDao().configPagination(searchModel,dc);
     }
 
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public PaginationResult<T> executePagination(SearchModel<T> searchModel) {
+        return getDao().executePagination(searchModel, configPagination(searchModel));
+    }
+
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public BaseHibernateDao<T> getDao() {
         return dao;
     }
@@ -144,13 +148,6 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
         this.dao = dao;
     }
 
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public final PaginationResult<T> paginate(SearchModel<T> searchModel) {
-        DetachedCriteria dc = configPagination(searchModel);
-        return getDao().executePagination(searchModel, dc);
-    }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -243,20 +240,14 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
         return true;
     }
 
-    public PaginationResult<T> executePagination(SearchModel<T> searchModel, final DetachedCriteria dc) {
-        return getDao().executePagination(searchModel, dc);
-    }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public EntityManager getEntityManager() {
         return em;
     }
 
-    @Override
-    public void setEntityManager(EntityManager em) {
-        this.em = em;
+    public void setEntityManager(EntityManager em){
+    	this.em = em;
     }
-
 
 }
