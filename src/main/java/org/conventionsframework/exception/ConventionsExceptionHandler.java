@@ -25,6 +25,8 @@ public class ConventionsExceptionHandler extends ExceptionHandlerWrapper {
     private ExceptionHandler wrapped;
 
     BusinessException be;
+    
+    Logger log = Logger.getLogger(ConventionsExceptionHandler.class.getSimpleName());
 
     public ConventionsExceptionHandler(ExceptionHandler exception) {
         this.wrapped = exception;
@@ -121,6 +123,7 @@ public class ConventionsExceptionHandler extends ExceptionHandlerWrapper {
         String errorName = (rootCause == null) ? ex.getClass().getCanonicalName() : rootCause.getClass().getCanonicalName();
         String errorMessage = ExceptionUtils.getRootCauseMessage(ex);
         String stackTrace = ExceptionUtils.getStackTrace(rootCause == null ? ex : rootCause);
+        log.log(Level.SEVERE,stackTrace); 
         /*
          * ELFlash.getFlash().put("errorName", errorName); /
          * ELFlash.getFlash().put("errorMessage", errorMessage);

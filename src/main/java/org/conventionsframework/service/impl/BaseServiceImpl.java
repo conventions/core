@@ -193,13 +193,16 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
             try{
                 //get type from generic injection @Inject BaseService<Entity,ID>
                 type = (ParameterizedType) ip.getType();
-            }catch (ClassCastException ex){}
-            if(type != null){
-                Type[] typeArgs = type.getActualTypeArguments();
-                if(typeArgs != null){
-                    return (Class<T>) typeArgs[0];
+                if(type != null){
+                    Type[] typeArgs = type.getActualTypeArguments();
+                    if(typeArgs != null && typeArgs.length == 1){
+                        return (Class<T>) typeArgs[0];
+                    }
                 }
+            }catch (Exception ex){
+            	//intentional
             }
+           
 
             //injectionPoint PersistenceClass
             if (ip.getAnnotated().isAnnotationPresent(PersistentClass.class)) {

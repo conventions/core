@@ -10,24 +10,36 @@ package org.conventionsframework.filter;
  * @author rmpestano
  */
 
-import org.conventionsframework.security.SecurityContext;
-import org.conventionsframework.util.Constants;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.conventionsframework.qualifier.Log;
+import org.conventionsframework.security.SecurityContext;
+import org.conventionsframework.util.Constants;
 
 @WebFilter(urlPatterns={"/*"})
 public class ConventionsFilter implements Filter {
     
-    private static final String FACES_RESOURCES = "/javax.faces.resource";
-    private static final String INDEX = "/index.html";
+    private static final String FACES_RESOURCES = "javax.faces.resource";
+    private static final String INDEX = "index.html";
     
     @Inject
     protected SecurityContext securityContext;
+    
+    @Inject
+    @Log
+    transient Logger log;
 
 
     String initialPage;
@@ -51,20 +63,19 @@ public class ConventionsFilter implements Filter {
             this.ignoredResource = ignoredResource;
         }
 
-        String initialPage =  filterConfig.getServletContext().getInitParameter(Constants.InitialParameters.INITIAL_PAGE);
+        initialPage =  filterConfig.getServletContext().getInitParameter(Constants.InitialParameters.INITIAL_PAGE);
         if(initialPage == null || "".equals(initialPage)){
-            this.initialPage = "/login.xhtml";
+            this.initialPage = "login.xhtml";
         }
-        else{
-            this.initialPage = "/"+initialPage;
-        }
-        String errorPage =  filterConfig.getServletContext().getInitParameter(Constants.InitialParameters.ERROR_PAGE);
+        errorPage =  filterConfig.getServletContext().getInitParameter(Constants.InitialParameters.ERROR_PAGE);
         if(errorPage == null || "".equals(errorPage)){
             this.errorPage = "/error.xhtml";
         }
-        else{
-            this.errorPage = "/"+errorPage;
-        }
+        
+        this.errorPage = this.errorPage.replaceAll("/", "");
+        this.initialPage = this.initialPage.replaceAll("/", "");
+        log.info("initialPage:"+this.initialPage);
+        log.info("errorPage:"+this.errorPage);
     }
 
     @Override
@@ -75,13 +86,12 @@ public class ConventionsFilter implements Filter {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) resp;
          if (skipResource(request)
         			|| securityContext.loggedIn()) {
         		chain.doFilter(req, resp);
         } else  {
              request.setAttribute("logoff", "true");//let ConventionsExceptionHandler redirect to logon
-                 request.setAttribute("queryString", request.getQueryString());
+             request.setAttribute("queryString", request.getQueryString());
              chain.doFilter(req,resp);
         }
         return;
@@ -93,8 +103,11 @@ public class ConventionsFilter implements Filter {
     }
     
     private boolean skipResource(HttpServletRequest request) {
-		String path = request.getServletPath();
-        return  path.startsWith(FACES_RESOURCES) || path.equalsIgnoreCase(initialPage) || path.equalsIgnoreCase(INDEX) || path.equalsIgnoreCase(errorPage)
+		String path = request.getServletPath().replaceAll("/", "");
+		boolean skip =  path.startsWith(FACES_RESOURCES) || path.equalsIgnoreCase(initialPage) || path.equalsIgnoreCase(INDEX) || path.equalsIgnoreCase(errorPage)
 				 || (ignoredResource != null && path.contains(ignoredResource));
+        return skip;
 	}
+    
+    
 }
