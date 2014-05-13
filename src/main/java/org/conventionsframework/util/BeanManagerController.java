@@ -24,6 +24,7 @@ package org.conventionsframework.util;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.faces.context.FacesContext;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.lang.annotation.Annotation;
@@ -33,15 +34,31 @@ import java.lang.annotation.Annotation;
  * @author rpestano
  */
 public class BeanManagerController {
+	
+	private static BeanManager beanManager;
 
     public static BeanManager getBeanManager() {
-        try {
-            InitialContext initialContext = new InitialContext();
-            return (BeanManager) initialContext.lookup("java:comp/BeanManager");
-        } catch (NamingException e) {
-            e.printStackTrace();
-            return null;
-        }
+    	
+    	if(beanManager == null){
+    		 try {
+    	            InitialContext initialContext = new InitialContext();
+    	           beanManager = (BeanManager) initialContext.lookup("java:comp/BeanManager");
+    	        } catch (NamingException e) {
+    	            e.printStackTrace();
+    	            return null;
+    	        }
+    	}
+    	return beanManager;
+       
+    }
+    
+    public static void setBeanManager(String jndi){
+    	 try {
+	            InitialContext initialContext = new InitialContext();
+	            beanManager = (BeanManager) initialContext.lookup(jndi);
+	        } catch (NamingException e) {
+	            e.printStackTrace();
+	        }
     }
 
 

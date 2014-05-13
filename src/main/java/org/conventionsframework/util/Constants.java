@@ -29,6 +29,7 @@ public  class Constants {
     
     public static final String FACES_REDIRECT = "?faces-redirect=true";
     public static final String USER_ROLES = "userRoles";
+    public static final String MANAGER_JNDI = "MANAGER_JNDI";
     
       public static final class State {
         public static final String FIND_STATE = "find";

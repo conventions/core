@@ -362,7 +362,7 @@ public abstract class BaseMBean<T extends BaseEntity> implements Serializable {
                         log.log(Level.WARNING, "Conventions: managed bean:" + getClass().getSimpleName() + " service was not initialized. message:" + ex.getMessage());
                     }
                 }
-            }else{//use generic service on top of bean's entity
+            }else{//use generic service on top of bean's entity for beans without concrete service
                  baseService = baseServiceInstance.get();
                  initialized = true;
              }

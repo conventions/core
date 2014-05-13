@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.conventionsframework</groupId>
     <artifactId>conventions-core</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>conventions-core</name>
     <description>
@@ -21,10 +21,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mojarra.version>2.1.7</mojarra.version>
         <myfaces.version>2.1.7</myfaces.version>
-        <myfaces.codi.version>1.0.6</myfaces.codi.version>
         <hibernate.version>4.1.5.Final</hibernate.version>
-        <primefaces.version>5.0.RC1</primefaces.version>
-        <prime-ext.version>2.0.0.RC</prime-ext.version>
+        <primefaces.version>5.0</primefaces.version>
     </properties>
     
     <licenses>
@@ -70,7 +68,12 @@
             <version>6.0</version>
             <scope>provided</scope>
         </dependency>
-       
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>5.0</version>
+            <scope>provided</scope>
+        </dependency>
        
         <dependency>
             <groupId>com.sun.faces</groupId>
@@ -90,7 +93,13 @@
             <artifactId>el-api</artifactId>
             <version>2.2.1-b04</version>
             <scope>provided</scope>
-        </dependency>  
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
         
         <!-- ORM -->    
         <dependency>
@@ -111,26 +120,8 @@
             <version>${hibernate.version}</version>
             <scope>provided</scope>
         </dependency>
-        
-        <dependency>
-            <groupId>org.primefaces.extensions</groupId>
-            <artifactId>primefaces-extensions</artifactId>
-            <version>${prime-ext.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-             <!--override extensions PF version-->
-            <dependency>
-                <groupId>org.primefaces</groupId>
-                <artifactId>primefaces</artifactId>
-                <version>${primefaces.version}</version>
-                <scope>provided</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    
+
     <profiles>
         <profile>
             <id>release</id>
@@ -247,12 +238,5 @@
         </plugins>
         <finalName>conventions-core-${version}</finalName>
     </build>
-    <repositories>
-        <repository>
-            <id>prime-repo</id>
-            <name>Prime Technology Maven Repository</name>
-            <url>http://repository.primefaces.org</url>
-            <layout>default</layout>
-        </repository>  
-    </repositories>    
+
 </project>
