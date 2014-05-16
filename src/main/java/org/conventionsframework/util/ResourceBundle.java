@@ -41,6 +41,10 @@ public class ResourceBundle extends java.util.PropertyResourceBundle implements 
         super(stream);
     }
 
+    public ResourceBundle(String location) throws IOException {
+        super(Thread.currentThread().getContextClassLoader().getResourceAsStream(location));
+    }
+
     public String getString(String key, Object... params) {
         return MessageFormat.format(this.getString(key), params);
     }
