@@ -21,12 +21,11 @@
  */
 package org.conventionsframework.service;
 
-import org.conventionsframework.dao.BaseHibernateDao;
+import org.conventionsframework.crud.Crud;
 import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.PaginationResult;
 import org.conventionsframework.model.SearchModel;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
 
 import javax.persistence.EntityManager;
 
@@ -51,12 +50,10 @@ public interface BaseService<T extends BaseEntity> {
     void beforeRemove(T entity);
 
     void afterRemove(T entity);
-    
-    BaseHibernateDao<T> getDao();
 
-    void setDao(BaseHibernateDao<T> dao);
+    <E extends T> Crud<E> crud();
 
-    DetachedCriteria getDetachedCriteria();
+    void setCrud(Crud<T> dao);
 
     Criteria getCriteria();
 

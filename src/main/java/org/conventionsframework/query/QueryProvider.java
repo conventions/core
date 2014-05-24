@@ -42,10 +42,10 @@ public class QueryProvider implements Serializable{
         BaseService service = (BaseService) BeanManagerController.getBeanByType(query.service());
         javax.persistence.Query q = null;
         if(!"".equals(query.sql())){
-             q = service.getDao().getEntityManager().createQuery(query.sql());
+             q = service.crud().getEntityManager().createQuery(query.sql());
         }
         else if(!"".equals(query.namedQuery())){
-             q = service.getDao().getEntityManager().createNamedQuery(query.namedQuery());
+             q = service.crud().getEntityManager().createNamedQuery(query.namedQuery());
         }
         
         QueryParams params = ic.getMethod().getAnnotation(QueryParams.class);

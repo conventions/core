@@ -31,6 +31,8 @@ import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
@@ -87,9 +89,10 @@ public class ResourceBundleProvider implements Serializable {
 
 		} else {
 			try {
-				currentBundle = new ResourceBundle(Thread.currentThread().getContextClassLoader()
-						.getResourceAsStream(
-								baseName + "_" + currentLocale + ".properties"));
+                InputStream stream = Thread.currentThread().getContextClassLoader()
+                        .getResourceAsStream(
+                                baseName + "_" + currentLocale + ".properties");
+				currentBundle = new ResourceBundle(new InputStreamReader(stream,"UTF-8"));
 				bundleMap.put(currentLocale, currentBundle);
 				log.fine("Conventions: loaded resource bundle:" + baseName
 						+ "_" + currentLocale + ".properties");

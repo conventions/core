@@ -38,8 +38,9 @@ import java.util.Map;
 
 /**
  * @author Rafael M. Pestano
- *
+ * @deprecated use Crud component
  */
+@Deprecated
 public interface BaseHibernateDao<T extends BaseEntity> extends Serializable {
 
     T load(Serializable id);

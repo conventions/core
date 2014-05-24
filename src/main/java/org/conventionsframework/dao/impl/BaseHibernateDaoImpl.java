@@ -46,6 +46,10 @@ import java.util.logging.Logger;
  * @author Rafael M. Pestano Jul 23, 2012 8:58:11 PM
  */
 @Dao
+@Deprecated
+/**
+ * @deprecated use Crud component
+ */
 public class BaseHibernateDaoImpl<T extends BaseEntity> implements BaseHibernateDao<T>, Serializable {
 
     private Class<T> persistentClass;

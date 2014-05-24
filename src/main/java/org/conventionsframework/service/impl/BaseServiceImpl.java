@@ -21,18 +21,16 @@
  */
 package org.conventionsframework.service.impl;
 
-import org.conventionsframework.dao.BaseHibernateDao;
+import org.conventionsframework.crud.Crud;
 import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.model.PaginationResult;
 import org.conventionsframework.model.SearchModel;
-import org.conventionsframework.qualifier.Dao;
 import org.conventionsframework.qualifier.Log;
 import org.conventionsframework.qualifier.PersistentClass;
 import org.conventionsframework.qualifier.Service;
 import org.conventionsframework.service.BaseService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -40,7 +38,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
@@ -58,8 +55,7 @@ import java.util.logging.Logger;
 public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Serializable {
 
     @Inject
-    @Dao
-    protected BaseHibernateDao<T> dao;
+    protected Crud<T> crud;
 
     @Inject
     protected EntityManager em;
@@ -72,10 +68,10 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
 
     @Inject
     public void initService(InjectionPoint ip) {
-        if(dao.getPersistentClass() == null){
-            dao.setPersistentClass(findPersistentClass(ip));
+        if(crud.getPersistentClass() == null){
+            crud.setPersistentClass(findPersistentClass(ip));
         }
-        dao.setEntityManager(getEntityManager());
+        crud.setEntityManager(getEntityManager());//override crud entityManager to use same hibernate session
     }
 
     @Override
@@ -86,7 +82,7 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
 
     public final void doStore(T entity) {
         this.beforeStore(entity);
-        getDao().saveOrUpdate(entity);
+        crud().saveOrUpdate(entity);
         flushSession();
         this.afterStore(entity);
     }
@@ -103,7 +99,7 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void remove(T entity) {
         if(!getEntityManager().contains(entity)){
-            entity = getDao().load((Serializable) ((BaseEntity)entity).getId());
+            entity = crud().load((Serializable) ((BaseEntity)entity).getId());
         }
         this.doRemove(entity);
     }
@@ -115,7 +111,7 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
 
     public final void doRemove(T entity) {
         this.beforeRemove(entity);
-        getDao().delete(entity);
+        crud().delete(entity);
         flushSession();
         this.afterRemove(entity);
     }
@@ -125,46 +121,40 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
     }
 
 
-    public DetachedCriteria configPagination(SearchModel<T> searchModel) {
-        return getDao().configPagination(searchModel);
+    public Criteria configPagination(SearchModel<T> searchModel) {
+        return crud().configPagination(searchModel);
     }
 
-    public DetachedCriteria configPagination(SearchModel<T> searchModel, DetachedCriteria dc) {
-        return getDao().configPagination(searchModel,dc);
+    public Criteria configPagination(SearchModel<T> searchModel, Criteria criteria) {
+        return crud().configPagination(searchModel,criteria);
     }
 
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public PaginationResult<T> executePagination(SearchModel<T> searchModel) {
-        return getDao().executePagination(searchModel, configPagination(searchModel));
+        return crud().executePagination(searchModel, configPagination(searchModel));
     }
 
 
     @Override
-    public BaseHibernateDao<T> getDao() {
-        return dao;
+    public Crud<T> crud() {
+        return crud;
     }
 
-    public void setDao(BaseHibernateDao<T> dao) {
-        this.dao = dao;
+    public void setCrud(Crud<T> crud) {
+        this.crud = crud;
     }
 
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public DetachedCriteria getDetachedCriteria() {
-        return getDao().getDetachedCriteria();
-    }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Criteria getCriteria() {
-        return getDao().getCriteria();
+        return crud().getCriteria();
     }
 
 
     public void flushSession() {
         if (isConventionsFlushSession()) {
-            Session session = getDao().getSession();
+            Session session = crud().getSession();
             if (session.isOpen() && session.isDirty()) {
                 session.flush();
             }
@@ -173,12 +163,12 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
 
 
     public void setPersistentClass(Class<T> clazz) {
-        getDao().setPersistentClass(clazz);
+        crud().setPersistentClass(clazz);
     }
 
 
     /**
-     * search persistentClass to set in dao layer
+     * search persistentClass to set in crud layer
      *
      * @param ip
      * @return
@@ -224,15 +214,15 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
         try {
             return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
         } catch (Exception ex) {
-            log.log(Level.WARNING, "Conventions service: could not find persistent class for service:" + getClass().getSimpleName() + " it will be resolved to null.(ignore this warn if you're using @Service annotation)");
+            log.log(Level.WARNING, "Conventions service: could not find persistent class for service:" + getClass().getSimpleName() + " it will be resolved to null.");
         }
         return null;
     }
 
 
-        @Override
+    @Override
     public Class<T> getPersistentClass() {
-        return dao.getPersistentClass();
+        return crud.getPersistentClass();
     }
 
     /**

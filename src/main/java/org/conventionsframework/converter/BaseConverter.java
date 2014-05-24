@@ -43,7 +43,7 @@ public abstract class BaseConverter implements Converter {
         }
         try {
             Long id = new Long(value);
-            return baseService.getDao().get(id);
+            return baseService.crud().get(id);
         } catch (ClassCastException ex) {
             ex.printStackTrace();
             return value;

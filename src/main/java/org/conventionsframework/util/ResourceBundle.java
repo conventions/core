@@ -25,6 +25,7 @@ import org.conventionsframework.qualifier.ConventionsBundle;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -35,14 +36,19 @@ public class ResourceBundle extends java.util.PropertyResourceBundle implements 
     private static final long serialVersionUID = 1L;
 
     public ResourceBundle() throws IOException {
-        super(Thread.currentThread().getContextClassLoader().getResourceAsStream("messages_" + Locale.getDefault().getLanguage() + ".properties"));   }
+        super(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("messages_" + Locale.getDefault().getLanguage() + ".properties"),"UTF-8"));
+    }
 
     public ResourceBundle(InputStream stream) throws IOException {
         super(stream);
     }
 
+    public ResourceBundle(InputStreamReader stream) throws IOException {
+        super(stream);
+    }
+
     public ResourceBundle(String location) throws IOException {
-        super(Thread.currentThread().getContextClassLoader().getResourceAsStream(location));
+        super(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(location),"UTF-8"));
     }
 
     public String getString(String key, Object... params) {
