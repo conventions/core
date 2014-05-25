@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.MissingResourceException;
 
 @ConventionsBundle//just to disambiguate, resourceBundle is produced by ResourceBundleProvider
 public class ResourceBundle extends java.util.ResourceBundle implements Serializable {
@@ -56,8 +57,10 @@ public class ResourceBundle extends java.util.ResourceBundle implements Serializ
     }
 
     public String getString(String key, Object... params) {
-        return MessageFormat.format(this.getString(key), params);
+        try {
+            return MessageFormat.format(this.getString(key), params);
+        } catch (MissingResourceException e) {
+            return "??" + key + "??";
+        }
     }
-
-
 }
