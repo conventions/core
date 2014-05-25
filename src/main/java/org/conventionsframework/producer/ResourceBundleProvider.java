@@ -47,7 +47,7 @@ import java.util.logging.Logger;
 public class ResourceBundleProvider implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String baseName;
+	private String baseName = "messages";
 	private String currentLanguage;
 	private Map<String, ResourceBundle> bundleMap = new HashMap<String, ResourceBundle>();
 	private Logger log = Logger.getLogger(getClass().getSimpleName());
@@ -56,34 +56,33 @@ public class ResourceBundleProvider implements Serializable {
 	public ResourceBundleProvider() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if(context != null){
-            currentLanguage = FacesContext.getCurrentInstance().getViewRoot()
-					.getLocale().getLanguage();
             baseName = context.getExternalContext().getInitParameter("BUNDLE_BASE_NAME");
             if(baseName == null){
             	baseName = "messages";
             }
+            currentLanguage = context.getViewRoot().getLocale().getLanguage();
 		}
-		else{
+        else{
             currentLanguage = Locale.getDefault().getLanguage();
-		}
-		this.changeResourceBundle();
+        }
+		this.loadResourceBundle();
 	}
 
 	/**
 	 * sets the currentBundle based on language
 	 */
-	private void changeResourceBundle() {
-        Locale newLocale = Locale.forLanguageTag(currentLanguage);
+	private void loadResourceBundle() {
+        Locale locale = Locale.forLanguageTag(currentLanguage);
         FacesContext context = FacesContext.getCurrentInstance();
         if(context != null){
-            context.getViewRoot().setLocale(newLocale);
+            context.getViewRoot().setLocale(locale);
         }
 		if (bundleMap.containsKey(currentLanguage)) {
 			currentBundle = bundleMap.get(currentLanguage);
 
 		} else {
 			try {
-				currentBundle = new ResourceBundle(baseName,newLocale);
+				currentBundle = new ResourceBundle(baseName,locale);
 				bundleMap.put(currentLanguage, currentBundle);
 				log.fine("Conventions: loaded resource bundle:" + baseName
 						+ "_" + currentLanguage + ".properties");
@@ -103,7 +102,7 @@ public class ResourceBundleProvider implements Serializable {
 
 	public void setCurrentLocale(String locale) {
 		this.currentLanguage = locale;
-		this.changeResourceBundle();
+		this.loadResourceBundle();
 	}
 
 	@Produces

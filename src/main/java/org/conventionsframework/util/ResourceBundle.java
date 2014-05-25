@@ -49,6 +49,22 @@ public class ResourceBundle extends java.util.ResourceBundle implements Serializ
         setParent(bundle);
     }
 
+    public ResourceBundle(String baseName) {
+        bundle = java.util.ResourceBundle.getBundle(baseName, Locale.getDefault(),UTF8_CONTROL);
+        setParent(bundle);
+    }
+
+    public ResourceBundle(String baseName, Locale locale) {
+        bundle = java.util.ResourceBundle.getBundle(baseName, locale,UTF8_CONTROL);
+        setParent(bundle);
+    }
+
+    public ResourceBundle(java.util.ResourceBundle bundle) throws IOException {
+        this.bundle = bundle;
+        setParent(bundle);
+    }
+
+
     @Override
     protected Object handleGetObject(String key) {
         try {
@@ -63,15 +79,7 @@ public class ResourceBundle extends java.util.ResourceBundle implements Serializ
         return parent.getKeys();
     }
 
-    public ResourceBundle(java.util.ResourceBundle bundle) throws IOException {
-        this.bundle = bundle;
-        setParent(bundle);
-    }
 
-    public ResourceBundle(String baseName, Locale locale) {
-    	bundle = java.util.ResourceBundle.getBundle(baseName, locale,UTF8_CONTROL);
-        setParent(bundle);
-	}
 
 	public String getString(String key, Object... params) {
         try {
