@@ -58,6 +58,10 @@ public class ResourceBundleProvider implements Serializable {
 		if(context != null){
             currentLanguage = FacesContext.getCurrentInstance().getViewRoot()
 					.getLocale().getLanguage();
+            baseName = context.getExternalContext().getInitParameter("BUNDLE_BASE_NAME");
+            if(baseName == null){
+            	baseName = "messages";
+            }
 		}
 		else{
             currentLanguage = Locale.getDefault().getLanguage();
@@ -69,12 +73,17 @@ public class ResourceBundleProvider implements Serializable {
 	 * sets the currentBundle based on language
 	 */
 	private void changeResourceBundle() {
+        Locale newLocale = Locale.forLanguageTag(currentLanguage);
+        FacesContext context = FacesContext.getCurrentInstance();
+        if(context != null){
+            context.getViewRoot().setLocale(newLocale);
+        }
 		if (bundleMap.containsKey(currentLanguage)) {
 			currentBundle = bundleMap.get(currentLanguage);
 
 		} else {
 			try {
-				currentBundle = new ResourceBundle(java.util.ResourceBundle.getBundle("messages",Locale.forLanguageTag(currentLanguage)));
+				currentBundle = new ResourceBundle(baseName,newLocale);
 				bundleMap.put(currentLanguage, currentBundle);
 				log.fine("Conventions: loaded resource bundle:" + baseName
 						+ "_" + currentLanguage + ".properties");

@@ -24,43 +24,95 @@ package org.conventionsframework.util;
 import org.conventionsframework.qualifier.ConventionsBundle;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
 
 @ConventionsBundle//just to disambiguate, resourceBundle is produced by ResourceBundleProvider
 public class ResourceBundle extends java.util.ResourceBundle implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    public static final Control UTF8_CONTROL = new UTF8Control();
 
     private java.util.ResourceBundle bundle;
 
 
     public ResourceBundle() {
-        bundle = java.util.ResourceBundle.getBundle("messages", Locale.getDefault());
+        bundle = java.util.ResourceBundle.getBundle("messages", Locale.getDefault(),UTF8_CONTROL);
+        setParent(bundle);
     }
 
     @Override
     protected Object handleGetObject(String key) {
-        return bundle.getObject(key);
+        try {
+            return parent.getString(key);
+        } catch (MissingResourceException e) {
+            return "??" + key + "??";
+        }
     }
 
     @Override
     public Enumeration<String> getKeys() {
-        return bundle.getKeys();
+        return parent.getKeys();
     }
 
     public ResourceBundle(java.util.ResourceBundle bundle) throws IOException {
         this.bundle = bundle;
+        setParent(bundle);
     }
 
-    public String getString(String key, Object... params) {
+    public ResourceBundle(String baseName, Locale locale) {
+    	bundle = java.util.ResourceBundle.getBundle(baseName, locale,UTF8_CONTROL);
+        setParent(bundle);
+	}
+
+	public String getString(String key, Object... params) {
         try {
             return MessageFormat.format(this.getString(key), params);
         } catch (MissingResourceException e) {
             return "??" + key + "??";
         }
     }
+
+    public static class UTF8Control extends Control {
+    	public java.util.ResourceBundle newBundle
+    	(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
+    	throws IllegalAccessException, InstantiationException, IOException
+    	{
+    	    // The below code is copied from default Control#newBundle() implementation.
+    	    // Only the PropertyResourceBundle line is changed to read the file as UTF-8.
+
+    	    String bundleName = toBundleName(baseName, locale);
+    	    String resourceName = toResourceName(bundleName, "properties");
+    	    java.util.ResourceBundle bundle = null;
+    	    InputStream stream = null;
+    	    if (reload) {
+    	        URL url = loader.getResource(resourceName);
+    	        if (url != null) {
+    	            URLConnection connection = url.openConnection();
+    	            if (connection != null) {
+    	                connection.setUseCaches(false);
+    	                stream = connection.getInputStream();
+    	            }
+    	        }
+    	    } else {
+    	        stream = loader.getResourceAsStream(resourceName);
+    	    }
+    	    if (stream != null) {
+    	        try {
+    	            bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
+    	        } finally {
+    	            stream.close();
+    	        }
+    	    }
+    	    return bundle;
+    	}
+    	}
 }
