@@ -31,8 +31,6 @@ import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
@@ -49,57 +47,41 @@ import java.util.logging.Logger;
 public class ResourceBundleProvider implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final String DEFAULT_BASE_NAME = "messages";
 	private String baseName;
-	private String currentLocale;
+	private String currentLanguage;
 	private Map<String, ResourceBundle> bundleMap = new HashMap<String, ResourceBundle>();
 	private Logger log = Logger.getLogger(getClass().getSimpleName());
 	private ResourceBundle currentBundle;
 
 	public ResourceBundleProvider() {
-		String baseNameParam = null;
 		FacesContext context = FacesContext.getCurrentInstance();
-		if (context != null) {
-			baseNameParam = (String) FacesContext.getCurrentInstance()
-					.getExternalContext().getInitParameterMap()
-					.get("BUNDLE_BASE_NAME");
-
-		}
-		if (baseNameParam == null) {
-			baseName = DEFAULT_BASE_NAME;
-		} else {
-			baseName = baseNameParam;
-		}
 		if(context != null){
-			currentLocale = FacesContext.getCurrentInstance().getViewRoot()
+            currentLanguage = FacesContext.getCurrentInstance().getViewRoot()
 					.getLocale().getLanguage();
 		}
 		else{
-			currentLocale = Locale.getDefault().getLanguage();
+            currentLanguage = Locale.getDefault().getLanguage();
 		}
 		this.changeResourceBundle();
 	}
 
 	/**
-	 * sets the currentBundle based on the baseName and language
+	 * sets the currentBundle based on language
 	 */
 	private void changeResourceBundle() {
-		if (bundleMap.containsKey(currentLocale)) {
-			currentBundle = bundleMap.get(currentLocale);
+		if (bundleMap.containsKey(currentLanguage)) {
+			currentBundle = bundleMap.get(currentLanguage);
 
 		} else {
 			try {
-                InputStream stream = Thread.currentThread().getContextClassLoader()
-                        .getResourceAsStream(
-                                baseName + "_" + currentLocale + ".properties");
-				currentBundle = new ResourceBundle(new InputStreamReader(stream,"UTF-8"));
-				bundleMap.put(currentLocale, currentBundle);
+				currentBundle = new ResourceBundle(java.util.ResourceBundle.getBundle("messages",Locale.forLanguageTag(currentLanguage)));
+				bundleMap.put(currentLanguage, currentBundle);
 				log.fine("Conventions: loaded resource bundle:" + baseName
-						+ "_" + currentLocale + ".properties");
+						+ "_" + currentLanguage + ".properties");
 			} catch (Exception e) {
 				log.log(Level.SEVERE,
 						"Conventions: problems trying to find resource bundle:"
-								+ baseName + "_" + currentLocale
+								+ baseName + "_" + currentLanguage
 								+ ".properties", e);
 			}
 		}
@@ -107,11 +89,11 @@ public class ResourceBundleProvider implements Serializable {
 	}
 
 	public String getCurrentLocale() {
-		return currentLocale;
+		return currentLanguage;
 	}
 
 	public void setCurrentLocale(String locale) {
-		this.currentLocale = locale;
+		this.currentLanguage = locale;
 		this.changeResourceBundle();
 	}
 

@@ -15,12 +15,11 @@
  */
 package org.conventionsframework.util;
 
-import java.io.IOException;
+import javax.enterprise.inject.Produces;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.inject.Produces;
-import javax.inject.Named;
 
 /**
  *
@@ -34,8 +33,8 @@ public final class VersionUtils implements Serializable {
     @Named(value = "conventionsVersion")
     public Version getCoreVersion() {
         try {
-            return new Version(new ResourceBundle(getClass().getResourceAsStream("/com/conventions/core/bundle/conventions.properties")).getString("conventions.version"));
-        } catch (IOException ex) {
+            return new Version(java.util.ResourceBundle.getBundle("org.conventions.core.bundle.conventions").getString("conventions.version"));
+        } catch (Exception ex) {
             Logger.getLogger(VersionUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

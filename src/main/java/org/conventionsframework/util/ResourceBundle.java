@@ -24,34 +24,40 @@ package org.conventionsframework.util;
 import org.conventionsframework.qualifier.ConventionsBundle;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Enumeration;
 import java.util.Locale;
 
-@ConventionsBundle
-public class ResourceBundle extends java.util.PropertyResourceBundle implements Serializable {
+@ConventionsBundle//just to disambiguate, resourceBundle is produced by ResourceBundleProvider
+public class ResourceBundle extends java.util.ResourceBundle implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public ResourceBundle() throws IOException {
-        super(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("messages_" + Locale.getDefault().getLanguage() + ".properties"),"UTF-8"));
+    private java.util.ResourceBundle bundle;
+
+
+    public ResourceBundle() {
+        bundle = java.util.ResourceBundle.getBundle("messages", Locale.getDefault());
     }
 
-    public ResourceBundle(InputStream stream) throws IOException {
-        super(stream);
+    @Override
+    protected Object handleGetObject(String key) {
+        return bundle.getObject(key);
     }
 
-    public ResourceBundle(InputStreamReader stream) throws IOException {
-        super(stream);
+    @Override
+    public Enumeration<String> getKeys() {
+        return bundle.getKeys();
     }
 
-    public ResourceBundle(String location) throws IOException {
-        super(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(location),"UTF-8"));
+    public ResourceBundle(java.util.ResourceBundle bundle) throws IOException {
+        this.bundle = bundle;
     }
 
     public String getString(String key, Object... params) {
         return MessageFormat.format(this.getString(key), params);
     }
+
+
 }
