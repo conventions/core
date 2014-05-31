@@ -22,26 +22,28 @@
 
 package org.conventionsframework.extension;
 
-import javax.enterprise.inject.spi.*;
+import org.conventionsframework.producer.ResourceBundleProvider;
+import org.conventionsframework.util.BeanManagerController;
+
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterDeploymentValidation;
+import javax.enterprise.inject.spi.Extension;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author rmpestano
  */
-public class CustomEntityManagerBootstrap implements Extension {
+public class Bootstrap implements Extension {
 
 
- 
-//    void bootstrapCustomEntityManager(@Observes ProcessProducer<?,EntityManager> pp) {
-//      
-//        if(pp.getAnnotatedMember().isAnnotationPresent(CustomEntityManager.class)){
-//        }
-//      
-//        
-//    }
 
-//   void after(@Observes AfterBeanDiscovery abd){
-//       
-//   }
+   public void afterDeployment(@Observes AfterDeploymentValidation afterDeploymentValidation){
+
+       Logger.getLogger(getClass().getName()).log(Level.INFO, "Running Conventions " + ResourceBundle.getBundle("conventions").getString("conventions.version"));
+
+   }
    
 }

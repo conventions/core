@@ -25,38 +25,19 @@ import java.util.logging.Logger;
  *
  * @author rmpestano
  */
-public final class VersionUtils implements Serializable {
+public class VersionUtils implements Serializable {
 
-    public static final VersionUtils INSTANCE = new VersionUtils();
 
     @Produces
     @Named(value = "conventionsVersion")
-    public Version getCoreVersion() {
+    public String getCoreVersion() {
         try {
-            return new Version(java.util.ResourceBundle.getBundle("org.conventions.core.bundle.conventions").getString("conventions.version"));
+            return java.util.ResourceBundle.getBundle("conventions").getString("conventions.version");
         } catch (Exception ex) {
             Logger.getLogger(VersionUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
 
-    public class Version implements Serializable {
 
-        private String version;
-
-        public Version() {
-        }
-
-        public Version(String version) {
-            this.version = version;
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
-        }
-    }
 }

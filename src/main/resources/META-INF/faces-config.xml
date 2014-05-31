@@ -6,13 +6,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
-    <application>
-        <system-event-listener>
-                <system-event-listener-class>org.conventionsframework.system.VersionSystemEventListener</system-event-listener-class>
-                <system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>
-                <source-class>javax.faces.application.Application</source-class>
-        </system-event-listener>
-    </application>  
    <component>
         <component-type>org.conventionsframework.component.PanelGrid</component-type>
         <component-class>org.conventionsframework.component.panelgrid.PanelGrid</component-class>
