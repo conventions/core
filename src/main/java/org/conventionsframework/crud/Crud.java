@@ -40,6 +40,8 @@ public final class Crud<T extends BaseEntity> implements Serializable {
     @Inject
     private EntityManager entityManager;
 
+    private Session session;
+
     private Class<T> persistentClass;
 
     private MatchMode matchMode;
@@ -379,7 +381,9 @@ public final class Crud<T extends BaseEntity> implements Serializable {
     }
 
     public Session getSession() {
-        Session session = getEntityManager().unwrap(Session.class);
+        if (session == null || !session.isOpen()) {
+            session = getEntityManager().unwrap(Session.class);
+        }
         return session;
     }
 
