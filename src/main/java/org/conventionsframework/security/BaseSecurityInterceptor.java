@@ -75,11 +75,8 @@ public abstract class BaseSecurityInterceptor implements Serializable {
     private String getFatalMessage(String message) {
         if (resourceBundle  != null) {
             String i18nMessage = null;
-            try {
-                i18nMessage = resourceBundle.getString(message);
-            } catch (java.util.MissingResourceException re) {
-            }
-            if (i18nMessage != null) {
+            i18nMessage = resourceBundle.getString(message);
+            if (i18nMessage != null && !i18nMessage.startsWith("??")) {
                return i18nMessage;
             } else {//no message for given key
                 return message;
