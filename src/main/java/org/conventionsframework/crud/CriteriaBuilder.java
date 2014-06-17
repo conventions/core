@@ -152,7 +152,7 @@ public class CriteriaBuilder<T extends BaseEntity> {
         return this;
     }
 
-    public CriteriaBuilder addCriterio(Criterion criterion) {
+    public CriteriaBuilder addCriterion(Criterion criterion) {
         if (criterion != null) {
             dc.add(criterion);
         }
