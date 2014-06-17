@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
+ * Null safe injectable generic Hibernate criteria
+ *
  * Created by rafael-pestano on 15/06/2014.
  */
 @Dependent
@@ -155,6 +157,34 @@ public class CriteriaBuilder<T extends BaseEntity> {
     public CriteriaBuilder addCriterion(Criterion criterion) {
         if (criterion != null) {
             dc.add(criterion);
+        }
+        return this;
+    }
+
+    public CriteriaBuilder isNull(String property){
+        if(property != null){
+            dc.add(Restrictions.isNull(property));
+        }
+        return this;
+    }
+
+    public CriteriaBuilder isNotNull(String property){
+        if(property != null){
+            dc.add(Restrictions.isNotNull(property));
+        }
+        return this;
+    }
+
+    public CriteriaBuilder isEmpty(String property){
+        if(property != null){
+            dc.add(Restrictions.isEmpty(property));
+        }
+        return this;
+    }
+
+    public CriteriaBuilder isNotEmpty(String property){
+        if(property != null){
+            dc.add(Restrictions.isNotEmpty(property));
         }
         return this;
     }
