@@ -1,4 +1,4 @@
-package org.conventionsframework.util;
+package org.conventionsframework.crud;
 
 import org.conventionsframework.model.BaseEntity;
 import org.hibernate.Criteria;
