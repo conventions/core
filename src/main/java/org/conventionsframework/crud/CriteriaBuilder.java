@@ -31,7 +31,7 @@ public class CriteriaBuilder<T extends BaseEntity> {
             Type[] typeArgs = type.getActualTypeArguments();
             entityClass = (Class<T>) typeArgs[0];
         } else {
-            throw new IllegalArgumentException("informe o tipo do T no ponto de injecao ex: @Inject CriteriaBuilde<TurmaT> builder");
+            throw new IllegalArgumentException("Provide entity at injection point ex: @Inject CriteriaBuilder<Entity> criteriaBuilder");
         }
 
         resetCriteria();
