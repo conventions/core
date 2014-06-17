@@ -73,7 +73,7 @@ public final class Crud<T extends BaseEntity> implements Serializable {
                 //intentional, will receive classcast in BaseServiceImpl(CDI BUG)
             }
         } else {
-            throw new IllegalArgumentException("informe o tipo do T no ponto de injecao ex: @Inject Finder<TurmaT> finder");
+            throw new IllegalArgumentException("provide entity at injection point ex: @Inject Crud<Entity> crud");
         }
     }
 
