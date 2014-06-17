@@ -11,11 +11,11 @@ import java.util.ResourceBundle;
  * Created by rafael-pestano on 10/06/2014.
  * <p/>
  * Classe utilitaria para fazer asserts
- * baseado na classe Assert do Spring http://grepcode.com/file/repo1.maven.org/maven2/org.springframework/spring-core/2.5.6/org/springframework/util/Assert.java
+ * baseado na classe Assert do Spring http://grepcode.com/file/repo1.maven.org/maven2/org.springframework/spring-core/2.5.6/org/springframework/util/assert.java
  */
 public class Assert implements Serializable {
 
-    private static java.util.ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+    private static java.util.ResourceBundle bundle = BeanManagerController.getBeanByType(org.conventionsframework.util.ResourceBundle.class);
 
     /**
      * verifica se mensagem esta no bundle
@@ -42,7 +42,7 @@ public class Assert implements Serializable {
 
     /**
      * Assert that given expression evaluates to <code>true</code>
-     * <pre class="code">Assert.isTrue(true,"message on fail");</pre>
+     * <pre class="code">Assert.isTrue(true,"message if expression evaluates to false");</pre>
      *
      * @param expression
      * @param message    the exception message to use if the assertion fails
@@ -51,7 +51,7 @@ public class Assert implements Serializable {
     public static void isTrue(boolean expression, String message) {
         if (!expression) {
             if (!hasText(message)) {
-                message = "Assert.isTrue";
+                message = "assert.isTrue";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -59,7 +59,7 @@ public class Assert implements Serializable {
 
     /**
      * Assert that given expression evaluates to <code>false</code>
-     * <pre class="code">Assert.notTrue(false,"message on fail");</pre>
+     * <pre class="code">Assert.notTrue(false,"message if expression evaluates to true");</pre>
      *
      * @param expression
      * @param message    the exception message to use if the assertion fails
@@ -68,7 +68,7 @@ public class Assert implements Serializable {
     public static void notTrue(boolean expression, String message) {
         if (expression) {
             if (!hasText(message)) {
-                message = "Assert.notTrue";
+                message = "assert.notTrue";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -76,7 +76,7 @@ public class Assert implements Serializable {
 
     /**
      * Assert that given objects are equal
-     * <pre class="code">Assert.equals(obj1,obj2,"message on fail");</pre>
+     * <pre class="code">Assert.equals(obj1,obj2,"message if objects are NOT equal");</pre>
      *
      * @param obj1
      * @param obj2
@@ -86,25 +86,25 @@ public class Assert implements Serializable {
     public static <T extends Object> void equals(T obj1, T obj2, String message) {
         if (!obj1.equals(obj2)) {
             if (!hasText(message)) {
-                message = "Assert.equals";
+                message = "assert.equals";
             }
             throw new BusinessException(getMessage(message));
         }
     }
 
     /**
-     * Assert that given objects are equal
-     * <pre class="code">Assert.equals(obj1,obj2,"message on fail");</pre>
+     * Assert that given objects are NOT equal
+     * <pre class="code">Assert.equals(obj1,obj2,"message if objects ARE equal");</pre>
      *
      * @param obj1
      * @param obj2
      * @param message the exception message to use if the assertion fails
-     * @throws org.conventionsframework.exception.BusinessException if the given objects are not equal
+     * @throws org.conventionsframework.exception.BusinessException if the given objects ARE equal
      */
     public static <T extends Object> void notEquals(T obj1, T obj2, String message) {
         if (obj1.equals(obj2)) {
             if (!hasText(message)) {
-                message = "Assert.notEquals";
+                message = "assert.notEquals";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -116,7 +116,7 @@ public class Assert implements Serializable {
 
     /**
      * Assert that given object is null
-     * <pre class="code">Assert.equals(obj1,obj2,"message on fail");</pre>
+     * <pre class="code">Assert.equals(obj1,obj2,"message if object is NOT null");</pre>
      *
      * @param object
      * @param message the exception message to use if the assertion fails
@@ -125,7 +125,7 @@ public class Assert implements Serializable {
     public static void isNull(Object object, String message) {
         if (!isNull(object)) {
             if (message == null) {
-                message = "Assert.isNull";
+                message = "assert.isNull";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -137,7 +137,7 @@ public class Assert implements Serializable {
 
     /**
      * Assert that given object is NOT null
-     * <pre class="code">Assert.equals(obj1,obj2,"message on fail");</pre>
+     * <pre class="code">Assert.equals(obj1,obj2,"message if object IS null");</pre>
      *
      * @param object
      * @param message the exception message to use if the assertion fails
@@ -146,7 +146,7 @@ public class Assert implements Serializable {
     public static void notNull(Object object, String message) {
         if (isNull(object)) {
             if (!hasText(message)) {
-                message = "Assert.notNull";
+                message = "assert.notNull";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -168,7 +168,7 @@ public class Assert implements Serializable {
     public static void hasLength(String text, String message) {
         if (!hasLength(text)) {
             if (!hasText(message)) {
-                message = "Assert.hasLength";
+                message = "assert.hasLength";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -188,7 +188,7 @@ public class Assert implements Serializable {
         int strLen = text.length();
         for (int i = 0; i < strLen; i++) {
             if (!Character.isWhitespace(text.charAt(i))) {
-                return true;//possui texto
+                return true;//has text
             }
         }
         return false;
@@ -196,7 +196,7 @@ public class Assert implements Serializable {
 
     /**
      * Assert that the given text has any character.
-     * <pre class="code">Assert.hasText(name,"message");</pre>
+     * <pre class="code">Assert.hasText(name,"message if the given text has no characters");</pre>
      *
      * @param text
      * @param message the exception message to use if the assertion fails
@@ -205,7 +205,7 @@ public class Assert implements Serializable {
     public static void hasText(String text, String message) {
         if (!hasText(text)) {
             if (!hasText(message)) {
-                message = "Assert.hasText";
+                message = "assert.hasText";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -214,17 +214,17 @@ public class Assert implements Serializable {
 
     /**
      * Assert that the given text contain the given substring.
-     * <pre class="code">Assert.contains("i am rod", "rod","message");</pre>
+     * <pre class="code">Assert.contains("i am rod", "rod","message if textToSearch does NOT contains substring");</pre>
      *
      * @param textToSearch the text to search
      * @param substring    the substring to find within the text
      * @param message      the exception message to use if the assertion fails
-     * @throws org.conventionsframework.exception.BusinessException if textToSearch does not contains substring
+     * @throws org.conventionsframework.exception.BusinessException if textToSearch does NOT contains substring
      */
     public static void contains(String textToSearch, String substring, String message) {
         if (!contains(textToSearch, substring)) {
             if (!hasText(message)) {
-                message = "Assert.contains";
+                message = "assert.contains";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -240,7 +240,7 @@ public class Assert implements Serializable {
 
     /**
      * Assert that the given text does not contain the given substring.
-     * <pre class="code">Assert.notContains(name, "rod");</pre>
+     * <pre class="code">Assert.notContains(name, "message if textToSearch contains substring");</pre>
      *
      * @param textToSearch the text to search
      * @param substring    the substring to find within the text
@@ -250,7 +250,7 @@ public class Assert implements Serializable {
     public static void notContains(String textToSearch, String substring, String message) {
         if (contains(textToSearch, substring)) {
             if (!hasText(message)) {
-                message = "Assert.notContains";
+                message = "assert.notContains";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -268,7 +268,7 @@ public class Assert implements Serializable {
     public static void notEmpty(Object[] array, String message) {
         if (!notEmpty(array)) {
             if (!hasText(message)) {
-                message = "Assert.notEmpty";
+                message = "assert.notEmpty";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -354,7 +354,7 @@ public class Assert implements Serializable {
     public static void notNull(Object[] array, String message) {
         if (!notNull(array)) {
             if (!hasText(message)) {
-                message = "Assert.notNull";
+                message = "assert.notNull";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -372,7 +372,7 @@ public class Assert implements Serializable {
     public static void notEmpty(Collection<?> collection, String message) {
         if (collection == null || collection.isEmpty()) {
             if (!hasText(message)) {
-                message = "Assert.notEmpty";
+                message = "assert.notEmpty";
             }
             throw new BusinessException(getMessage(message));
         }
@@ -391,7 +391,7 @@ public class Assert implements Serializable {
     public static void notEmpty(Map<?, ?> map, String message) {
         if (!notEmpty(map.entrySet().toArray())) {
             if (!hasText(message)) {
-                message = "Assert.notEmpty";
+                message = "assert.notEmpty";
             }
             throw new BusinessException(getMessage(message));
         }
