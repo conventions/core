@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * User: Rafael M. Pestano
  */
-public interface BaseEntity<T extends Serializable> {
+public interface BaseEntity {
 
-    T getId();
+    Serializable getId();
 }
