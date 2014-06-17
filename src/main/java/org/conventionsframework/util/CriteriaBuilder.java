@@ -1,6 +1,8 @@
 package org.conventionsframework.util;
 
 import org.conventionsframework.model.BaseEntity;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.*;
 import org.hibernate.sql.JoinType;
 
@@ -167,6 +169,12 @@ public class CriteriaBuilder<T extends BaseEntity> {
         DetachedCriteria detachedCriteria = dc;
         resetCriteria();
         return detachedCriteria;
+    }
+
+    public Criteria buildCriteria(Session session) {
+        Criteria criteria = dc.getExecutableCriteria(session);
+        resetCriteria();
+        return criteria;
     }
 
     public void resetCriteria() {
