@@ -8,7 +8,7 @@
 
 
     <composite:interface>
-        <composite:attribute name="appendToBody" default="false"  />
+        <composite:attribute name="appendTo" default=""  />
         <composite:attribute name="removeAction" default="delete"  />
         <composite:attribute name="timeout" default="1600"  shortDescription="timeout before closing dialog, useful to show messages before closing" />
         <composite:attribute name="mbean" required="true"/>
@@ -25,7 +25,7 @@
     </composite:interface>
 
     <composite:implementation>
-        <p:dialog widgetVar="#{cc.attrs.widgetVar}" header="#{cc.attrs.header}" modal="true" minHeight="100" appendToBody="#{cc.attrs.appendToBody}"
+        <p:dialog widgetVar="#{cc.attrs.widgetVar}" header="#{cc.attrs.header}" modal="true" minHeight="100" appendTo="#{cc.attrs.appendTo}"
                   height="#{cc.attrs.height}" width="#{cc.attrs.width}" resizable="true" closable="true" showEffect="explode" hideEffect="explode">
             <p:fieldset legend="#{cc.attrs.removeMessage}" style="text-align: center;padding: 10px">
                 <p:outputPanel id="panel" autoUpdate="true">
@@ -36,7 +36,7 @@
                     <h:panelGrid cellspacing="15" columns="2">
                         <conv:removeButton value="#{cc.attrs.remove}" deleteAction="#{cc.attrs.removeAction}" mbean="#{cc.attrs.mbean}" update="#{cc.attrs.update}"
                                            oncomplete="closeModalRemoval();#{cc.attrs.oncomplete}" />
-                        <p:commandButton value="#{cc.attrs.cancel}" oncomplete="#{cc.attrs.widgetVar}.hide()"/>
+                        <p:commandButton value="#{cc.attrs.cancel}" oncomplete="PF(#{cc.attrs.widgetVar}).hide()"/>
                     </h:panelGrid>
                 </center>
             </p:fieldset>
@@ -49,7 +49,7 @@
                 }
 
                 function closeRemovalDialog(){
-                        #{cc.attrs.widgetVar}.hide();
+                        PF(#{cc.attrs.widgetVar}).hide();
                 }
             </script>
     </composite:implementation>

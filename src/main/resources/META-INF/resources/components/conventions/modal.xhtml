@@ -48,7 +48,7 @@
                         <framework:modalButton value="#{cc.attrs.modalButtonValue}" 
                                        mbean="#{cc.attrs.mbean}"
                                        rendered="#{cc.attrs.renderButton}"
-                                       oncomplete="#{cc.attrs.widgetVar}.hide();" 
+                                       oncomplete="PF(#{cc.attrs.widgetVar}).hide();"
                                        update="#{cc.attrs.update}"
                                        />
                     </center>

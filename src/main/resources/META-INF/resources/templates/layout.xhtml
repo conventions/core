@@ -22,8 +22,8 @@
             <p:dialog widgetVar="loading"  modal="true" height="30px" width="150px" closable="false">
                 loading...
             </p:dialog>
-            <p:ajaxStatus rendered="#{empty showAjaxStatus or showAjaxStatus}" onstart="loading.show()"
-                          oncomplete="loading.hide()" styleClass="ajaxStatus" />
+            <p:ajaxStatus rendered="#{empty showAjaxStatus or showAjaxStatus}" onstart="PF('loading').show()"
+                          oncomplete="PF('loading').hide()" styleClass="ajaxStatus" />
               <p:layout id="all" widgetVar="mainLayout" fullPage="true"  stateful="#{not empty keepLayoutState and keepLayoutState}" >
                   <p:layoutUnit position="north" resizable="true" collapsible="true" size="#{empty northSize ? (empty stateController.stateItens ? '125':'155'):northSize}" minSize="125" rendered="#{empty showTopUnit or showTopUnit}" >
                       <h:form id="headerForm">
