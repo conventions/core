@@ -16,15 +16,20 @@
 
 package org.conventionsframework.query;
 
+import org.conventionsframework.model.BaseEntity;
 import org.conventionsframework.qualifier.Query;
 import org.conventionsframework.qualifier.QueryParam;
 import org.conventionsframework.qualifier.QueryParams;
+import org.conventionsframework.qualifier.Service;
 import org.conventionsframework.service.BaseService;
 import org.conventionsframework.util.BeanManagerController;
 
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 /**
@@ -34,13 +39,19 @@ import java.io.Serializable;
 
 @Query(service = BaseService.class)
 @Interceptor
-public class QueryProvider implements Serializable{
-    
+public class QueryProvider<T extends BaseEntity> implements Serializable{
+
+
     @AroundInvoke
     public Object execute(InvocationContext ic) throws Exception{
+        BaseService service = null;
         Query query = ic.getMethod().getAnnotation(Query.class);
-        BaseService service = (BaseService) BeanManagerController.getBeanByType(query.service());
+        Class<? extends BaseService> serviceClass = query.service();
+        if(!serviceClass.equals(BaseService.class)){
+           service = (BaseService) BeanManagerController.getBeanByType(serviceClass);
+        }
         javax.persistence.Query q = null;
+
         if(!"".equals(query.sql())){
              q = service.crud().getEntityManager().createQuery(query.sql());
         }

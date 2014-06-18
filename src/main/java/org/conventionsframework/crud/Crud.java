@@ -197,7 +197,7 @@ public final class Crud<T extends BaseEntity> implements Serializable {
             criteria = getSession().createCriteria(getPersistentClass());
         }
         if (entity != null && example == null) {
-            example = Example.create(example);
+            example = Example.create(entity);
         }
         if (excludeProperties != null && !excludeProperties.isEmpty()) {
             for (String exclude : excludeProperties) {

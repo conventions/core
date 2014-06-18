@@ -24,7 +24,6 @@ package org.conventionsframework.util;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.faces.context.FacesContext;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.lang.annotation.Annotation;
@@ -63,6 +62,7 @@ public class BeanManagerController {
 
 
     public static <T> T getBeanByType(Class<T> type) {
+
         BeanManager bm = getBeanManager();
         Bean bean = bm.getBeans(type).iterator().next();
         CreationalContext ctx = bm.createCreationalContext(bean); // could be inlined below

@@ -285,16 +285,11 @@ public class StateController implements Serializable {
             return value;
         }
         String i18nTitle = null;
-        try {
-            i18nTitle = resourceBundleProvider.getCurrentBundle().getString(
-                    value);
-        } catch (Exception re) {
-
+        i18nTitle = resourceBundleProvider.getCurrentBundle().getString(value);
+        if(i18nTitle.startsWith("??")){
+            return value;
         }
-        if (i18nTitle != null) {
-            return i18nTitle;
-        }
-        return value;
+        return i18nTitle;
     }
 
 }
