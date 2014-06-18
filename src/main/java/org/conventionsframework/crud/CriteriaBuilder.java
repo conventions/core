@@ -102,10 +102,23 @@ public class CriteriaBuilder<T extends BaseEntity> {
         return this;
     }
 
-    public CriteriaBuilder between(String property, Calendar dtIni, Calendar dtFim) {
-        if (dtIni != null && dtFim != null) {
-            dc.add(Restrictions.between(property, dtIni, dtFim));
+    public CriteriaBuilder between(String property, Calendar dtIni, Calendar dtEnd) {
+        if (dtIni != null && dtEnd != null) {
+            dtIni.set(Calendar.HOUR,0);
+            dtIni.set(Calendar.MINUTE,0);
+            dtIni.set(Calendar.SECOND,0);
+            dtEnd.set(Calendar.HOUR,23);
+            dtEnd.set(Calendar.MINUTE,59);
+            dtEnd.set(Calendar.SECOND,59);
+            dc.add(Restrictions.between(property, dtIni, dtEnd));
         }
+        return this;
+    }
+
+    public CriteriaBuilder between(String property, Integer ini, Integer end) {
+         if(ini != null && end != null){
+             dc.add(Restrictions.between(property, ini, end));
+         }
         return this;
     }
 
