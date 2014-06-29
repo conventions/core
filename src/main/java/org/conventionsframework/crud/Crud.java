@@ -339,9 +339,6 @@ public final class Crud<T extends BaseEntity> implements Serializable {
     // count
 
     public int count() {
-        if (getCriteria() == null) {
-            getCriteria() = getSession().createCriteria(getPersistentClass());
-        }
         getCriteria().setProjection(Projections.count(getSession()
                 .getSessionFactory().getClassMetadata(persistentClass)
                 .getIdentifierPropertyName()));
