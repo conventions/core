@@ -317,10 +317,7 @@ public final class Crud<T extends BaseEntity> implements Serializable {
 
 
     public T find() {
-        if (criteria == null) {
-            criteria = getCriteria();
-        }
-        T result = (T) criteria.uniqueResult();
+        T result = (T) getCriteria().uniqueResult();
         resetCriteria();
         return result;
     }
@@ -328,30 +325,27 @@ public final class Crud<T extends BaseEntity> implements Serializable {
     // list
 
     public List<T> list() {
-        if (criteria == null) {
-            criteria = getCriteria();
-        }
-        List<T> result = criteria.list();
+        List<T> result = getCriteria().list();
         resetCriteria();
         return result;
     }
 
     public List<T> listAll() {
         resetCriteria();
-        List<T> result = criteria.list();
+        List<T> result = getCriteria().list();
         return result;
     }
 
     // count
 
     public int count() {
-        if (criteria == null) {
-            criteria = getSession().createCriteria(getPersistentClass());
+        if (getCriteria() == null) {
+            getCriteria() = getSession().createCriteria(getPersistentClass());
         }
-        criteria.setProjection(Projections.count(getSession()
+        getCriteria().setProjection(Projections.count(getSession()
                 .getSessionFactory().getClassMetadata(persistentClass)
                 .getIdentifierPropertyName()));
-        Long result = (Long) criteria.uniqueResult();
+        Long result = (Long) getCriteria().uniqueResult();
         resetCriteria();
         return result.intValue();
     }
@@ -367,15 +361,14 @@ public final class Crud<T extends BaseEntity> implements Serializable {
 
     public Criteria configPagination(SearchModel<T> searchModel) {
         resetCriteria();
-        Criteria criteria = getCriteria();
-        addBasicFilterRestrictions(criteria, searchModel.getFilter());
-        addBasicFilterRestrictions(criteria, searchModel.getDatatableFilter());
+        addBasicFilterRestrictions(getCriteria(), searchModel.getFilter());
+        addBasicFilterRestrictions(getCriteria(), searchModel.getDatatableFilter());
         if (searchModel.getEntity() != null) {
             Example example = Example.create(searchModel.getEntity())
                     .enableLike(MatchMode.ANYWHERE).ignoreCase();
-            criteria.add(example);
+            getCriteria().add(example);
         }
-        return criteria;
+        return getCriteria();
     }
 
     public Criteria configPagination(SearchModel<T> searchModel,
