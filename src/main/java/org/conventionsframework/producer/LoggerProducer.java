@@ -16,12 +16,12 @@
 package org.conventionsframework.producer;
 
 import org.conventionsframework.qualifier.Log;
-import java.io.Serializable;
-import java.util.logging.Logger;
+
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
+import java.io.Serializable;
+import java.util.logging.Logger;
 
 /**
  *
@@ -35,7 +35,7 @@ public class LoggerProducer implements Serializable{
     
     @Produces @Log
     public  Logger produce(InjectionPoint ip){
-        return  Logger.getLogger(ip.getMember().getDeclaringClass().getSimpleName());
+        return  Logger.getLogger(ip.getMember().getDeclaringClass().getName());
     }
     
 }

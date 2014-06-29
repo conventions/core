@@ -338,7 +338,9 @@ public final class Crud<T extends BaseEntity> implements Serializable {
     }
 
     public List<T> listAll() {
-        return getCriteria().list();
+        List<T> result = criteria.list();
+        resetCriteria();
+        return result;
     }
 
     // count
@@ -487,6 +489,11 @@ public final class Crud<T extends BaseEntity> implements Serializable {
         return criteria;
     }
 
+    public Criteria getCriteria(boolean reset) {
+        Criteria copy = getCriteria();
+        criteria = null;
+        return copy;
+    }
 
 
     // general utilities
