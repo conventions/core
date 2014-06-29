@@ -481,7 +481,9 @@ public final class Crud<T extends BaseEntity> implements Serializable {
 
     public Criteria getCriteria(boolean reset) {
         Criteria copy = getCriteria();
-        criteria = null;
+        if(reset){
+            criteria = null;
+        }
         return copy;
     }
 
