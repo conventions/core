@@ -69,7 +69,6 @@ public final class Crud<T extends BaseEntity> implements Serializable {
     // buider methods
 
 
-
     public Crud<T> example(T entity) {
         if (entity != null) {
             getCriteria().add(Example.create(entity));
@@ -338,8 +337,8 @@ public final class Crud<T extends BaseEntity> implements Serializable {
     }
 
     public List<T> listAll() {
-        List<T> result = criteria.list();
         resetCriteria();
+        List<T> result = criteria.list();
         return result;
     }
 
@@ -349,7 +348,6 @@ public final class Crud<T extends BaseEntity> implements Serializable {
         if (criteria == null) {
             criteria = getSession().createCriteria(getPersistentClass());
         }
-
         criteria.setProjection(Projections.count(getSession()
                 .getSessionFactory().getClassMetadata(persistentClass)
                 .getIdentifierPropertyName()));
@@ -359,8 +357,10 @@ public final class Crud<T extends BaseEntity> implements Serializable {
     }
 
     public int countAll() {
-        return projection(Projections.rowCount()).criteria(
-                getCriteria().setFirstResult(0).setMaxResults(1)).count();
+        int result = projection(Projections.rowCount()).firstResult(0)
+                .maxResult(1).count();
+        resetCriteria();
+        return result;
     }
 
     // pagination
