@@ -315,7 +315,11 @@ public final class Crud<T extends BaseEntity> implements Serializable {
 
     // find
 
-
+    /**
+     * @return an unique entry from table represented by {@link org.conventionsframework.crud.Crud#persistentClass}
+     * based on current org.conventionsframework.crudCrud#criteria and its restrictions
+     * @throws javax.persistence.NonUniqueResultException in case current {@link org.conventionsframework.crud.Crud#criteria} doesn't match an unique entry
+     */
     public T find() {
         T result = (T) getCriteria().uniqueResult();
         resetCriteria();
@@ -323,13 +327,19 @@ public final class Crud<T extends BaseEntity> implements Serializable {
     }
 
     // list
-
+    /**
+     * @return all entries from the table represented by {@link org.conventionsframework.crud.Crud#persistentClass}
+     * based on current {@link org.conventionsframework.crud.Crud#criteria} and its restrictions
+     */
     public List<T> list() {
         List<T> result = getCriteria().list();
         resetCriteria();
         return result;
     }
 
+    /**
+     * @return all entries from table represented by {@link org.conventionsframework.crud.Crud#persistentClass}
+     */
     public List<T> listAll() {
         resetCriteria();
         List<T> result = getCriteria().list();
@@ -338,6 +348,10 @@ public final class Crud<T extends BaseEntity> implements Serializable {
 
     // count
 
+    /**
+     * @return number of entries from table represented by {@link org.conventionsframework.crud.Crud#persistentClass}
+     * based on current @link{ org.conventionsframework.crud.Crud#criteria} and its restrictions
+     */
     public int count() {
         getCriteria().setProjection(Projections.count(getSession()
                 .getSessionFactory().getClassMetadata(persistentClass)
@@ -347,7 +361,11 @@ public final class Crud<T extends BaseEntity> implements Serializable {
         return result.intValue();
     }
 
+    /**
+     * @return number of entries from table represented by {@link org.conventionsframework.crud.Crud#persistentClass}
+     */
     public int countAll() {
+        resetCriteria();
         int result = projection(Projections.rowCount()).firstResult(0)
                 .maxResult(1).count();
         resetCriteria();
@@ -368,6 +386,14 @@ public final class Crud<T extends BaseEntity> implements Serializable {
         return getCriteria();
     }
 
+    /**
+     *
+     * configure pagination based on searchModel and a pre populated criteria
+     *
+     * @param searchModel
+     * @param criteria
+     * @return criteria with basicFilterRestrictions, see {@link org.conventionsframework.crud.Crud#addBasicFilterRestrictions(org.hibernate.Criteria, java.util.Map)}
+     */
     public Criteria configPagination(SearchModel<T> searchModel,
                                      Criteria criteria) {
         addBasicFilterRestrictions(criteria, searchModel.getFilter());
@@ -380,6 +406,18 @@ public final class Crud<T extends BaseEntity> implements Serializable {
         return criteria;
     }
 
+    /**
+     * pagination execution based on searchModel by:
+     * 1 - counting all records based on given criteria
+     * 2 - getting the database page based on criteria and searchModel metadata
+     * 3 - returns a wrapper object containing rowCount obtained in step 1
+     * and database page from step 2.
+     *
+     * @param searchModel holds database page, maxResults, sorting and filters
+     * @param criteria pre populated criteria to restrict database pages
+     *
+     * @return wrapper object containing rowCount and database page
+     */
     public PaginationResult<T> executePagination(SearchModel<T> searchModel,
                                                  final Criteria criteria) {
 

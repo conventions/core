@@ -125,7 +125,7 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T>, Se
         return crud().configPagination(searchModel);
     }
 
-    public Criteria configPagination(SearchModel<T> searchModel, Criteria criteria) {
+    protected final Criteria configPagination(SearchModel<T> searchModel, Criteria criteria) {
         return crud().configPagination(searchModel,criteria);
     }
 
