@@ -28,6 +28,7 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -153,5 +154,11 @@ public class ConfigurationProvider implements Serializable {
 
     public void addConfigEntry(String key, Object value) {
         configMap.put(key, value);
+    }
+
+    @Named("configMap")
+    @Produces
+    public Map<String, Object> getConfigMap() {
+        return configMap;
     }
 }
