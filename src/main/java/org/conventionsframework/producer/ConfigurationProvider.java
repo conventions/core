@@ -22,7 +22,9 @@
 package org.conventionsframework.producer;
 
 import org.conventionsframework.qualifier.Config;
+import org.conventionsframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -53,22 +55,24 @@ public class ConfigurationProvider implements Serializable {
 
     private Map<String, Object> configMap = new HashMap<String, Object>();
 
+    @PostConstruct
+    public void readFromDefaultFile(){
+
+    }
 
     protected @Produces @Config
     String produceStringEntry(InjectionPoint ip) {
-
-        String key = ip.getMember().getName();
+        String key = getConfigKey(ip);
         if (configMap.containsKey(key)) {
             return (String) configMap.get(key);
         }
         return null;
     }
 
-
     protected @Produces @Config
     Boolean produceBooleanEntry(InjectionPoint ip) {
 
-        String key = ip.getMember().getName();
+        String key = getConfigKey(ip);
         if (configMap.containsKey(key)) {
             return (Boolean) configMap.get(key);
         }
@@ -79,7 +83,7 @@ public class ConfigurationProvider implements Serializable {
     protected @Produces @Config
     Integer produceIntegerEntry(InjectionPoint ip) {
 
-        String key = ip.getMember().getName();
+         String key = getConfigKey(ip);
         if (configMap.containsKey(key)) {
             return (Integer) configMap.get(key);
         }
@@ -160,5 +164,10 @@ public class ConfigurationProvider implements Serializable {
     @Produces
     public Map<String, Object> getConfigMap() {
         return configMap;
+    }
+
+    private String getConfigKey(InjectionPoint ip) {
+        Config config = ip.getAnnotated().getAnnotation(Config.class);
+        return Assert.hasText(config.value()) ? config.value() : ip.getMember().getName();
     }
 }

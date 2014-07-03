@@ -23,6 +23,13 @@ package org.conventionsframework.producer;
 
 import org.conventionsframework.qualifier.PropertyFile;
 import org.conventionsframework.qualifier.PropertyKey;
+import org.conventionsframework.util.Assert;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -30,59 +37,50 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
 
 /**
- *
  * @author Rafaem M. Pestano - Jul 7, 2012 7:03:43 PM
- * 
  */
 @Named
 @ApplicationScoped
 public class PropertiesProvider implements Serializable {
-    
+
     private String defaultPropertiesPath;
-    private Map<String,Properties> propsMap = new HashMap<String, Properties>();
+    private Map<String, Properties> propsMap = new HashMap<String, Properties>();
     private Properties currentProps;
     private Logger log = Logger.getLogger(PropertiesProvider.class.getSimpleName());
 
-    
+
     public PropertiesProvider() {
         loadDefaultProperties();
-        if (defaultPropertiesPath != null) {
-            this.loadProperties(defaultPropertiesPath);
-            if(log.isLoggable(Level.FINE)){
-                log.log(Level.INFO, "Conventions properties provider loaded successfully.");
-            }
+        this.loadProperties(defaultPropertiesPath);
+        if (log.isLoggable(Level.FINE)) {
+            log.log(Level.INFO, "Conventions properties provider loaded successfully.");
         }
     }
 
     public PropertiesProvider(String pathToFile) {
         loadProperties(pathToFile);
     }
-     
-    
+
+
     public void loadProperties(String pathToFile) {
-        if("".endsWith(pathToFile)){//if no file is provided use the default file
+        if ("".endsWith(pathToFile)) {//if no file is provided use the default file
             loadDefaultProperties();
             pathToFile = defaultPropertiesPath;
         }
         try {
-            if(!propsMap.containsKey(pathToFile)){
+            if (!propsMap.containsKey(pathToFile)) {
                 Properties props = new Properties();
                 props.load(PropertiesProvider.class.getResourceAsStream(pathToFile));
                 propsMap.put(pathToFile, props);
             }
-           currentProps = propsMap.get(pathToFile);
+            currentProps = propsMap.get(pathToFile);
         } catch (IOException e) {
-            if(log.isLoggable(Level.WARNING)){
+            if (log.isLoggable(Level.WARNING)) {
                 log.log(Level.WARNING, "Conventions could not load property file at " + pathToFile);
                 e.printStackTrace();
-                
+
             }
         }
     }
@@ -90,22 +88,22 @@ public class PropertiesProvider implements Serializable {
     @Produces
     @PropertyKey
     public String produceKey(InjectionPoint ip) {
-        
-        if(ip.getAnnotated().isAnnotationPresent(PropertyKey.class)){
+
+        if (ip.getAnnotated().isAnnotationPresent(PropertyKey.class)) {
             PropertyKey property = ip.getAnnotated().getAnnotation(PropertyKey.class);
             this.loadProperties(property.file());
             return currentProps.getProperty(property.key());
         }
         return "";
     }
-    
+
     @Produces
     @PropertyFile
     public Properties produceProperty(InjectionPoint ip) {
-        
-        if(ip.getAnnotated().isAnnotationPresent(PropertyFile.class)){
+
+        if (ip.getAnnotated().isAnnotationPresent(PropertyFile.class)) {
             PropertyFile property = ip.getAnnotated().getAnnotation(PropertyFile.class);
-            if(!"".endsWith(property.file())){
+            if (!"".endsWith(property.file())) {
                 this.loadProperties(property.file());
             }
         }
@@ -129,13 +127,15 @@ public class PropertiesProvider implements Serializable {
     }
 
     private void loadDefaultProperties() {
-         try{
-           defaultPropertiesPath = (String)FacesContext.getCurrentInstance().getExternalContext().getInitParameterMap().get("DEFAULT_PROPERTIES_PATH");
-        }catch(NullPointerException ex){
-            
+        try {
+            defaultPropertiesPath = (String) FacesContext.getCurrentInstance().getExternalContext().getInitParameterMap().get("DEFAULT_PROPERTIES_PATH");
+            if (!Assert.hasText(defaultPropertiesPath)) {
+                defaultPropertiesPath = "app.properties";
+            }
+        } catch (NullPointerException ex) {
+
         }
     }
-    
-    
+
 
 }
