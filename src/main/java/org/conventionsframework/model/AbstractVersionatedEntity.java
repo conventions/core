@@ -39,6 +39,7 @@ public abstract class AbstractVersionatedEntity<T extends Serializable> extends 
     private Date updateDate;
     @Version
     private Integer version;
+    private String username;
     
 
     public Date getUpdateDate() {
@@ -63,6 +64,14 @@ public abstract class AbstractVersionatedEntity<T extends Serializable> extends 
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+    
+    public String getUsername() {
+        return username;    
+    }
+    
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @PrePersist
